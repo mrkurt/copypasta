@@ -3,6 +3,11 @@ var edit = {
     $(this).parent().addClass('editing');
     $(this).addClass('active');
   },
+  stop : function(){
+    $('#start-edit').removeClass('active').parent().removeClass('editing');
+    edit.indicator().remove();
+    return false;
+  },
   indicator : function(){
     if($('#edit-indicator').length == 0){
       $('body').append('<div id="edit-indicator"><p>click to edit</p></div>');
@@ -15,7 +20,7 @@ var edit = {
     }
 
     $('#dialog')
-      .html('<div><textarea>' + original + '</textarea><input type="button" value="Submit Changes"></div>')
+      .html('<div><textarea>' + original + '</textarea><p><input type="button" value="Submit Changes"> <input type="button" value="Cancel" class="close"></p></div>')
       .lightbox_me()
       .find('textarea').focus();
   },
@@ -29,6 +34,7 @@ var edit = {
     $(elementSelector).live('mouseout', edit.deactivate);
     $('#edit-indicator').live('click', edit.element_click);
     $('#start-edit').live('click', edit.start);
+    $('#end-edit').live('click', edit.stop);
   },
   elements : ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5'],
   currentLive : false,
