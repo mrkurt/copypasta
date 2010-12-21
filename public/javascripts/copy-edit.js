@@ -10,7 +10,7 @@ var edit = {
   },
   indicator : function(){
     if($('#edit-indicator').length == 0){
-      $('body').append('<div id="edit-indicator"><p>click to edit</p></div>');
+      $('body').append('<div id="edit-indicator"><p>click to correct</p></div>');
     }
     return $('#edit-indicator');
   },
@@ -31,8 +31,8 @@ var edit = {
       elementSelector += '.editing ' + edit.elements[i];
     }
     $(elementSelector).live('mouseover', edit.activate);
-    $(elementSelector).live('mouseout', edit.deactivate);
     $('#edit-indicator').live('click', edit.element_click);
+    $('#edit-indicator').live('mouseout', edit.deactivate);
     $('#start-edit').live('click', edit.start);
     $('#end-edit').live('click', edit.stop);
   },
@@ -50,6 +50,8 @@ var edit = {
     indicator.css('top', t + 'px').css('left', l + 'px').show();
   },
   deactivate : function(){
+    edit.currentLive = false;
+    edit.indicator().hide();
   },
   element_click : function(){
     var e = edit.currentLive;
