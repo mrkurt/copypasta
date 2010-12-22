@@ -14,13 +14,13 @@ var edit = {
     }
     return $('#edit-indicator');
   },
-  widget : function(original){
+  widget : function(original, path){
     if($('#dialog').length == 0){
       $('body').append('<div id="dialog"></div>');
     }
 
     $('#dialog')
-      .html('<div><textarea>' + original + '</textarea><p><input type="button" value="Submit Changes"> <input type="button" value="Cancel" class="close"></p></div>')
+      .html('<div><h1>' + path + '</h1><textarea>' + original + '</textarea><p><input type="button" value="Submit Changes"> <input type="button" value="Cancel" class="close"></p></div>')
       .lightbox_me()
       .find('textarea').focus();
   },
@@ -54,7 +54,7 @@ var edit = {
     edit.indicator().hide();
   },
   element_click : function(){
-    var e = edit.currentLive;
+    var e = edit.currentLive, others = $(edit.currentLive.tagName), i
     if(!e){
       console.debug("no element");
       return;
@@ -62,7 +62,14 @@ var edit = {
     if(!$(e).attr('original-content')){
       $(e).attr('original-content', $(e).html());
     }
-    edit.widget($(e).html());
+
+    var path = '';
+    for(i = 0; i < others.length; i++){
+      if(others.get(i) == edit.currentLive){
+        path = "Paragraph #" + (i + 1);
+      }
+    }
+    edit.widget($(e).html(), path);
   }
 };
 
