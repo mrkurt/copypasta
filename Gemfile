@@ -4,19 +4,13 @@ gem 'rails', '3.0.3'
 gem 'haml', '3.0.24'
 gem 'compass'
 
-gem 'bson', '1.1'
-gem 'bson_ext', '1.1'
-gem 'mongoid', '2.0.0.beta.20'
-
 gem 'bcrypt-ruby' #hashing
+gem 'sqlite3'
 
 
 group :development, :test do
   gem 'rspec', '>= 2.0.0.beta.19'
   gem 'rspec-rails', '>= 2.0.0.beta.19'
-
-  gem 'capybara'
-  gem 'launchy'
 end
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
