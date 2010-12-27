@@ -4,12 +4,17 @@ currentLive = false
 ids =
   indicator: 'copy-pasta-edit-indicator'
   dialog: 'copy-pasta-dialog'
+  iframe : 'copy-pasta-iframe'
+  form : 'copy-pasta-form'
 
 paths =
   indicator: '#' + ids.indicator
   dialog: '#' + ids.dialog
   btn: '.copy-pasta-button'
   active: '.copy-pasta-active'
+  form: '#' + ids.form
+
+default_form = '<form id="' + ids.form + '" method="post" action="edits/new" target="' + ids.iframe + '"><input type="hidden" name="view" value="framed"></form>'
 
 indicator = () ->
   if $(paths.indicator).length == 0
@@ -18,7 +23,7 @@ indicator = () ->
 
 dialog = () ->
   if $(paths.dialog).length == 0
-    $('body').append('<div id="' + ids.dialog + '"></div>')
+    $('body').append('<div id="' + ids.dialog + '"><iframe id="' + ids.iframe + '"></iframe>' + default_form + '</div>')
   $(paths.dialog)
 
 activate = () ->
@@ -50,9 +55,19 @@ show_widget = () ->
     'edit[proposed]' : e.original_text
     'edit[url]' : window.location.href
 
-  $.post '/edits/new', data, (d, status, xhr) ->
-    dialog().html(d).removeClass('loading').lightbox_me()
-    deactivate()
+  $(paths.form).replaceWith(default_form)
+
+  for own key, value of data
+    i = $('<input type="hidden" name="' + key + '">')
+    i.val(value)
+    $(paths.form).append(i)
+
+  dialog().lightbox_me()
+  console.debug($(paths.form))
+  $(paths.form).submit()
+
+iframe_action = (e) ->
+  console.debug(e)
 
 watch el for el in ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
 
@@ -68,3 +83,5 @@ $(paths.btn + '.on').live 'click', ()->
   btn = $(this)
   btn.removeClass('on').addClass('off')
   $(btn.attr('href')).removeClass('copy-pasta-active')
+
+window.addEventListener('message', iframe_action, false)

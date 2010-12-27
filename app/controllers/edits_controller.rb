@@ -6,5 +6,6 @@ class EditsController < ApplicationController
 
   def new
     @edit = Edit.new(params[:edit])
+    render :layout => (params[:view] || true)
   end
 end

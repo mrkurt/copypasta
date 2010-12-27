@@ -1,1 +1,10 @@
 !!! 5
+%html
+  %head
+    %title Framed copypasta
+    :javascript
+      if(parent){
+        parent.postMessage(true, "http://localhost:3000");
+      }
+  %body
+    =yield
