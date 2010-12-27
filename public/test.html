@@ -12,20 +12,20 @@
         margin: 0 auto;
       }
 
-      #dialog{
+      #copy-pasta-dialog{
         width: 400px;
         background-color: #fff;
       }
-      #dialog textarea{
+      #copy-pasta-dialog textarea{
         display: block;
         width: 380px;
         height: 360px;
         margin: 10px auto;
       }
-      #dialog p{
+      #copy-pasta-dialog p{
         margin: 0px 10px 10px 10px;
       }
-      #edit-indicator{
+      #copy-pasta-edit-indicator{
         background-color: rgba(0, 0, 255, 0.4);
         z-index: 999;
         position: absolute;
@@ -35,21 +35,22 @@
         cursor: pointer;
       }
 
-      #edit-indicator p{
+      #copy-pasta-edit-indicator p{
         padding: 3px;
         width: 104px;
         height: 20px;
         background-color: yellow;
         position: absolute;
         top: 100%;
-        right: 10%;
+        left: 90%;
         bottom: 0;
         margin: 0;
         margin-top: 5px;
+        margin-left: -55px;
         z-index: 998;
       }
 
-      #edit-indicator p:before{
+      #copy-pasta-edit-indicator p:before{
         border-width: 10px;
         border-style: solid;
         border-color: transparent;
@@ -61,7 +62,7 @@
         margin-left: -10px;
       }
 
-      #start-edit{
+      .copy-pasta-button{
         padding: 10px;
         background-color: #009;
         color: #fff;
@@ -70,20 +71,20 @@
         cursor: pointer;
       }
 
-      #start-edit .help{
+      .copy-pasta-button .help{
         display: none;
       }
 
-      #start-edit.active{
+      .copy-pasta-button.on{
         background-color: #090;
         cursor: auto;
       }
 
-      #start-edit.active .help{
+      .copy-pasta-button.on .help{
         display: block;
       }
 
-      #start-edit.active .prompt{
+      .copy-pasta-button.on .prompt{
         display: none;
       }
     </style>
@@ -105,17 +106,17 @@
  <div class="news-item-figure"><div class="news-item-figure-image" style=""><img src="http://static.arstechnica.com/albumsalesconcets.jpg" /></div></div> 
  
  <h3>Superstars miss out </h3> 
- <p>But this tradeoff mostly benefited smaller music groups. "File-sharing may have a relatively small impact on concert performances for large, 'superstar' bands," suggests the paper."These bands were already well-known and their music was already widely played prior to file-sharing, so file-sharing may have had little impact on demand for their concerts."</p> 
+ <p style="width: 150px; margin: 0 auto;">But this tradeoff mostly benefited smaller music groups. "File-sharing may have a relatively small impact on concert performances for large, 'superstar' bands," suggests the paper."These bands were already well-known and their music was already widely played prior to file-sharing, so file-sharing may have had little impact on demand for their concerts."</p> 
  <p>In other words, whatever losses large bands took due to illegitimate file sharing probably were not compensated by more concert attendance.</p> 
  <p>Are these scholars onto something here? The <a href="http://www.techpolicyinstitute.org/blog/2010/12/research-roundup-file-sharing-vs-music-sales-craigslist-vs-newspapers-and-more/">Technology Policy Institute</a> reviewed the survey, and observes that while it followed music and concert sale trends, the paper could have done a better job of tracking file sharing by incorporating more extant research. </p> 
  <p>Still, "the work is a commendable attempt at understanding the early period of a trend that is often discussed but rarely studied," TPI notes.</p>        
- <div id="start-edit">
+ <div class="copy-pasta-button off" href="#content">
    <div class="prompt">click to help fix errors</div>
    <div class="help">now click the offending text (<a href="#" id="end-edit">or click here when done</a>)</div>
  </div>
     </div>
     <script type="text/javascript" src="/javascripts/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery.lightbox_me.js"></script>
-    <script type="text/javascript" src="/javascripts/copy-edit.js"></script>
+    <script type="text/javascript" src="/javascripts/copypasta.js"></script>
   </body>
 </html>
