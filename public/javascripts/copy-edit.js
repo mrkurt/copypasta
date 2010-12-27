@@ -16,13 +16,14 @@ var edit = {
   },
   widget : function(original, path){
     if($('#dialog').length == 0){
-      $('body').append('<div id="dialog"></div>');
+      $('body').append('<div id="dialog"><iframe id="copy_pasta_frame" frameborder="no" style="width: 100%; height: 500px;"></iframe><a href="#" class="close">Close (esc)</a><form id="copy_pasta_form" target="copy_pasta_frame" action="/edits/new" method="post"><input id="copy_pasta_input_original" type="hidden" name="edit[original]"><input id="copy_pasta_input_proposed" type="hidden" name="edit[proposed]"><input id="copy_pasta_input_url" type="hidden" name="edit[url]"><input id="copy_pasta_input_path" type="hidden" name="edit[element_path]"></form></div>');
     }
 
-    $('#dialog')
-      .html('<div><h1>' + path + '</h1><textarea>' + original + '</textarea><p><input type="button" value="Submit Changes"> <input type="button" value="Cancel" class="close"></p></div>')
-      .lightbox_me()
-      .find('textarea').focus();
+    $('#copy_pasta_input_original').val(original);
+    $('#copy_pasta_input_proposed').val(original);
+    $('#copy_pasta_input_url').val(window.location.href);
+    $('#dialog').lightbox_me();
+    $('#copy_pasta_form').submit();
   },
   setup : function(){
     var elementSelector = '';
@@ -47,14 +48,17 @@ var edit = {
       .css('width', $(this).outerWidth())
       .css('height', $(this).outerHeight());
     edit.currentLive = this;
-    indicator.css('top', t + 'px').css('left', l + 'px').show();
+    indicator.css('top', t + 'px').css('left', l + 'px').fadeIn();
   },
   deactivate : function(){
     edit.currentLive = false;
     edit.indicator().hide();
   },
   element_click : function(){
-    var e = edit.currentLive, others = $(edit.currentLive.tagName), i
+    var e = edit.currentLive, 
+        others = $(edit.currentLive.tagName),
+        indicator = edit.indicator(),
+        i;
     if(!e){
       console.debug("no element");
       return;
@@ -63,13 +67,7 @@ var edit = {
       $(e).attr('original-content', $(e).html());
     }
 
-    var path = '';
-    for(i = 0; i < others.length; i++){
-      if(others.get(i) == edit.currentLive){
-        path = "Paragraph #" + (i + 1);
-      }
-    }
-    edit.widget($(e).html(), path);
+    edit.widget($(e).html(), '');
   }
 };
 

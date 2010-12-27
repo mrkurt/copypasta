@@ -7,6 +7,9 @@ gem 'compass'
 gem 'bcrypt-ruby' #hashing
 gem 'sqlite3'
 
+gem 'loofah'
+gem 'loofah-activerecord'
+
 
 group :development, :test do
   gem 'rspec', '>= 2.0.0.beta.19'

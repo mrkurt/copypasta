@@ -1,0 +1,7 @@
+=form_for @edit do |f|
+  =f.hidden_field :element_path
+  =f.hidden_field :url
+  =f.hidden_field :original
+  =f.text_area :proposed
+  %p
+    =f.submit 'Submit Changes'
