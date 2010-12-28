@@ -3,10 +3,11 @@
   %head
     %title Framed copypasta
     =stylesheet_link_tag 'copypasta.css'
-    =javascript_include_tag "constants_#{Rails.env}", 'copypasta', :concat => 'copypasta-embed'
+    =javascript_include_tag 'constants_development' if Rails.env == 'development'
+    =javascript_include_tag 'copypasta'
     :javascript
       if(parent){
-        parent.postMessage(true, copypasta.ENDPOINT);
+        parent.postMessage(true, 'http://localhost:3000');
       }
   %body
     =yield

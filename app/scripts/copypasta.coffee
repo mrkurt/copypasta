@@ -1,6 +1,5 @@
 $ = jQuery
 currentLive = false
-constants = window.copypasta
 
 ids =
   indicator: 'copy-pasta-edit-indicator'
@@ -15,7 +14,7 @@ paths =
   active: '.copy-pasta-active'
   form: '#' + ids.form
 
-default_form = '<form style="" id="' + ids.form + '" method="post" action="' + constants.ENDPOINT + '/edits/new" target="' + ids.iframe + '"><input type="hidden" name="view" value="framed"></form>'
+default_form = '<form style="" id="' + ids.form + '" method="post" action="http://localhost:3000/edits/new" target="' + ids.iframe + '"><input type="hidden" name="view" value="framed"></form>'
 
 blank_dialog = '<div id="' + ids.dialog + '"><iframe frameborder="no" style="margin: 0px; padding: 0px; width: 400px; height: 400px;" id="' + ids.iframe + '" scrolling="no"></iframe></div>'
 
