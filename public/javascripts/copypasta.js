@@ -57,7 +57,7 @@
     data = {
       'edit[original]': e.original_text,
       'edit[proposed]': e.original_text,
-      'edit[url]': window.location.href
+      'url': window.location.href
     };
     dialog().append(default_form);
     for (key in data) {
