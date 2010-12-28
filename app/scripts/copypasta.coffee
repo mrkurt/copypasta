@@ -1,6 +1,5 @@
 $ = jQuery
 currentLive = false
-#yes
 
 ids =
   indicator: 'copy-pasta-edit-indicator'
