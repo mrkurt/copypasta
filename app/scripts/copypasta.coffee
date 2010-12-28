@@ -1,5 +1,6 @@
 $ = jQuery
 currentLive = false
+constants = window.copypasta
 
 ids =
   indicator: 'copy-pasta-edit-indicator'
@@ -14,7 +15,9 @@ paths =
   active: '.copy-pasta-active'
   form: '#' + ids.form
 
-default_form = '<form id="' + ids.form + '" method="post" action="edits/new" target="' + ids.iframe + '"><input type="hidden" name="view" value="framed"></form>'
+default_form = '<form style="" id="' + ids.form + '" method="post" action="' + constants.ENDPOINT + '/edits/new" target="' + ids.iframe + '"><input type="hidden" name="view" value="framed"></form>'
+
+blank_dialog = '<div id="' + ids.dialog + '"><iframe frameborder="no" style="margin: 0px; padding: 0px; width: 400px; height: 400px;" id="' + ids.iframe + '" scrolling="no"></iframe></div>'
 
 indicator = () ->
   if $(paths.indicator).length == 0
@@ -23,7 +26,7 @@ indicator = () ->
 
 dialog = () ->
   if $(paths.dialog).length == 0
-    $('body').append('<div id="' + ids.dialog + '"><iframe id="' + ids.iframe + '"></iframe>' + default_form + '</div>')
+    $('body').append(blank_dialog)
   $(paths.dialog)
 
 activate = () ->
@@ -55,15 +58,12 @@ show_widget = () ->
     'edit[proposed]' : e.original_text
     'edit[url]' : window.location.href
 
-  $(paths.form).replaceWith(default_form)
-
+  dialog().append(default_form)
   for own key, value of data
-    i = $('<input type="hidden" name="' + key + '">')
-    i.val(value)
-    $(paths.form).append(i)
+    $('<input type="hidden" name="' + key + '">').val(value).appendTo(paths.form)
 
   dialog().lightbox_me()
-  console.debug($(paths.form))
+
   $(paths.form).submit()
 
 iframe_action = (e) ->
@@ -83,5 +83,6 @@ $(paths.btn + '.on').live 'click', ()->
   btn = $(this)
   btn.removeClass('on').addClass('off')
   $(btn.attr('href')).removeClass('copy-pasta-active')
+  false
 
 window.addEventListener('message', iframe_action, false)

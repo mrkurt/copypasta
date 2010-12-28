@@ -2,9 +2,12 @@
 %html
   %head
     %title Framed copypasta
+    =stylesheet_link_tag 'copypasta.css'
+    =javascript_include_tag "constants_#{Rails.env}", 'copypasta', :concat => 'copypasta-embed'
     :javascript
       if(parent){
-        parent.postMessage(true, "http://localhost:3000");
+        parent.postMessage(true, copypasta.ENDPOINT);
       }
   %body
     =yield
+    =javascript_include_tag 'jquery-1.4.2.min', 'application'

@@ -1,9 +1,12 @@
+window.copypasta = {ENDPOINT : 'http://localhost:3000'};
+
+
 (function() {
-  var $, activate, blank_dialog, constants, currentLive, deactivate, default_form, dialog, el, ids, iframe_action, indicator, paths, show_widget, watch, _i, _len, _ref;
+  var $, activate, blank_dialog, currentLive, deactivate, default_form, dialog, el, endpoint, ids, iframe_action, indicator, paths, show_widget, watch, _i, _len, _ref;
   var __hasProp = Object.prototype.hasOwnProperty;
   $ = jQuery;
   currentLive = false;
-  constants = window.copypasta;
+  endpoint = 'http://localhost:3000';
   ids = {
     indicator: 'copy-pasta-edit-indicator',
     dialog: 'copy-pasta-dialog',
@@ -17,7 +20,7 @@
     active: '.copy-pasta-active',
     form: '#' + ids.form
   };
-  default_form = '<form style="" id="' + ids.form + '" method="post" action="' + constants.ENDPOINT + '/edits/new" target="' + ids.iframe + '"><input type="hidden" name="view" value="framed"></form>';
+  default_form = '<form style="" id="' + ids.form + '" method="post" action="' + endpoint + '/edits/new" target="' + ids.iframe + '"><input type="hidden" name="view" value="framed"></form>';
   blank_dialog = '<div id="' + ids.dialog + '"><iframe frameborder="no" style="margin: 0px; padding: 0px; width: 400px; height: 400px;" id="' + ids.iframe + '" scrolling="no"></iframe></div>';
   indicator = function() {
     if ($(paths.indicator).length === 0) {
