@@ -1,10 +1,16 @@
-/* line 1, ../../app/stylesheets/copypasta.scss */
+/* line 2, ../../app/stylesheets/copypasta.scss */
+body#copy-pasta-frame form {
+  width: 400px;
+  min-height: 250px;
+}
+
+/* line 7, ../../app/stylesheets/copypasta.scss */
 #copy-pasta-dialog {
   width: 400px;
   background-color: #fff;
 }
 
-/* line 5, ../../app/stylesheets/copypasta.scss */
+/* line 11, ../../app/stylesheets/copypasta.scss */
 #copy-pasta-dialog textarea {
   display: block;
   width: 380px;
@@ -12,12 +18,12 @@
   margin: 10px auto;
 }
 
-/* line 11, ../../app/stylesheets/copypasta.scss */
+/* line 17, ../../app/stylesheets/copypasta.scss */
 #copy-pasta-dialog p {
   margin: 0px 10px 10px 10px;
 }
 
-/* line 14, ../../app/stylesheets/copypasta.scss */
+/* line 20, ../../app/stylesheets/copypasta.scss */
 #copy-pasta-edit-indicator {
   background-color: rgba(0, 0, 255, 0.4);
   z-index: 999;
@@ -28,7 +34,7 @@
   cursor: pointer;
 }
 
-/* line 24, ../../app/stylesheets/copypasta.scss */
+/* line 30, ../../app/stylesheets/copypasta.scss */
 #copy-pasta-edit-indicator p {
   padding: 3px;
   width: 104px;
@@ -44,7 +50,7 @@
   z-index: 998;
 }
 
-/* line 39, ../../app/stylesheets/copypasta.scss */
+/* line 45, ../../app/stylesheets/copypasta.scss */
 #copy-pasta-edit-indicator p:before {
   border-width: 10px;
   border-style: solid;
@@ -57,7 +63,7 @@
   margin-left: -10px;
 }
 
-/* line 51, ../../app/stylesheets/copypasta.scss */
+/* line 57, ../../app/stylesheets/copypasta.scss */
 .copy-pasta-button {
   padding: 10px;
   background-color: #009;
@@ -67,23 +73,23 @@
   cursor: pointer;
 }
 
-/* line 60, ../../app/stylesheets/copypasta.scss */
+/* line 66, ../../app/stylesheets/copypasta.scss */
 .copy-pasta-button .help {
   display: none;
 }
 
-/* line 64, ../../app/stylesheets/copypasta.scss */
+/* line 70, ../../app/stylesheets/copypasta.scss */
 .copy-pasta-button.on {
   background-color: #090;
   cursor: auto;
 }
 
-/* line 69, ../../app/stylesheets/copypasta.scss */
+/* line 75, ../../app/stylesheets/copypasta.scss */
 .copy-pasta-button.on .help {
   display: block;
 }
 
-/* line 73, ../../app/stylesheets/copypasta.scss */
+/* line 79, ../../app/stylesheets/copypasta.scss */
 .copy-pasta-button.on .prompt {
   display: none;
 }

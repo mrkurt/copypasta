@@ -1,75 +1,81 @@
-      #copy-pasta-dialog{
-        width: 400px;
-        background-color: #fff;
-      }
-      #copy-pasta-dialog textarea{
-        display: block;
-        width: 380px;
-        height: 360px;
-        margin: 10px auto;
-      }
-      #copy-pasta-dialog p{
-        margin: 0px 10px 10px 10px;
-      }
-      #copy-pasta-edit-indicator{
-        background-color: rgba(0, 0, 255, 0.4);
-        z-index: 999;
-        position: absolute;
-        color: #000;
-        font-weight: bold;
-        text-align: center;
-        cursor: pointer;
-      }
+body#copy-pasta-frame{
+  form{
+    width: 400px;
+    min-height: 250px;
+  }
+}
+#copy-pasta-dialog{
+  width: 400px;
+  background-color: #fff;
+}
+#copy-pasta-dialog textarea{
+  display: block;
+  width: 380px;
+  height: 360px;
+  margin: 10px auto;
+}
+#copy-pasta-dialog p{
+  margin: 0px 10px 10px 10px;
+}
+#copy-pasta-edit-indicator{
+  background-color: rgba(0, 0, 255, 0.4);
+  z-index: 999;
+  position: absolute;
+  color: #000;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+}
 
-      #copy-pasta-edit-indicator p{
-        padding: 3px;
-        width: 104px;
-        height: 20px;
-        background-color: yellow;
-        position: absolute;
-        top: 100%;
-        left: 90%;
-        bottom: 0;
-        margin: 0;
-        margin-top: 5px;
-        margin-left: -55px;
-        z-index: 998;
-      }
+#copy-pasta-edit-indicator p{
+  padding: 3px;
+  width: 104px;
+  height: 20px;
+  background-color: yellow;
+  position: absolute;
+  top: 100%;
+  left: 90%;
+  bottom: 0;
+  margin: 0;
+  margin-top: 5px;
+  margin-left: -55px;
+  z-index: 998;
+}
 
-      #copy-pasta-edit-indicator p:before{
-        border-width: 10px;
-        border-style: solid;
-        border-color: transparent;
-        border-bottom-color: yellow;
-        content: '';
-        position: absolute;
-        top: -20px;
-        left: 50%;
-        margin-left: -10px;
-      }
+#copy-pasta-edit-indicator p:before{
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent;
+  border-bottom-color: yellow;
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  margin-left: -10px;
+}
 
-      .copy-pasta-button{
-        padding: 10px;
-        background-color: #009;
-        color: #fff;
-        font-weight: bold;
-        text-align: center;
-        cursor: pointer;
-      }
+.copy-pasta-button{
+  padding: 10px;
+  background-color: #009;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+}
 
-      .copy-pasta-button .help{
-        display: none;
-      }
+.copy-pasta-button .help{
+  display: none;
+}
 
-      .copy-pasta-button.on{
-        background-color: #090;
-        cursor: auto;
-      }
+.copy-pasta-button.on{
+  background-color: #090;
+  cursor: auto;
+}
 
-      .copy-pasta-button.on .help{
-        display: block;
-      }
+.copy-pasta-button.on .help{
+  display: block;
+}
 
-      .copy-pasta-button.on .prompt{
-        display: none;
-      }
+.copy-pasta-button.on .prompt{
+  display: none;
+}
