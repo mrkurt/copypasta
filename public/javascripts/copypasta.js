@@ -75,8 +75,9 @@
   send_to_iframe_queue = [];
   send_to_iframe = function(msg) {
     if (iframe_ready) {
+      console.debug("Parent Sending: " + msg.label + " to " + window.location.href);
       $(paths.iframe).get(0).contentWindow.postMessage(JSON.stringify(msg), 'http://copypasta.heroku.com');
-      return console.debug("Parent Sent: " + msg.label + " to " + window.location.href);
+      return console.debug("Parent send done");
     } else {
       return send_to_iframe_queue.push(msg);
     }

@@ -67,8 +67,9 @@ show_widget = () ->
 send_to_iframe_queue = []
 send_to_iframe = (msg) ->
   if iframe_ready
+    console.debug("Parent Sending: " + msg.label + " to " + window.location.href)
     $(paths.iframe).get(0).contentWindow.postMessage(JSON.stringify(msg), 'http://localhost:3000')
-    console.debug("Parent Sent: " + msg.label + " to " + window.location.href)
+    console.debug("Parent send done")
   else
     send_to_iframe_queue.push msg
 
