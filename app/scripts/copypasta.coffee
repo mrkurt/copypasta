@@ -86,7 +86,7 @@ iframe_action = (e) ->
     $(paths.btn + '.on').click()
     dialog().find(paths.cancel_btn).click()
   else if data.label == 'resize'
-    $(paths.iframe).animate({height : e.data.h + 'px'})
+    $(paths.iframe).animate({height : data.h + 'px'})
 
 watch el for el in ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
 

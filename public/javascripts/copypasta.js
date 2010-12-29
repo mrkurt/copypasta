@@ -103,7 +103,7 @@
       return dialog().find(paths.cancel_btn).click();
     } else if (data.label === 'resize') {
       return $(paths.iframe).animate({
-        height: e.data.h + 'px'
+        height: data.h + 'px'
       });
     }
   };
