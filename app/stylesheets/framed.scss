@@ -1,0 +1,48 @@
+body{
+  font-family: arial, sans-serif;
+  font-size: 13px;
+  line-height: 140%;
+  padding: 0px;
+  margin: 0px;
+
+}
+.error, .success{
+  margin: 5px;
+  padding: 5px;
+  font-weight: bold;
+}
+.error{
+  border: 1px solid red;
+  background: mix(#fff, red, 80%);
+}
+.success{
+  border: 1px solid green;
+  background: mix(#fff, green, 80%);
+}
+p{ 
+  margin: 5px;
+  padding: 0px;
+}
+#edit-create-success p.options{
+  text-align: right;
+  input[value=Done]{ font-weight: bold; }
+}
+form{
+  width: 400px;
+  margin: 0;
+  padding: 0;
+  
+  textarea{
+    width: 386px;
+    height: 250px;
+    display: block;
+    margin: 5px auto;
+  }
+  p{
+    text-align: right;
+  }
+  input[type=submit]{ font-weight: bold; }
+}
+
+ins.diffmod{ background-color: #AFA; text-decoration: none; }
+del.diffmod{ background-color: #FAA; text-decoration: line-through; }

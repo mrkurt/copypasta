@@ -1,11 +1,13 @@
-body#copy-pasta-frame{
-  form{
-    width: 400px;
-    min-height: 250px;
-  }
-}
+@import 'compass/css3/border-radius';
+@import 'compass/css3/gradient';
+
 #copy-pasta-dialog{
   width: 400px;
+  @include border-radius(9px);
+  border: 10px solid #666;
+  border: 10px solid rgba(0,0,0, 0.4);
+}
+#copy-pasta-iframe{
   background-color: #fff;
 }
 #copy-pasta-dialog textarea{

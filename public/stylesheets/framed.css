@@ -1,0 +1,76 @@
+/* line 1, ../../app/stylesheets/framed.scss */
+body {
+  font-family: arial, sans-serif;
+  font-size: 13px;
+  line-height: 140%;
+  padding: 0px;
+  margin: 0px;
+}
+
+/* line 9, ../../app/stylesheets/framed.scss */
+.error, .success {
+  margin: 5px;
+  padding: 5px;
+  font-weight: bold;
+}
+
+/* line 14, ../../app/stylesheets/framed.scss */
+.error {
+  border: 1px solid red;
+  background: #ffcccc;
+}
+
+/* line 18, ../../app/stylesheets/framed.scss */
+.success {
+  border: 1px solid green;
+  background: #cce5cc;
+}
+
+/* line 22, ../../app/stylesheets/framed.scss */
+p {
+  margin: 5px;
+  padding: 0px;
+}
+
+/* line 26, ../../app/stylesheets/framed.scss */
+#edit-create-success p.options {
+  text-align: right;
+}
+/* line 28, ../../app/stylesheets/framed.scss */
+#edit-create-success p.options input[value=Done] {
+  font-weight: bold;
+}
+
+/* line 30, ../../app/stylesheets/framed.scss */
+form {
+  width: 400px;
+  margin: 0;
+  padding: 0;
+}
+/* line 35, ../../app/stylesheets/framed.scss */
+form textarea {
+  width: 386px;
+  height: 250px;
+  display: block;
+  margin: 5px auto;
+}
+/* line 41, ../../app/stylesheets/framed.scss */
+form p {
+  text-align: right;
+}
+/* line 44, ../../app/stylesheets/framed.scss */
+form input[type=submit] {
+  font-weight: bold;
+}
+
+/* line 47, ../../app/stylesheets/framed.scss */
+ins.diffmod {
+  background-color: #AFA;
+  text-decoration: none;
+}
+
+/* line 48, ../../app/stylesheets/framed.scss */
+del.diffmod {
+  background-color: #FAA;
+  text-decoration: line-through;
+}

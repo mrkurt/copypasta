@@ -3,6 +3,8 @@
   =f.hidden_field :url
   =f.hidden_field :original
   =f.text_area :proposed
+  =hidden_field_tag 'view', params[:view] if params[:view]
+  =hidden_field_tag 'url', params[:url] if params[:url]
   %p
-    =f.submit 'Submit Changes'
     %input{:type => 'button', :value => 'Cancel', :class => 'close'}
+    =f.submit 'Submit Changes'
