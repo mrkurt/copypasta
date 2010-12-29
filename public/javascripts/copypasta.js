@@ -91,7 +91,7 @@
   };
   iframe_action = function(e) {
     var data;
-    if (e.origin !== 'http://localhost:3000') {
+    if (e.origin !== 'http://localhost:3000/') {
       return;
     }
     data = JSON.parse(e.data);

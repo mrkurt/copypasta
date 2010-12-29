@@ -77,7 +77,7 @@ send_queued = () ->
   send_to_iframe_queue = []
 
 iframe_action = (e) ->
-  return unless e.origin == 'http://localhost:3000'
+  return unless e.origin == 'http://localhost:3000/'
   data = JSON.parse(e.data)
   if data.label == 'ready'
     iframe_ready = true
