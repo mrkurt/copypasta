@@ -75,9 +75,8 @@
   send_to_iframe_queue = [];
   send_to_iframe = function(msg) {
     if (iframe_ready) {
-      console.debug("Parent Sending: " + msg.label + " to " + window.location.href);
       $(paths.iframe).get(0).contentWindow.postMessage(JSON.stringify(msg), 'http://copypasta.heroku.com');
-      return console.debug("Parent send done");
+      return console.debug("Parent Sent: " + msg.label + " to " + window.location.href);
     } else {
       return send_to_iframe_queue.push(msg);
     }
@@ -92,7 +91,7 @@
   };
   iframe_action = function(e) {
     var data;
-    if (e.origin !== 'http://copypasta.heroku.com/') {
+    if (e.origin !== 'http://copypasta.heroku.com') {
       return;
     }
     data = JSON.parse(e.data);
