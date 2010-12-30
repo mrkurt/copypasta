@@ -90,6 +90,7 @@ iframe_action = (e) ->
     $(paths.iframe).animate({height : data.h + 'px'})
 
 init = ()->
+  lightbox_me_init($)
   watch el for el in ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
 
   $(paths.indicator).live('mouseout', deactivate)
@@ -121,7 +122,6 @@ scripts = [
     {
       test: ()-> window.jQuery && window.jQuery.fn.lightbox_me
       src: 'http://localhost:3000/javascripts/jquery.lightbox_me.js'
-      callback: ()-> lightbox_me_init($)
     },
     { #json lib for ie8 in quirks mode
       test: ()-> window.JSON
@@ -131,24 +131,26 @@ scripts = [
 
 scripts.load = (queue, callback) ->
   def = queue.pop()
-  loaded = false
+  console.debug("Loading " + def.src)
+  def.loaded = false
   s = document.createElement('script')
   s.type = "text/javascript"
   s.src = def.src
   s.onload = s.onreadystatechange = ()->
     d = this.readyState
     if !loaded && (!d || d == 'loaded' || d == 'complete')
-      loaded = true
+      def.loaded = true
       def.callback() if def.callback?
-      if queue.length == 0
+      remaining = (i for i in queue when !i.loaded)
+      if remaining.length == 0
         callback()
-      else
-        scripts.load(queue, callback)
+  scripts.load(queue, callback)
   document.documentElement.childNodes[0].appendChild(s)
 
-queue = (s for s in scripts when s? && !s.test()).reverse()
+queue = (s for s in scripts when s? && !s.test())
 
-if queue.length == 0
-  init()
-else
+if queue.length > 0
+  console.debug('loading scripts')
   scripts.load(queue, init)
+else
+  init()

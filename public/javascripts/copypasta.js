@@ -109,6 +109,7 @@
   };
   init = function() {
     var el, _i, _len, _ref;
+    lightbox_me_init($);
     _ref = ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5'];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       el = _ref[_i];
@@ -150,10 +151,7 @@
       test: function() {
         return window.jQuery && window.jQuery.fn.lightbox_me;
       },
-      src: 'http://copypasta.heroku.com/javascripts/jquery.lightbox_me.js',
-      callback: function() {
-        return lightbox_me_init($);
-      }
+      src: 'http://copypasta.heroku.com/javascripts/jquery.lightbox_me.js'
     }, {
       test: function() {
         return window.JSON;
@@ -162,30 +160,41 @@
     }
   ];
   scripts.load = function(queue, callback) {
-    var def, loaded, s;
+    var def, s;
     def = queue.pop();
-    loaded = false;
+    console.debug("Loading " + def.src);
+    def.loaded = false;
     s = document.createElement('script');
     s.type = "text/javascript";
     s.src = def.src;
     s.onload = s.onreadystatechange = function() {
-      var d;
+      var d, i, remaining;
       d = this.readyState;
       if (!loaded && (!d || d === 'loaded' || d === 'complete')) {
-        loaded = true;
+        def.loaded = true;
         if (def.callback != null) {
           def.callback();
         }
-        if (queue.length === 0) {
+        remaining = (function() {
+          var _i, _len, _results;
+          _results = [];
+          for (_i = 0, _len = queue.length; _i < _len; _i++) {
+            i = queue[_i];
+            if (!i.loaded) {
+              _results.push(i);
+            }
+          }
+          return _results;
+        })();
+        if (remaining.length === 0) {
           return callback();
-        } else {
-          return scripts.load(queue, callback);
         }
       }
     };
+    scripts.load(queue, callback);
     return document.documentElement.childNodes[0].appendChild(s);
   };
-  queue = ((function() {
+  queue = (function() {
     var _i, _len, _results;
     _results = [];
     for (_i = 0, _len = scripts.length; _i < _len; _i++) {
@@ -195,10 +204,11 @@
       }
     }
     return _results;
-  })()).reverse();
-  if (queue.length === 0) {
-    init();
-  } else {
+  })();
+  if (queue.length > 0) {
+    console.debug('loading scripts');
     scripts.load(queue, init);
+  } else {
+    init();
   }
 }).call(this);
