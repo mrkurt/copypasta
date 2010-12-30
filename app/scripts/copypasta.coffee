@@ -131,7 +131,7 @@ scripts.load = (queue, callback) ->
   s = document.createElement('script')
   s.type = "text/javascript"
   s.src = def.src
-  s.onload = s.onreadystatechanged = ()->
+  s.onload = s.onreadystatechange = ()->
     d = this.readyState
     if !loaded && (!d || d == 'loaded' || d == 'complete')
       loaded = true

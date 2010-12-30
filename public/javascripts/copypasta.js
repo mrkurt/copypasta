@@ -163,7 +163,7 @@
     s = document.createElement('script');
     s.type = "text/javascript";
     s.src = def.src;
-    s.onload = s.onreadystatechanged = function() {
+    s.onload = s.onreadystatechange = function() {
       var d;
       d = this.readyState;
       if (!loaded && (!d || d === 'loaded' || d === 'complete')) {
