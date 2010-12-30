@@ -162,7 +162,7 @@
   scripts.load = function(queue, callback) {
     var def, s;
     def = queue.pop();
-    def.loaded = false;
+    def['loaded'] = false;
     s = document.createElement('script');
     s.type = "text/javascript";
     s.src = def.src;
@@ -170,7 +170,7 @@
       var d, i, remaining;
       d = this.readyState;
       if (!loaded && (!d || d === 'loaded' || d === 'complete')) {
-        def.loaded = true;
+        def['loaded'] = true;
         if (def.callback != null) {
           def.callback();
         }

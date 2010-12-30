@@ -131,14 +131,14 @@ scripts = [
 
 scripts.load = (queue, callback) ->
   def = queue.pop()
-  def.loaded = false
+  def['loaded'] = false
   s = document.createElement('script')
   s.type = "text/javascript"
   s.src = def.src
   s.onload = s.onreadystatechange = ()->
     d = this.readyState
     if !loaded && (!d || d == 'loaded' || d == 'complete')
-      def.loaded = true
+      def['loaded'] = true
       def.callback() if def.callback?
       remaining = (i for i in queue when !i.loaded)
       if remaining.length == 0
