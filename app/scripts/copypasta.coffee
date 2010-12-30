@@ -143,7 +143,7 @@ scripts.load = (queue, callback) ->
       remaining = (i for i in queue when !i.loaded)
       if remaining.length == 0
         callback()
-  scripts.load(queue, callback) if queue.length == 0
+  scripts.load(queue, callback) if queue.length > 0
   document.documentElement.childNodes[0].appendChild(s)
 
 queue = (s for s in scripts when s? && !s.test())
