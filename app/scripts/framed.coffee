@@ -1,5 +1,9 @@
 $ = jQuery
 
+debug = (msg)-> false
+if console? && console.debug?
+  debug = console.debug
+
 init = ()->
   if window.addEventListener?
     window.addEventListener('message', receive_message, false)
@@ -14,7 +18,7 @@ resize = () ->
 
 send_message = (msg) ->
   parent.postMessage(JSON.stringify(msg), parent_url)
-  console.debug("Frame Sent: " + msg.label + " to " + parent_url)
+  debug("Frame Sent: " + msg.label + " to " + parent_url)
 
 fill_form = (data) ->
   $('form input, form textarea').each ()->

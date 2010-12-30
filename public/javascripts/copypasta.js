@@ -1,8 +1,14 @@
 (function() {
-  var $, activate, blank_dialog, currentLive, deactivate, dialog, el, ids, iframe_action, iframe_ready, indicator, paths, send_queued, send_to_iframe, send_to_iframe_queue, show_widget, watch, _i, _len, _ref;
+  var $, activate, blank_dialog, currentLive, deactivate, debug, dialog, el, ids, iframe_action, iframe_ready, indicator, paths, send_queued, send_to_iframe, send_to_iframe_queue, show_widget, watch, _i, _len, _ref;
   $ = jQuery;
   currentLive = false;
   iframe_ready = false;
+  debug = function(msg) {
+    return false;
+  };
+  if ((typeof console != "undefined" && console !== null) && (console.debug != null)) {
+    debug = console.debug;
+  }
   ids = {
     indicator: 'copy-pasta-edit-indicator',
     dialog: 'copy-pasta-dialog',
@@ -76,7 +82,7 @@
   send_to_iframe = function(msg) {
     if (iframe_ready) {
       $(paths.iframe).get(0).contentWindow.postMessage(JSON.stringify(msg), 'http://copypasta.heroku.com');
-      return console.debug("Parent Sent: " + msg.label + " to " + window.location.href);
+      return debug("Parent Sent: " + msg.label + " to " + window.location.href);
     } else {
       return send_to_iframe_queue.push(msg);
     }

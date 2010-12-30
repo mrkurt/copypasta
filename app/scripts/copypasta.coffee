@@ -2,6 +2,10 @@ $ = jQuery
 currentLive = false
 iframe_ready = false
 
+debug = (msg)-> false
+if console? && console.debug?
+  debug = console.debug
+
 ids =
   indicator: 'copy-pasta-edit-indicator'
   dialog: 'copy-pasta-dialog'
@@ -68,7 +72,7 @@ send_to_iframe_queue = []
 send_to_iframe = (msg) ->
   if iframe_ready
     $(paths.iframe).get(0).contentWindow.postMessage(JSON.stringify(msg), 'http://localhost:3000')
-    console.debug("Parent Sent: " + msg.label + " to " + window.location.href)
+    debug("Parent Sent: " + msg.label + " to " + window.location.href)
   else
     send_to_iframe_queue.push msg
 
