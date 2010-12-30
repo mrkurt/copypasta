@@ -2,6 +2,13 @@
   var $, fill_form, init, receive_message, resize, send_message;
   $ = jQuery;
   init = function() {
+    if (window.addEventListener != null) {
+      window.addEventListener('message', receive_message, false);
+    } else if (window.attachEvent != null) {
+      window.attachEvent('onmessage', function() {
+        return receive_message(event);
+      });
+    }
     window.addEventListener('message', receive_message, false);
     send_message({
       'label': 'ready'

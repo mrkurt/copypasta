@@ -4,8 +4,8 @@
 #copy-pasta-dialog{
   width: 400px;
   @include border-radius(9px);
-  border: 10px solid #666;
-  border: 10px solid rgba(0,0,0, 0.4);
+  padding: 10px;
+  background: url(../images/translucent-black.png);
 }
 #copy-pasta-iframe{
   background-color: #fff;
@@ -20,7 +20,7 @@
   margin: 0px 10px 10px 10px;
 }
 #copy-pasta-edit-indicator{
-  background-color: rgba(0, 0, 255, 0.4);
+  background: url(../images/translucent-blue.png);
   z-index: 999;
   position: absolute;
   color: #000;

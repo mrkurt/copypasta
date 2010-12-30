@@ -127,5 +127,11 @@
     $(btn.attr('href')).removeClass('copy-pasta-active');
     return false;
   });
-  window.addEventListener('message', iframe_action, false);
+  if (window.addEventListener != null) {
+    window.addEventListener('message', iframe_action, false);
+  } else if (window.attachEvent != null) {
+    window.attachEvent('onmessage', function() {
+      return iframe_action(event);
+    });
+  }
 }).call(this);

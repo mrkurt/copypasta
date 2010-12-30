@@ -7,8 +7,8 @@
   -ms-border-radius: 9px;
   -khtml-border-radius: 9px;
   border-radius: 9px;
-  border: 10px solid #666;
-  border: 10px solid rgba(0, 0, 0, 0.4);
+  padding: 10px;
+  background: url(../images/translucent-black.png);
 }
 
 /* line 10, ../../app/stylesheets/copypasta.scss */
@@ -31,7 +31,7 @@
 
 /* line 22, ../../app/stylesheets/copypasta.scss */
 #copy-pasta-edit-indicator {
-  background-color: rgba(0, 0, 255, 0.4);
+  background: url(../images/translucent-blue.png);
   z-index: 999;
   position: absolute;
   color: #000;

@@ -104,4 +104,7 @@ $(paths.btn + '.on').live 'click', ()->
   $(btn.attr('href')).removeClass('copy-pasta-active')
   false
 
-window.addEventListener('message', iframe_action, false)
+if window.addEventListener?
+  window.addEventListener('message', iframe_action, false)
+else if window.attachEvent?
+  window.attachEvent('onmessage', ()-> iframe_action(event))
