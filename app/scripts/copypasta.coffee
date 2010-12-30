@@ -122,6 +122,10 @@ scripts = [
       test: ()-> window.jQuery && window.jQuery.fn.lightbox_me
       src: 'http://localhost:3000/javascripts/jquery.lightbox_me.js'
       callback: ()-> lightbox_me_init($)
+    },
+    { #json lib for ie8 in quirks mode
+      test: ()-> window.JSON
+      src: 'http://localhost:3000/javascripts/json2.js'
     }
   ]
 

@@ -154,6 +154,11 @@
       callback: function() {
         return lightbox_me_init($);
       }
+    }, {
+      test: function() {
+        return window.JSON;
+      },
+      src: 'http://copypasta.heroku.com/javascripts/json2.js'
     }
   ];
   scripts.load = function(queue, callback) {
