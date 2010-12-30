@@ -162,7 +162,6 @@
   scripts.load = function(queue, callback) {
     var def, s;
     def = queue.pop();
-    console.debug("Loading " + def.src);
     def.loaded = false;
     s = document.createElement('script');
     s.type = "text/javascript";
@@ -206,7 +205,6 @@
     return _results;
   })();
   if (queue.length > 0) {
-    console.debug('loading scripts');
     scripts.load(queue, init);
   } else {
     init();

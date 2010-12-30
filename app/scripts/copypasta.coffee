@@ -131,7 +131,6 @@ scripts = [
 
 scripts.load = (queue, callback) ->
   def = queue.pop()
-  console.debug("Loading " + def.src)
   def.loaded = false
   s = document.createElement('script')
   s.type = "text/javascript"
@@ -150,7 +149,6 @@ scripts.load = (queue, callback) ->
 queue = (s for s in scripts when s? && !s.test())
 
 if queue.length > 0
-  console.debug('loading scripts')
   scripts.load(queue, init)
 else
   init()
