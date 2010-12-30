@@ -9,7 +9,6 @@
         return receive_message(event);
       });
     }
-    window.addEventListener('message', receive_message, false);
     send_message({
       'label': 'ready'
     });

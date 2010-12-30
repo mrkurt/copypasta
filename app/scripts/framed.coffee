@@ -5,7 +5,6 @@ init = ()->
     window.addEventListener('message', receive_message, false)
   else if window.attachEvent?
     window.attachEvent('onmessage', ()-> receive_message(event))
-  window.addEventListener('message', receive_message, false)
   send_message({'label' : 'ready'})
   resize()
 
