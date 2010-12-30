@@ -23,7 +23,7 @@
 */
 
 
-(function($) {
+var lightbox_me_init = (function($) {
 
     $.fn.lightbox_me = function(options) {
 
@@ -231,4 +231,5 @@
     }
 
 
-})(jQuery);
+});
+

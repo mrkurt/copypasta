@@ -1,10 +1,8 @@
-$ = jQuery
+$ = false
 currentLive = false
 iframe_ready = false
 
-debug = (msg)-> false
-if console? && console.debug?
-  debug = console.debug
+window.copypasta = copypasta = {}
 
 ids =
   indicator: 'copy-pasta-edit-indicator'
@@ -72,7 +70,6 @@ send_to_iframe_queue = []
 send_to_iframe = (msg) ->
   if iframe_ready
     $(paths.iframe).get(0).contentWindow.postMessage(JSON.stringify(msg), 'http://localhost:3000')
-    debug("Parent Sent: " + msg.label + " to " + window.location.href)
   else
     send_to_iframe_queue.push msg
 
@@ -92,23 +89,62 @@ iframe_action = (e) ->
   else if data.label == 'resize'
     $(paths.iframe).animate({height : data.h + 'px'})
 
-watch el for el in ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
+init = ()->
+  watch el for el in ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
 
-$(paths.indicator).live('mouseout', deactivate)
-$(paths.indicator).live('click', show_widget)
+  $(paths.indicator).live('mouseout', deactivate)
+  $(paths.indicator).live('click', show_widget)
 
-$(paths.btn + '.off').live 'click', ()->
-  btn = $(this)
-  btn.removeClass('off').addClass('on')
-  $(btn.attr('href')).addClass('copy-pasta-active')
+  $(paths.btn + '.off').live 'click', ()->
+    btn = $(this)
+    btn.removeClass('off').addClass('on')
+    $(btn.attr('href')).addClass('copy-pasta-active')
 
-$(paths.btn + '.on').live 'click', ()->
-  btn = $(this)
-  btn.removeClass('on').addClass('off')
-  $(btn.attr('href')).removeClass('copy-pasta-active')
-  false
+  $(paths.btn + '.on').live 'click', ()->
+    btn = $(this)
+    btn.removeClass('on').addClass('off')
+    $(btn.attr('href')).removeClass('copy-pasta-active')
+    false
 
-if window.addEventListener?
-  window.addEventListener('message', iframe_action, false)
-else if window.attachEvent?
-  window.attachEvent('onmessage', ()-> iframe_action(event))
+  if window.addEventListener?
+    window.addEventListener('message', iframe_action, false)
+  else if window.attachEvent?
+    window.attachEvent('onmessage', ()-> iframe_action(event))
+
+scripts = [
+    {
+      test: ()-> window.jQuery && window.jQuery.fn && window.jQuery.fn.jquery > "1.4.2"
+      src: 'http://localhost:3000/javascripts/jquery-1.4.2.min.js'
+      callback : ()->
+        ($ = window.jQuery).noConflict(1)
+    },
+    {
+      test: ()-> window.jQuery && window.jQuery.fn.lightbox_me
+      src: 'http://localhost:3000/javascripts/jquery.lightbox_me.js'
+      callback: ()-> lightbox_me_init($)
+    }
+  ]
+
+scripts.load = (queue, callback) ->
+  def = queue.pop()
+  loaded = false
+  s = document.createElement('script')
+  s.type = "text/javascript"
+  s.src = def.src
+  s.onload = s.onreadystatechanged = ()->
+    d = this.readyState
+    if !loaded && (!d || d == 'loaded' || d == 'complete')
+      loaded = true
+      def.callback() if def.callback?
+      if queue.length == 0
+        callback()
+      else
+        scripts.load(queue, callback)
+  document.documentElement.childNodes[0].appendChild(s)
+
+queue = (s for s in scripts when s? && !s.test()).reverse()
+
+if queue.length == 0
+  init()
+else
+  scripts.load(queue, init)

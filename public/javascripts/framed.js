@@ -1,12 +1,6 @@
 (function() {
-  var $, debug, fill_form, init, receive_message, resize, send_message;
+  var $, fill_form, init, receive_message, resize, send_message;
   $ = jQuery;
-  debug = function(msg) {
-    return false;
-  };
-  if ((typeof console != "undefined" && console !== null) && (console.debug != null)) {
-    debug = console.debug;
-  }
   init = function() {
     if (window.addEventListener != null) {
       window.addEventListener('message', receive_message, false);
@@ -29,8 +23,7 @@
     return send_message(m);
   };
   send_message = function(msg) {
-    parent.postMessage(JSON.stringify(msg), parent_url);
-    return debug("Frame Sent: " + msg.label + " to " + parent_url);
+    return parent.postMessage(JSON.stringify(msg), parent_url);
   };
   fill_form = function(data) {
     return $('form input, form textarea').each(function() {

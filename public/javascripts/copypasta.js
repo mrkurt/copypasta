@@ -1,14 +1,9 @@
 (function() {
-  var $, activate, blank_dialog, currentLive, deactivate, debug, dialog, el, ids, iframe_action, iframe_ready, indicator, paths, send_queued, send_to_iframe, send_to_iframe_queue, show_widget, watch, _i, _len, _ref;
-  $ = jQuery;
+  var $, activate, blank_dialog, copypasta, currentLive, deactivate, dialog, ids, iframe_action, iframe_ready, indicator, init, paths, queue, s, scripts, send_queued, send_to_iframe, send_to_iframe_queue, show_widget, watch;
+  $ = false;
   currentLive = false;
   iframe_ready = false;
-  debug = function(msg) {
-    return false;
-  };
-  if ((typeof console != "undefined" && console !== null) && (console.debug != null)) {
-    debug = console.debug;
-  }
+  window.copypasta = copypasta = {};
   ids = {
     indicator: 'copy-pasta-edit-indicator',
     dialog: 'copy-pasta-dialog',
@@ -81,8 +76,7 @@
   send_to_iframe_queue = [];
   send_to_iframe = function(msg) {
     if (iframe_ready) {
-      $(paths.iframe).get(0).contentWindow.postMessage(JSON.stringify(msg), 'http://copypasta.heroku.com');
-      return debug("Parent Sent: " + msg.label + " to " + window.location.href);
+      return $(paths.iframe).get(0).contentWindow.postMessage(JSON.stringify(msg), 'http://copypasta.heroku.com');
     } else {
       return send_to_iframe_queue.push(msg);
     }
@@ -113,31 +107,93 @@
       });
     }
   };
-  _ref = ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5'];
-  for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-    el = _ref[_i];
-    watch(el);
-  }
-  $(paths.indicator).live('mouseout', deactivate);
-  $(paths.indicator).live('click', show_widget);
-  $(paths.btn + '.off').live('click', function() {
-    var btn;
-    btn = $(this);
-    btn.removeClass('off').addClass('on');
-    return $(btn.attr('href')).addClass('copy-pasta-active');
-  });
-  $(paths.btn + '.on').live('click', function() {
-    var btn;
-    btn = $(this);
-    btn.removeClass('on').addClass('off');
-    $(btn.attr('href')).removeClass('copy-pasta-active');
-    return false;
-  });
-  if (window.addEventListener != null) {
-    window.addEventListener('message', iframe_action, false);
-  } else if (window.attachEvent != null) {
-    window.attachEvent('onmessage', function() {
-      return iframe_action(event);
+  init = function() {
+    var el, _i, _len, _ref;
+    _ref = ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5'];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      el = _ref[_i];
+      watch(el);
+    }
+    $(paths.indicator).live('mouseout', deactivate);
+    $(paths.indicator).live('click', show_widget);
+    $(paths.btn + '.off').live('click', function() {
+      var btn;
+      btn = $(this);
+      btn.removeClass('off').addClass('on');
+      return $(btn.attr('href')).addClass('copy-pasta-active');
     });
+    $(paths.btn + '.on').live('click', function() {
+      var btn;
+      btn = $(this);
+      btn.removeClass('on').addClass('off');
+      $(btn.attr('href')).removeClass('copy-pasta-active');
+      return false;
+    });
+    if (window.addEventListener != null) {
+      return window.addEventListener('message', iframe_action, false);
+    } else if (window.attachEvent != null) {
+      return window.attachEvent('onmessage', function() {
+        return iframe_action(event);
+      });
+    }
+  };
+  scripts = [
+    {
+      test: function() {
+        return window.jQuery && window.jQuery.fn && window.jQuery.fn.jquery > "1.4.2";
+      },
+      src: 'http://copypasta.heroku.com/javascripts/jquery-1.4.2.min.js',
+      callback: function() {
+        return ($ = window.jQuery).noConflict(1);
+      }
+    }, {
+      test: function() {
+        return window.jQuery && window.jQuery.fn.lightbox_me;
+      },
+      src: 'http://copypasta.heroku.com/javascripts/jquery.lightbox_me.js',
+      callback: function() {
+        return lightbox_me_init($);
+      }
+    }
+  ];
+  scripts.load = function(queue, callback) {
+    var def, loaded, s;
+    def = queue.pop();
+    loaded = false;
+    s = document.createElement('script');
+    s.type = "text/javascript";
+    s.src = def.src;
+    s.onload = s.onreadystatechanged = function() {
+      var d;
+      d = this.readyState;
+      if (!loaded && (!d || d === 'loaded' || d === 'complete')) {
+        loaded = true;
+        if (def.callback != null) {
+          def.callback();
+        }
+        if (queue.length === 0) {
+          return callback();
+        } else {
+          return scripts.load(queue, callback);
+        }
+      }
+    };
+    return document.documentElement.childNodes[0].appendChild(s);
+  };
+  queue = ((function() {
+    var _i, _len, _results;
+    _results = [];
+    for (_i = 0, _len = scripts.length; _i < _len; _i++) {
+      s = scripts[_i];
+      if ((s != null) && !s.test()) {
+        _results.push(s);
+      }
+    }
+    return _results;
+  })()).reverse();
+  if (queue.length === 0) {
+    init();
+  } else {
+    scripts.load(queue, init);
   }
 }).call(this);
