@@ -26,6 +26,9 @@
     return $(paths.indicator);
   };
   dialog = function(src) {
+    if (src != null) {
+      src = src + "&" + Math.random();
+    }
     if ($(paths.dialog).length === 0) {
       $('body').append(blank_dialog);
     }
@@ -160,17 +163,31 @@
     }
   ];
   scripts.load = function(queue, callback) {
-    var def, s;
-    def = queue.pop();
-    def.loaded = false;
+    var def, i, remaining, s;
+    remaining = (function() {
+      var _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = queue.length; _i < _len; _i++) {
+        i = queue[_i];
+        if (!(i.state != null)) {
+          _results.push(i);
+        }
+      }
+      return _results;
+    })();
+    if (remaining.length === 0) {
+      return;
+    }
+    def = remaining.pop();
+    def.state = 'pending';
     s = document.createElement('script');
     s.type = "text/javascript";
     s.src = def.src;
     s.onload = s.onreadystatechange = function() {
-      var d, i, remaining;
+      var d, i;
       d = this.readyState;
-      if (!loaded && (!d || d === 'loaded' || d === 'complete')) {
-        def.loaded = true;
+      if (!def.loaded && (!d || d === 'loaded' || d === 'complete')) {
+        def.state = 'loaded';
         if (def.callback != null) {
           def.callback();
         }
@@ -179,7 +196,7 @@
           _results = [];
           for (_i = 0, _len = queue.length; _i < _len; _i++) {
             i = queue[_i];
-            if (!i.loaded) {
+            if (i.state !== 'loaded') {
               _results.push(i);
             }
           }

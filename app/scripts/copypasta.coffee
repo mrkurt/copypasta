@@ -27,6 +27,8 @@ indicator = () ->
   $(paths.indicator)
 
 dialog = (src) ->
+  if src?
+    src = src + "&" + Math.random()
   if $(paths.dialog).length == 0
     $('body').append(blank_dialog)
   iframe_ready = false
@@ -130,17 +132,19 @@ scripts = [
   ]
 
 scripts.load = (queue, callback) ->
-  def = queue.pop()
-  def.loaded = false
+  remaining = (i for i in queue when !i.state?)
+  return if remaining.length == 0
+  def = remaining.pop()
+  def.state = 'pending'
   s = document.createElement('script')
   s.type = "text/javascript"
   s.src = def.src
   s.onload = s.onreadystatechange = ()->
     d = this.readyState
-    if !loaded && (!d || d == 'loaded' || d == 'complete')
-      def.loaded = true
+    if !def.loaded && (!d || d == 'loaded' || d == 'complete')
+      def.state = 'loaded'
       def.callback() if def.callback?
-      remaining = (i for i in queue when !i.loaded)
+      remaining = (i for i in queue when i.state != 'loaded')
       if remaining.length == 0
         callback()
   scripts.load(queue, callback) if queue.length > 0
