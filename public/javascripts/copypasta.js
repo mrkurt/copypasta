@@ -190,7 +190,9 @@
         }
       }
     };
-    scripts.load(queue, callback);
+    if (queue.length === 0) {
+      scripts.load(queue, callback);
+    }
     return document.documentElement.childNodes[0].appendChild(s);
   };
   queue = (function() {
