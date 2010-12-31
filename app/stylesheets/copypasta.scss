@@ -27,13 +27,20 @@
   font-weight: bold;
   text-align: center;
   cursor: pointer;
+  padding: 5px;
+  @include border-radius(5px);
+  margin-left: -5px;
+  margin-top: -5px;
+  border: 1px dashed #009;
 }
 
 #copy-pasta-edit-indicator p{
   padding: 3px;
   width: 104px;
   height: 20px;
-  background-color: yellow;
+  background-color: #009;
+  border: 1px solid #009;
+  color: #fff;
   position: absolute;
   top: 100%;
   left: 90%;
@@ -42,13 +49,14 @@
   margin-top: 5px;
   margin-left: -55px;
   z-index: 998;
+  @include border-radius(5px);
 }
 
 #copy-pasta-edit-indicator p:before{
   border-width: 10px;
   border-style: solid;
   border-color: transparent;
-  border-bottom-color: yellow;
+  border-bottom-color: #009;
   content: '';
   position: absolute;
   top: -20px;

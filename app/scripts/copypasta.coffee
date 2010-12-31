@@ -1,3 +1,10 @@
+(()->
+  css = document.createElement('link')
+  css.rel = "stylesheet"
+  css.href = "http://localhost:3000/stylesheets/compiled/copypasta.css"
+  document.documentElement.childNodes[0].appendChild(css)
+)()
+
 $ = false
 currentLive = false
 iframe_ready = false
@@ -66,7 +73,7 @@ show_widget = () ->
 
   send_to_iframe({'label' : 'form_data', 'data' : data})
 
-  dialog('http://localhost:3000/edits/new?view=framed&url=' + escape(window.location.href)).lightbox_me {closeClick : false, closeEsc : false }
+  dialog('http://localhost:3000/edits/new?view=framed&url=' + escape(window.location.href)).lightbox_me()
 
 send_to_iframe_queue = []
 send_to_iframe = (msg) ->
@@ -86,7 +93,6 @@ iframe_action = (e) ->
     iframe_ready = true
     send_queued()
   else if data.label == 'finished'
-    $(paths.btn + '.on').click()
     dialog().find(paths.cancel_btn).click()
   else if data.label == 'resize'
     $(paths.iframe).animate({height : data.h + 'px'})
@@ -157,7 +163,3 @@ if queue.length > 0
 else
   init()
 
-css = document.createElement('link')
-css.rel = "stylesheet"
-css.href = "http://localhost:3000/stylesheets/compiled/copypasta.css"
-document.documentElement.childNodes[0].appendChild(css)
