@@ -1,21 +1,22 @@
-(()->
-  css = document.createElement('link')
-  css.rel = "stylesheet"
-  css.href = "http://localhost:3000/stylesheets/compiled/copypasta.css"
-  document.documentElement.childNodes[0].appendChild(css)
-)()
+css = document.createElement('link')
+css.rel = "stylesheet"
+css.href = "http://localhost:3000/stylesheets/compiled/copypasta.css"
+document.documentElement.childNodes[0].appendChild(css)
 
 $ = false
 currentLive = false
+currentContainer = false
 iframe_ready = false
+form_data = {}
 
-window.copypasta = copypasta = {}
+window.copypasta = copypasta = {$ : false, page_id : copypasta_page_id}
 
 ids =
   indicator: 'copy-pasta-edit-indicator'
   dialog: 'copy-pasta-dialog'
   iframe : 'copy-pasta-iframe'
   cancel_btn : 'copy-pasta-cancel'
+  overlay: 'copy-pasta-overlay'
 
 paths =
   indicator: '#' + ids.indicator
@@ -24,9 +25,10 @@ paths =
   active: '.copy-pasta-active'
   cancel_btn: '#' + ids.cancel_btn
   iframe: '#' + ids.iframe
+  overlay: '#' + ids.overlay
 
 
-blank_dialog = '<div id="' + ids.dialog + '"><iframe frameborder="no" style="margin: 0px; padding: 0px; width: 100%; height: 300px; z-index: 2;" id="' + ids.iframe + '" scrolling="no"></iframe><input type="button" class="close" id="copy-pasta-cancel" style="display:none;"></div>'
+blank_dialog = '<div id="' + ids.dialog + '" class="copy-pasta-loading"><div id="copy-pasta-overlay"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe><input type="button" class="close" id="copy-pasta-cancel" style="display:none;"></div>'
 
 indicator = () ->
   if $(paths.indicator).length == 0
@@ -38,8 +40,10 @@ dialog = (src) ->
     src = src + "&" + Math.random()
   if $(paths.dialog).length == 0
     $('body').append(blank_dialog)
-  iframe_ready = false
-  $(paths.iframe).attr('src', src) if src?
+  if src?
+    $(paths.overlay).show()
+    iframe_ready = false
+    $(paths.iframe).attr('src', src) if src?
   $(paths.dialog)
 
 activate = () ->
@@ -66,14 +70,13 @@ show_widget = () ->
 
   indicator().addClass('loading')
 
-  data =
+  form_data.new_edit =
     'edit[original]' : e.original_text
     'edit[proposed]' : e.original_text
     'edit[url]' : window.location.href
+    'edit[element_path]' : copypasta.getElementCssPath(e, currentContainer)
 
-  send_to_iframe({'label' : 'form_data', 'data' : data})
-
-  dialog('http://localhost:3000/edits/new?view=framed&url=' + escape(window.location.href)).lightbox_me()
+  dialog('http://localhost:3000/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(copypasta.page_id)).lightbox_me()
 
 send_to_iframe_queue = []
 send_to_iframe = (msg) ->
@@ -86,12 +89,18 @@ send_queued = () ->
   send_to_iframe m for m in send_to_iframe_queue
   send_to_iframe_queue = []
 
+load_iframe_form = (id)->
+  if id? && form_data[id]?
+    send_to_iframe('label' : 'form_data', 'data' : form_data[id])
+
 iframe_action = (e) ->
   return unless e.origin == 'http://localhost:3000'
   data = JSON.parse(e.data)
   if data.label == 'ready'
     iframe_ready = true
     send_queued()
+    $(paths.overlay).fadeOut()
+    load_iframe_form(data.form_id) if data.form_id?
   else if data.label == 'finished'
     dialog().find(paths.cancel_btn).click()
   else if data.label == 'resize'
@@ -107,13 +116,13 @@ init = ()->
   $(paths.btn + '.off').live 'click', ()->
     btn = $(this)
     btn.removeClass('off').addClass('on')
-    $(btn.attr('href')).addClass('copy-pasta-active')
+    currentContainer = $(btn.attr('href')).addClass('copy-pasta-active').get(0)
 
   $(paths.btn + '.on').live 'click', ()->
     btn = $(this)
     btn.removeClass('on').addClass('off')
     $(btn.attr('href')).removeClass('copy-pasta-active')
-    false
+    currentContainer = false
 
   if window.addEventListener?
     window.addEventListener('message', iframe_action, false)
@@ -125,11 +134,11 @@ scripts = [
       test: ()-> window.jQuery && window.jQuery.fn && window.jQuery.fn.jquery > "1.4.2"
       src: 'http://localhost:3000/javascripts/jquery-1.4.2.min.js'
       callback : ()->
-        ($ = window.jQuery).noConflict(1)
+        (copypasta.$ = $ = window.jQuery).noConflict(1)
     },
     {
       test: ()-> window.jQuery && window.jQuery.fn.lightbox_me
-      src: 'http://localhost:3000/javascripts/jquery.lightbox_me.min.js'
+      src: 'http://localhost:3000/javascripts/utils.min.js'
     },
     { #json lib for ie8 in quirks mode
       test: ()-> window.JSON
@@ -162,4 +171,3 @@ if queue.length > 0
   scripts.load(queue, init)
 else
   init()
-

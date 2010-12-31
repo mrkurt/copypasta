@@ -1,10 +1,21 @@
 =form_for @edit do |f|
+  =hidden_field_tag 'view', params[:view] if params[:view]
+  =hidden_field_tag 'url', params[:url] if params[:url]
+  -if @page
+    =fields_for @page do |p|
+      =p.hidden_field :key
+      =p.hidden_field :host
+      =p.hidden_field :url
   =f.hidden_field :element_path
   =f.hidden_field :url
   =f.hidden_field :original
   =f.text_area :proposed
-  =hidden_field_tag 'view', params[:view] if params[:view]
-  =hidden_field_tag 'url', params[:url] if params[:url]
-  %p
-    %input{:type => 'button', :value => 'Cancel', :class => 'close'}
+  %p.field
+    =f.label :user_name, 'Your name:'
+    =f.text_field :user_name
+  %p.field
+    =f.label :email, 'Email:'
+    =f.text_field :email
+  %p.options
+    %input{:type => 'button', :value => 'Cancel', :class => 'close secondary'}
     =f.submit 'Submit Changes'

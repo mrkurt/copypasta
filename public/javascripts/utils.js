@@ -1,3 +1,36 @@
+window.copypasta.getElementCssPath = function(element, root)
+{
+    if (element && element.id)
+        return '#' + element.id;
+    else
+        return window.copypasta.getElementTreeCssPath(element, root);
+};
+
+window.copypasta.getElementTreeCssPath = function(element, root)
+{
+    var paths = [];
+
+    // Use nodeName (instead of localName) so namespace prefix is included (if any).
+    for (; element && element.nodeType == 1 && element != root; element = element.parentNode)
+    {
+        var index = 0;
+        for (var sibling = element.previousSibling; sibling; sibling = sibling.previousSibling)
+        {
+            // Ignore document type declaration.
+            if (sibling.nodeType == Node.DOCUMENT_TYPE_NODE)
+                continue;
+
+            if (sibling.nodeName == element.nodeName)
+                ++index;
+        }
+
+        var tagName = element.nodeName.toLowerCase();
+        var pathIndex = ":eq(" + index + ")";
+        paths.splice(0, 0, tagName + pathIndex);
+    }
+
+    return paths.length ? paths.join(" ") : null;
+};
 /*
  * Copyright (C) 1999-2009 Jive Software. All rights reserved.
  *

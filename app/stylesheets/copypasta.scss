@@ -1,23 +1,32 @@
 @import 'compass/css3/border-radius';
 @import 'compass/css3/gradient';
+@import 'compass/css3/opacity';
 
 #copy-pasta-dialog{
-  width: 400px;
+  width: 420px;
   @include border-radius(9px);
   padding: 10px;
   background: url(../../images/translucent-black.png);
+  &.copy-pasta-loading #copy-pasta-overlay{
+    width: 420px;
+    height: 345px;
+    z-index: 3;
+    display: block;
+    background: #fff url(../../images/loading.gif) no-repeat center center;
+    @include opacity(0.8);
+  }
+}
+#copy-pasta-overlay{
+  display: none;
+  position: absolute;
 }
 #copy-pasta-iframe{
-  background-color: #fff;
-}
-#copy-pasta-dialog textarea{
-  display: block;
-  width: 380px;
-  height: 360px;
-  margin: 10px auto;
-}
-#copy-pasta-dialog p{
-  margin: 0px 10px 10px 10px;
+  background-color: #f6f6f6;
+  height: 345px;
+  padding: 0;
+  margin: 0;
+  z-index: 2;
+  width: 100%;
 }
 #copy-pasta-edit-indicator{
   background: url(../../images/translucent-blue.png);
@@ -38,8 +47,8 @@
   padding: 3px;
   width: 104px;
   height: 20px;
-  background-color: #009;
-  border: 1px solid #009;
+  background-color: #006;
+  border: 1px solid #006;
   color: #fff;
   position: absolute;
   top: 100%;
@@ -50,13 +59,14 @@
   margin-left: -55px;
   z-index: 998;
   @include border-radius(5px);
+  @include linear-gradient(color-stops(#006, #004));
 }
 
 #copy-pasta-edit-indicator p:before{
   border-width: 10px;
   border-style: solid;
   border-color: transparent;
-  border-bottom-color: #009;
+  border-bottom-color: #006;
   content: '';
   position: absolute;
   top: -20px;

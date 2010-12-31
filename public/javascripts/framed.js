@@ -1,19 +1,6 @@
 (function() {
   var $, fill_form, init, receive_message, resize, send_message;
-  $ = jQuery;
-  init = function() {
-    if (window.addEventListener != null) {
-      window.addEventListener('message', receive_message, false);
-    } else if (window.attachEvent != null) {
-      window.attachEvent('onmessage', function() {
-        return receive_message(event);
-      });
-    }
-    send_message({
-      'label': 'ready'
-    });
-    return resize();
-  };
+  $ = window.jQuery;
   resize = function() {
     var m;
     m = {
@@ -43,6 +30,20 @@
     if (data.label === 'form_data') {
       return fill_form(data.data);
     }
+  };
+  init = function() {
+    if (window.addEventListener != null) {
+      window.addEventListener('message', receive_message, false);
+    } else if (window.attachEvent != null) {
+      window.attachEvent('onmessage', function() {
+        return receive_message(event);
+      });
+    }
+    send_message({
+      'label': 'ready',
+      form_id: $('form').attr('id')
+    });
+    return resize();
   };
   $('.close').live('click', function() {
     return send_message({

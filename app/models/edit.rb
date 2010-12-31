@@ -1,6 +1,6 @@
 class Edit < ActiveRecord::Base
   xss_foliate :strip => [:original, :proposed]
-  attr_accessible :element_path, :original, :proposed, :url
+  attr_accessible :element_path, :original, :proposed, :url, :email, :user_name
 
   belongs_to :page
 

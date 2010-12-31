@@ -1,12 +1,4 @@
-$ = jQuery
-
-init = ()->
-  if window.addEventListener?
-    window.addEventListener('message', receive_message, false)
-  else if window.attachEvent?
-    window.attachEvent('onmessage', ()-> receive_message(event))
-  send_message({'label' : 'ready'})
-  resize()
+$ = window.jQuery
 
 resize = () ->
   m = {label : 'resize', h: $('html').height()}
@@ -26,6 +18,15 @@ receive_message = (e)->
   data = JSON.parse(e.data)
   if data.label == 'form_data'
     fill_form data.data
+
+init = ()->
+  if window.addEventListener?
+    window.addEventListener('message', receive_message, false)
+  else if window.attachEvent?
+    window.attachEvent('onmessage', ()-> receive_message(event))
+
+  send_message({'label' : 'ready', form_id : $('form').attr('id')})
+  resize()
 
 $('.close').live 'click', ()-> send_message({'label' : 'finished'})
 $(init)

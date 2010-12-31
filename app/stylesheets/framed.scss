@@ -1,11 +1,47 @@
+@import 'compass/css3/gradient';
+@import 'compass/css3/text-shadow';
+@import 'compass/css3/box-shadow';
+@import 'compass/css3/inline-block';
+@import 'compass/css3/border-radius';
 body{
   font-family: arial, sans-serif;
   font-size: 13px;
   line-height: 140%;
   padding: 0px;
   margin: 0px;
-
+  background-color: #f6f6f6;
+  color: #000;
 }
+
+.button, input[type=submit], input[type=button]{
+  border: 0px;
+  margin: 0px;
+  color: white;
+  font-size: 12px;
+  padding: 5px 12px;
+  vertical-align: middle;
+  text-align: center;
+  text-decoration: none;
+  font-weight: bold;
+  @include border-radius(5px);
+  @include text-shadow(#1067ae);
+  @include inline-block;
+  background-color: #50a4d0;
+  @include linear-gradient(color-stops(#50a4d0, #126baf));
+  @include box-shadow(#000, 0, 1px, 1px);
+  cursor: pointer;
+  
+  &.secondary{
+    background-color: #777;
+    @include linear-gradient(color-stops(#999, #777));
+    @include text-shadow(#444);
+  }
+
+  &:hover{
+    color: #FF9;
+  }
+}
+
 .error, .success{
   margin: 5px;
   padding: 5px;
@@ -30,19 +66,45 @@ p{
 form{
   width: 400px;
   margin: 0;
-  padding: 0;
+  padding: 10px;
   
   textarea{
-    width: 386px;
+    width: 394px;
     height: 250px;
-    display: block;
-    margin: 5px auto;
+    padding: 2px;
   }
+  textarea, input[type=text]{
+    border: 1px solid #666;
+    margin: 0;
+  }
+
   p{
+    margin: 10px 0px;
     text-align: right;
+    label{
+      font-weight: bold;
+    }
+    input{
+      margin: 0;
+    }
+    &.field{
+      width: 200px;
+      float: left;
+      white-space: nowrap;
+      input{
+        width: 127px;
+      }
+    }
+    &.options{
+      margin-bottom: 0px;
+    }
   }
   input[type=submit]{ font-weight: bold; }
 }
 
+.hint{
+  color: #666;
+  font-size: 80%;
+}
 ins.diffmod{ background-color: #AFA; text-decoration: none; }
 del.diffmod{ background-color: #FAA; text-decoration: line-through; }

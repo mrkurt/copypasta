@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101222212316) do
+ActiveRecord::Schema.define(:version => 20101231161822) do
 
   create_table "edits", :force => true do |t|
     t.string   "url"
@@ -22,6 +22,8 @@ ActiveRecord::Schema.define(:version => 20101222212316) do
     t.integer  "page_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "email"
+    t.string   "user_name"
   end
 
   add_index "edits", ["page_id"], :name => "index_edits_on_page_id"
