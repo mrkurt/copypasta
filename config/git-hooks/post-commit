@@ -1,3 +1,4 @@
 #!/bin/sh
 coffee -c -o public/javascripts app/scripts/copypasta.coffee
 git update-index --assume-unchanged public/javascripts/copypasta.js
+git update-index --assume-unchanged public/javascripts/copypasta.min.js
