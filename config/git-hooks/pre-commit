@@ -5,3 +5,7 @@ uglifyjs public/javascripts/copypasta.js > public/javascripts/copypasta.min.js
 uglifyjs public/javascripts/framed.js > public/javascripts/framed.min.js
 git update-index --no-assume-unchanged public/javascripts/copypasta.js
 git update-index --no-assume-unchanged public/javascripts/copypasta.min.js
+
+git add public/javascripts/copypasta.js
+git add public/javascripts/copypasta.min.js
+git add public/javascripts/framed.min.js
