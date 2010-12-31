@@ -1,5 +1,4 @@
 CoffeeScript = require 'coffee-script'
-sys = require 'sys'
 
 replacements =
   'http://localhost:3000' : 'http://copypasta.heroku.com'

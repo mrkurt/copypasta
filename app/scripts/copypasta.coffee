@@ -123,11 +123,11 @@ scripts = [
     },
     {
       test: ()-> window.jQuery && window.jQuery.fn.lightbox_me
-      src: 'http://localhost:3000/javascripts/jquery.lightbox_me.js'
+      src: 'http://localhost:3000/javascripts/jquery.lightbox_me.min.js'
     },
     { #json lib for ie8 in quirks mode
       test: ()-> window.JSON
-      src: 'http://localhost:3000/javascripts/json2.js'
+      src: 'http://localhost:3000/javascripts/json2.min.js'
     }
   ]
 
@@ -156,3 +156,8 @@ if queue.length > 0
   scripts.load(queue, init)
 else
   init()
+
+css = document.createElement('link')
+css.rel = "stylesheet"
+css.href = "http://localhost:3000/stylesheets/compiled/copypasta.css"
+document.documentElement.childNodes[0].appendChild(css)

@@ -1,5 +1,6 @@
 #!/bin/sh
 
 coffee -r ./app/scripts/production-replacements.coffee -c -o public/javascripts app/scripts/copypasta.coffee
+uglifyjs public/javascripts/copypasta.js > public/javascripts/copypasta.min.js
+uglifyjs public/javascripts/framed.js > public/javascripts/framed.min.js
 git update-index --no-assume-unchanged public/javascripts/copypasta.js
-git add -f public/javascripts/copypasta.js

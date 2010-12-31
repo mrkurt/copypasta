@@ -5,7 +5,7 @@
   width: 400px;
   @include border-radius(9px);
   padding: 10px;
-  background: url(../images/translucent-black.png);
+  background: url(../../images/translucent-black.png);
 }
 #copy-pasta-iframe{
   background-color: #fff;
@@ -20,7 +20,7 @@
   margin: 0px 10px 10px 10px;
 }
 #copy-pasta-edit-indicator{
-  background: url(../images/translucent-blue.png);
+  background: url(../../images/translucent-blue.png);
   z-index: 999;
   position: absolute;
   color: #000;
