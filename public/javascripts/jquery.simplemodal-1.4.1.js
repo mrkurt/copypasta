@@ -1,37 +1,3 @@
-window.copypasta.getElementCssPath = function(element, root)
-{
-    if (element && element.id)
-        return '#' + element.id;
-    else
-        return window.copypasta.getElementTreeCssPath(element, root);
-};
-
-window.copypasta.getElementTreeCssPath = function(element, root)
-{
-    var paths = [];
-
-    // Use nodeName (instead of localName) so namespace prefix is included (if any).
-    for (; element && element.nodeType == 1 && element != root; element = element.parentNode)
-    {
-        var index = 0;
-        for (var sibling = element.previousSibling; sibling; sibling = sibling.previousSibling)
-        {
-            // Ignore document type declaration.
-            if (sibling.nodeType == Node.DOCUMENT_TYPE_NODE)
-                continue;
-
-            if (sibling.nodeName == element.nodeName)
-                ++index;
-        }
-
-        var tagName = element.nodeName.toLowerCase();
-        var pathIndex = ":eq(" + index + ")";
-        paths.splice(0, 0, tagName + pathIndex);
-    }
-
-    return paths.length ? paths.join(" ") : null;
-};
-
 /*
  * SimpleModal 1.4.1 - jQuery Plugin
  * http://www.ericmmartin.com/projects/simplemodal/
@@ -94,7 +60,7 @@ window.copypasta.getElementTreeCssPath = function(element, root)
  * @author Eric Martin (http://ericmmartin.com)
  * @version 1.4.1
  */
-window.copypasta.modal_init = (function ($) {
+;(function ($) {
 	var ie6 = $.browser.msie && parseInt($.browser.version) === 6 && typeof window['XMLHttpRequest'] !== 'object',
 		ie7 = $.browser.msie && parseInt($.browser.version) === 7,
 		ieQuirks = null,
@@ -264,7 +230,7 @@ window.copypasta.modal_init = (function ($) {
 			// determine how to handle the data based on its type
 			if (typeof data === 'object') {
 				// convert DOM object to a jQuery object
-				data = data instanceof $ ? data : $(data);
+				data = data instanceof jQuery ? data : $(data);
 				s.d.placeholder = false;
 
 				// if the object came from the DOM, keep track of its parent
@@ -729,5 +695,4 @@ window.copypasta.modal_init = (function ($) {
 			}
 		}
 	};
-});
-
+})(jQuery);

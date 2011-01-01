@@ -1,3 +1,4 @@
+return unless window.postMessage?
 static_host = "http://localhost:3000"
 css = document.createElement('link')
 css.rel = "stylesheet"
@@ -20,7 +21,6 @@ ids =
   indicator: 'copy-pasta-edit-indicator'
   dialog: 'copy-pasta-dialog'
   iframe : 'copy-pasta-iframe'
-  cancel_btn : 'copy-pasta-cancel'
   overlay: 'copy-pasta-overlay'
 
 paths =
@@ -28,16 +28,18 @@ paths =
   dialog: '#' + ids.dialog
   btn: '.copy-pasta-button'
   active: '.copy-pasta-active'
-  cancel_btn: '#' + ids.cancel_btn
   iframe: '#' + ids.iframe
   overlay: '#' + ids.overlay
 
 
-blank_dialog = '<div id="' + ids.dialog + '" class="copy-pasta-loading"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe><input type="button" class="close" id="' + ids.cancel_btn + '" style="display:none;"></div>'
+blank_dialog = '<div id="' + ids.dialog + '" class="copy-pasta-loading"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>'
 
 indicator = () ->
   if $(paths.indicator).length == 0
     $('body').append('<div id="' + ids.indicator + '"><p>click to correct</p></div>')
+    $(paths.indicator).bind('mouseout', deactivate)
+    $(paths.indicator).bind('click', lightbox_widget)
+
   $(paths.indicator)
 
 dialog = (src) ->
@@ -48,11 +50,12 @@ dialog = (src) ->
     debug_msg("Overlay shown")
     src = src + "&" + Math.random()
     src += '#debug' if copypasta.debug
+    debug_msg("Loading iframe: " + src)
     $(paths.iframe).attr('src', src)
   $(paths.dialog)
 
 hide_dialog = ()->
-  dialog().find(paths.cancel_btn).click()
+  $.modal.close()
 
 hide_dialog_overlay = ()->
   $(paths.overlay).fadeOut ()->
@@ -80,8 +83,8 @@ watch = (el) ->
   $(paths.active + ' ' + el).live('mouseover', activate)
 
 lightbox_widget = ()->
-  copypasta.lightbox_init($) unless $.fn.lightbox_me
-  show_widget('copy-pasta-lightbox').lightbox_me()
+  copypasta.modal_init($) unless $.fn.modal
+  show_widget('copy-pasta-lightbox').modal { escClose: true, overlayClose: true, overlayId : 'copy-pasta-lightbox-overlay', containerId : 'copy-pasta-lightbox-container', opacity: 70, position: ['10%',0] }
 
 show_widget = (css_class) ->
   e = currentLive
@@ -128,9 +131,6 @@ receive_from_iframe = (e) ->
 init = ()->
   watch el for el in ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
 
-  $(paths.indicator).live('mouseout', deactivate)
-  $(paths.indicator).live('click', lightbox_widget)
-
   $(paths.btn + '.off').live 'click', ()->
     images.load()
     btn = $(this)
@@ -150,14 +150,15 @@ init = ()->
 
 scripts = [
     {
-      test: ()-> window.jQuery && window.jQuery.fn && window.jQuery.fn.jquery > "1.4.2"
+      test: ()-> window.jQuery && window.jQuery.fn && window.jQuery.fn.jquery > "1.3"
+      #src: 'http://localhost:3000/javascripts/jquery-1.3.min.js'
       src: 'http://localhost:3000/javascripts/jquery-1.4.2.min.js'
       callback : ()->
         (copypasta.$ = $ = window.jQuery).noConflict(1)
     },
     {
       test: ()-> copypasta.getElementCssPath && window.jQuery && window.jQuery.fn.lightbox_me
-      src: 'http://localhost:3000/javascripts/utils.min.js'
+      src: 'http://localhost:3000/javascripts/utils.js'
     },
     { #json lib for ie8 in quirks mode
       test: ()-> window.JSON
