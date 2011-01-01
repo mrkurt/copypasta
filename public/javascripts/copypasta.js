@@ -117,7 +117,7 @@
       'edit[url]': window.location.href,
       'edit[element_path]': copypasta.getElementCssPath(e, currentContainer)
     };
-    d = dialog('http://copypasta.heroku.com/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(copypasta.page_id));
+    d = dialog('http://copypasta.heroku.com/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(window.copypasta.page_id));
     if (css_class != null) {
       d.attr('class', css_class);
     }
