@@ -139,7 +139,6 @@ receive_from_iframe = (e) ->
     resize_dialog(data)
 
 init = ()->
-  debug_msg('Using jquery version ' + $.fn.jquery)
   watch el for el in ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
 
   if copypasta.auto_start
@@ -165,11 +164,16 @@ init = ()->
 
 scripts = [
     {
-      test: ()-> ($ = window.jQuery) && window.jQuery.fn && window.jQuery.fn.jquery > "1.3"
+      test: ()->
+        if window.jQuery && window.jQuery.fn && window.jQuery.fn.jquery > "1.3"
+          $ = window.jQuery
+          debug_msg("Using existing jquery: version " + $.fn.jquery)
+          true
       #src: 'http://localhost:3000/javascripts/jquery-1.3.min.js'
-      src: 'http://localhost:3000/javascripts/jquery-1.4.2.min.js'
+      src: 'http://localhost:3000/javascripts/jquery-1.4.4.min.js'
       callback : ()->
         (copypasta.$ = $ = window.jQuery).noConflict(1)
+        debug_msg("Loaded own jquery: version " + $.fn.jquery)
     },
     {
       test: ()-> copypasta.getElementCssPath && window.jQuery && window.jQuery.fn.lightbox_me

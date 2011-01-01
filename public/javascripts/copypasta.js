@@ -190,7 +190,6 @@
   };
   init = function() {
     var el, _i, _len, _ref;
-    debug_msg('Using jquery version ' + $.fn.jquery);
     _ref = ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5'];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       el = _ref[_i];
@@ -225,11 +224,16 @@
   scripts = [
     {
       test: function() {
-        return ($ = window.jQuery) && window.jQuery.fn && window.jQuery.fn.jquery > "1.3";
+        if (window.jQuery && window.jQuery.fn && window.jQuery.fn.jquery > "1.3") {
+          $ = window.jQuery;
+          debug_msg("Using existing jquery: version " + $.fn.jquery);
+          return true;
+        }
       },
-      src: 'http://copypasta.heroku.com/javascripts/jquery-1.4.2.min.js',
+      src: 'http://copypasta.heroku.com/javascripts/jquery-1.4.4.min.js',
       callback: function() {
-        return (copypasta.$ = $ = window.jQuery).noConflict(1);
+        (copypasta.$ = $ = window.jQuery).noConflict(1);
+        return debug_msg("Loaded own jquery: version " + $.fn.jquery);
       }
     }, {
       test: function() {
