@@ -88,7 +88,7 @@
     });
   };
   show_edit_dialog = function() {
-    var url, _ref;
+    var page_id, url, _ref, _ref2;
     e = currentLive;
     (_ref = e.original_text) != null ? _ref : e.original_text = e.innerHTML;
     form_data.new_edit = {
@@ -97,7 +97,8 @@
       'edit[url]': window.location.href,
       'edit[element_path]': copypasta.getElementCssPath(e, currentContainer)
     };
-    url = 'http://copypasta.heroku.com/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(copypasta.page_id);
+    page_id = (_ref2 = copypasta.page_id) != null ? _ref2 : '';
+    url = 'http://copypasta.heroku.com/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(page_id);
     return show_dialog(url, 'lightbox');
   };
   dialog_types = {

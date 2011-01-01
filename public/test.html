@@ -21,6 +21,9 @@
     </style>
   </head>
   <body>
+   <div style="text-align: center;">
+     Drag Bookmarklet: <a href="javascript:(function(){if(!window.copypasta) {window.copypasta_auto_start = true; var s = document.createElement('script');s.setAttribute('src','http://copypasta.heroku.com/javascripts/copypasta.js?' + Math.random());document.getElementsByTagName('body')[0].appendChild(s);}})();">CopyPasta</a>
+   </div>
    <div class="copy-pasta-button off" href="#content">
      <div class="prompt">click to help fix errors</div>
      <div class="help">now click the offending text (<a href="#" id="end-edit">or click here when done</a>)</div>
