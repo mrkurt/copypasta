@@ -110,10 +110,10 @@ receive_from_iframe = (e) ->
   debug_msg("Parent receive: " + data.label + " from " + e.origin)
   if data.label == 'ready'
     iframe_ready = true
-    $(paths.overlay).fadeOut()
-    debug_msg("Overlay hidden")
-    send_queued()
     load_iframe_form(data.form_id) if data.form_id?
+    $(paths.overlay).fadeOut ()->
+      debug_msg("Overlay hidden")
+      send_queued()
   else if data.label == 'finished'
     dialog().find(paths.cancel_btn).click()
   else if data.label == 'resize'

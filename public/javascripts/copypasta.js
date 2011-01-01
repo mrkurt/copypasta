@@ -127,12 +127,13 @@
     debug_msg("Parent receive: " + data.label + " from " + e.origin);
     if (data.label === 'ready') {
       iframe_ready = true;
-      $(paths.overlay).fadeOut();
-      debug_msg("Overlay hidden");
-      send_queued();
       if (data.form_id != null) {
-        return load_iframe_form(data.form_id);
+        load_iframe_form(data.form_id);
       }
+      return $(paths.overlay).fadeOut(function() {
+        debug_msg("Overlay hidden");
+        return send_queued();
+      });
     } else if (data.label === 'finished') {
       return dialog().find(paths.cancel_btn).click();
     } else if (data.label === 'resize') {
