@@ -91,7 +91,8 @@
     return currentLive = false;
   };
   watch = function(el) {
-    return $(paths.active + ' ' + el).live('mouseover', activate);
+    $(paths.active + ' ' + el).live('mouseover', activate);
+    return true;
   };
   lightbox_widget = function() {
     if (!$.fn.modal) {
@@ -158,6 +159,7 @@
   };
   init = function() {
     var el, _i, _len, _ref;
+    debug_msg('Using jquery version ' + $.fn.jquery);
     _ref = ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5'];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       el = _ref[_i];

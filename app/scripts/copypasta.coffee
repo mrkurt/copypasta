@@ -81,6 +81,7 @@ deactivate = () ->
 
 watch = (el) ->
   $(paths.active + ' ' + el).live('mouseover', activate)
+  true
 
 lightbox_widget = ()->
   copypasta.modal_init($) unless $.fn.modal
@@ -129,6 +130,7 @@ receive_from_iframe = (e) ->
     resize_dialog(data)
 
 init = ()->
+  debug_msg('Using jquery version ' + $.fn.jquery)
   watch el for el in ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
 
   $(paths.btn + '.off').live 'click', ()->
