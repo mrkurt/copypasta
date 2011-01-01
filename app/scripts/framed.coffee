@@ -1,11 +1,19 @@
 $ = window.jQuery
 
+copypasta_debug = window.location.hash.indexOf('debug') > 0
+
+debug_msg = (msg)->
+  if copypasta_debug
+    console.debug(msg)
+
 resize = () ->
   m = {label : 'resize', h: $('html').height()}
   send_message(m)
 
 send_message = (msg) ->
-  parent.postMessage(JSON.stringify(msg), parent_url)
+  debug_msg("Frame send: " + msg.label + " to " + parent_url)
+  msg = JSON.stringify(msg)
+  parent.postMessage(msg, parent_url)
 
 fill_form = (data) ->
   $('form input, form textarea').each ()->
@@ -14,8 +22,11 @@ fill_form = (data) ->
       $(this).val(data[attr])
 
 receive_message = (e)->
-  return unless parent_url.indexOf(e.origin) == 0
+  unless parent_url.indexOf(e.origin) == 0
+    debug_msg(e)
+    return
   data = JSON.parse(e.data)
+  debug_msg("Frame receive: " + data.label + " from " + e.origin)
   if data.label == 'form_data'
     fill_form data.data
 

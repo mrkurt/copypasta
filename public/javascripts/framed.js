@@ -1,6 +1,12 @@
 (function() {
-  var $, fill_form, init, receive_message, resize, send_message;
+  var $, copypasta_debug, debug_msg, fill_form, init, receive_message, resize, send_message;
   $ = window.jQuery;
+  copypasta_debug = window.location.hash.indexOf('debug') > 0;
+  debug_msg = function(msg) {
+    if (copypasta_debug) {
+      return console.debug(msg);
+    }
+  };
   resize = function() {
     var m;
     m = {
@@ -10,7 +16,9 @@
     return send_message(m);
   };
   send_message = function(msg) {
-    return parent.postMessage(JSON.stringify(msg), parent_url);
+    debug_msg("Frame send: " + msg.label + " to " + parent_url);
+    msg = JSON.stringify(msg);
+    return parent.postMessage(msg, parent_url);
   };
   fill_form = function(data) {
     return $('form input, form textarea').each(function() {
@@ -24,9 +32,11 @@
   receive_message = function(e) {
     var data;
     if (parent_url.indexOf(e.origin) !== 0) {
+      debug_msg(e);
       return;
     }
     data = JSON.parse(e.data);
+    debug_msg("Frame receive: " + data.label + " from " + e.origin);
     if (data.label === 'form_data') {
       return fill_form(data.data);
     }

@@ -11,6 +11,11 @@ iframe_ready = false
 form_data = {}
 
 window.copypasta = copypasta = {$ : false, page_id : copypasta_page_id}
+copypasta.debug = window.copypasta_debug || window.location.hash.indexOf('debug') > 0
+
+debug_msg = (msg)->
+  if copypasta.debug
+    console.debug(msg)
 
 ids =
   indicator: 'copy-pasta-edit-indicator'
@@ -37,11 +42,11 @@ indicator = () ->
   $(paths.indicator)
 
 dialog = (src) ->
-  if src?
-    src = src + "&" + Math.random()
   if $(paths.dialog).length == 0
     $('body').append(blank_dialog)
   if src?
+    src = src + "&" + Math.random()
+    src += '#debug' if copypasta.debug
     $(paths.overlay).show()
     iframe_ready = false
     $(paths.iframe).attr('src', src)
@@ -82,7 +87,9 @@ show_widget = () ->
 send_to_iframe_queue = []
 send_to_iframe = (msg) ->
   if iframe_ready
-    $(paths.iframe).get(0).contentWindow.postMessage(JSON.stringify(msg), 'http://localhost:3000')
+    debug_msg("Parent send: " + msg.label + " to http://localhost:3000")
+    msg = JSON.stringify(msg)
+    $(paths.iframe).get(0).contentWindow.postMessage(msg, 'http://localhost:3000')
   else
     send_to_iframe_queue.push msg
 
@@ -94,9 +101,12 @@ load_iframe_form = (id)->
   if id? && form_data[id]?
     send_to_iframe('label' : 'form_data', 'data' : form_data[id])
 
-iframe_action = (e) ->
-  return unless e.origin == 'http://localhost:3000'
+receive_from_iframe = (e) ->
+  unless e.origin == 'http://localhost:3000'
+    debug_msg(e)
+    return
   data = JSON.parse(e.data)
+  debug_msg("Parent receive: " + data.label + " from " + e.origin)
   if data.label == 'ready'
     iframe_ready = true
     send_queued()
@@ -128,9 +138,9 @@ init = ()->
     currentContainer = false
 
   if window.addEventListener?
-    window.addEventListener('message', iframe_action, false)
+    window.addEventListener('message', receive_from_iframe, false)
   else if window.attachEvent?
-    window.attachEvent('onmessage', ()-> iframe_action(event))
+    window.attachEvent('onmessage', ()-> receive_from_iframe(event))
 
 scripts = [
     {

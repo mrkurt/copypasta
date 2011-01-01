@@ -1,5 +1,5 @@
 (function() {
-  var $, activate, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, dialog, form_data, ids, iframe_action, iframe_ready, images, indicator, init, load_iframe_form, paths, queue, s, scripts, send_queued, send_to_iframe, send_to_iframe_queue, show_widget, static_host, watch;
+  var $, activate, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog, form_data, ids, iframe_ready, images, indicator, init, load_iframe_form, paths, queue, receive_from_iframe, s, scripts, send_queued, send_to_iframe, send_to_iframe_queue, show_widget, static_host, watch;
   static_host = "http://copypasta.heroku.com";
   css = document.createElement('link');
   css.rel = "stylesheet";
@@ -13,6 +13,12 @@
   window.copypasta = copypasta = {
     $: false,
     page_id: copypasta_page_id
+  };
+  copypasta.debug = window.copypasta_debug || window.location.hash.indexOf('debug') > 0;
+  debug_msg = function(msg) {
+    if (copypasta.debug) {
+      return console.debug(msg);
+    }
   };
   ids = {
     indicator: 'copy-pasta-edit-indicator',
@@ -38,13 +44,14 @@
     return $(paths.indicator);
   };
   dialog = function(src) {
-    if (src != null) {
-      src = src + "&" + Math.random();
-    }
     if ($(paths.dialog).length === 0) {
       $('body').append(blank_dialog);
     }
     if (src != null) {
+      src = src + "&" + Math.random();
+      if (copypasta.debug) {
+        src += '#debug';
+      }
       $(paths.overlay).show();
       iframe_ready = false;
       $(paths.iframe).attr('src', src);
@@ -86,7 +93,9 @@
   send_to_iframe_queue = [];
   send_to_iframe = function(msg) {
     if (iframe_ready) {
-      return $(paths.iframe).get(0).contentWindow.postMessage(JSON.stringify(msg), 'http://copypasta.heroku.com');
+      debug_msg("Parent send: " + msg.label + " to http://copypasta.heroku.com");
+      msg = JSON.stringify(msg);
+      return $(paths.iframe).get(0).contentWindow.postMessage(msg, 'http://copypasta.heroku.com');
     } else {
       return send_to_iframe_queue.push(msg);
     }
@@ -107,12 +116,14 @@
       });
     }
   };
-  iframe_action = function(e) {
+  receive_from_iframe = function(e) {
     var data;
     if (e.origin !== 'http://copypasta.heroku.com') {
+      debug_msg(e);
       return;
     }
     data = JSON.parse(e.data);
+    debug_msg("Parent receive: " + data.label + " from " + e.origin);
     if (data.label === 'ready') {
       iframe_ready = true;
       send_queued();
@@ -154,10 +165,10 @@
       return currentContainer = false;
     });
     if (window.addEventListener != null) {
-      return window.addEventListener('message', iframe_action, false);
+      return window.addEventListener('message', receive_from_iframe, false);
     } else if (window.attachEvent != null) {
       return window.attachEvent('onmessage', function() {
-        return iframe_action(event);
+        return receive_from_iframe(event);
       });
     }
   };
