@@ -111,7 +111,12 @@
     data = JSON.parse(e.data);
     debug_msg("Parent receive: " + data.label + " from " + e.origin);
     if (data.label === 'ready') {
-      load_iframe_form(data.form_id);
+      if (!load_iframe_form(data.form_id)) {
+        return $(paths.overlay).fadeOut(function() {
+          return debug_msg("Overlay hidden");
+        });
+      }
+    } else if (data.label === 'form_data_loaded') {
       return $(paths.overlay).fadeOut(function() {
         return debug_msg("Overlay hidden");
       });

@@ -99,9 +99,12 @@ receive_from_iframe = (e) ->
   data = JSON.parse(e.data)
   debug_msg("Parent receive: " + data.label + " from " + e.origin)
   if data.label == 'ready'
-    load_iframe_form(data.form_id)
-    $(paths.overlay).fadeOut ()->
-      debug_msg("Overlay hidden")
+    unless load_iframe_form(data.form_id)
+      $(paths.overlay).fadeOut ()->
+        debug_msg("Overlay hidden")
+  else if data.label == 'form_data_loaded'
+      $(paths.overlay).fadeOut ()->
+        debug_msg("Overlay hidden")
   else if data.label == 'finished'
     dialog().find(paths.cancel_btn).click()
   else if data.label == 'resize'
