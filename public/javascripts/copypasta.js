@@ -91,8 +91,7 @@
     return currentLive = false;
   };
   watch = function(el) {
-    $(paths.active + ' ' + el).live('mouseover', activate);
-    return true;
+    return $(paths.active + ' ' + el).live('mouseover', activate);
   };
   lightbox_widget = function() {
     if (!$.fn.modal) {
@@ -190,7 +189,7 @@
   scripts = [
     {
       test: function() {
-        return window.jQuery && window.jQuery.fn && window.jQuery.fn.jquery > "1.3";
+        return ($ = window.jQuery) && window.jQuery.fn && window.jQuery.fn.jquery > "1.3";
       },
       src: 'http://copypasta.heroku.com/javascripts/jquery-1.4.2.min.js',
       callback: function() {

@@ -81,7 +81,6 @@ deactivate = () ->
 
 watch = (el) ->
   $(paths.active + ' ' + el).live('mouseover', activate)
-  true
 
 lightbox_widget = ()->
   copypasta.modal_init($) unless $.fn.modal
@@ -152,7 +151,7 @@ init = ()->
 
 scripts = [
     {
-      test: ()-> window.jQuery && window.jQuery.fn && window.jQuery.fn.jquery > "1.3"
+      test: ()-> ($ = window.jQuery) && window.jQuery.fn && window.jQuery.fn.jquery > "1.3"
       #src: 'http://localhost:3000/javascripts/jquery-1.3.min.js'
       src: 'http://localhost:3000/javascripts/jquery-1.4.2.min.js'
       callback : ()->
