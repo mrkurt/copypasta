@@ -26,7 +26,8 @@
   form_data = {};
   window.copypasta = copypasta = {
     $: false,
-    page_id: window.copypasta_page_id
+    page_id: window.copypasta_page_id,
+    auto_start: window.copypasta_auto_start
   };
   copypasta.debug = window.copypasta_debug || window.location.hash.indexOf('debug') > 0;
   debug_msg = function(msg) {
@@ -175,6 +176,10 @@
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       el = _ref[_i];
       watch(el);
+    }
+    if (copypasta.auto_start) {
+      $(paths.btn).removeClass('off').addClass('on');
+      currentContainer = $('body').addClass('copy-pasta-active').get(0);
     }
     $(paths.btn + '.off').live('click', function() {
       var btn;

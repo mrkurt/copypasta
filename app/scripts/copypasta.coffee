@@ -12,7 +12,7 @@ currentLive = false
 currentContainer = false
 form_data = {}
 
-window.copypasta = copypasta = {$ : false, page_id : window.copypasta_page_id}
+window.copypasta = copypasta = {$ : false, page_id : window.copypasta_page_id, auto_start : window.copypasta_auto_start}
 copypasta.debug = window.copypasta_debug || window.location.hash.indexOf('debug') > 0
 
 debug_msg = (msg)->
@@ -133,6 +133,10 @@ receive_from_iframe = (e) ->
 init = ()->
   debug_msg('Using jquery version ' + $.fn.jquery)
   watch el for el in ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
+
+  if copypasta.auto_start
+    $(paths.btn).removeClass('off').addClass('on')
+    currentContainer = $('body').addClass('copy-pasta-active').get(0)
 
   $(paths.btn + '.off').live 'click', ()->
     images.load()
