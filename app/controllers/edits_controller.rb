@@ -1,9 +1,15 @@
 class EditsController < ApplicationController
-  protect_from_forgery :except => :new
+  before_filter :require_url!
+
+  def index
+
+  end
+
   def show
     @edit = Edit.find(params[:id])
     render :layout => (params[:view] || true)
   end
+
   def create
     @page = load_page(true)
     @edit = Edit.new(params[:edit])
@@ -26,12 +32,11 @@ class EditsController < ApplicationController
 
   def load_page(create = false)
     return @page if @page
-    h = host
     key = (params[:page] && params[:page][:key]) || Digest::MD5.hexdigest(params[:url])
     @page = Page.where(:key => key, :host => host).first
     unless @page
       @page = Page.new(params[:page]) unless @page
-      @page.host = h
+      @page.host = host
       @page.key = key
       @page.url = params[:url]
       @page.save if create
@@ -39,10 +44,4 @@ class EditsController < ApplicationController
     @page
   end
 
-  def host
-    raise "No URL specified" unless params[:url]
-    u = URI.parse params[:url]
-    raise "No URL specified" unless u.host
-    u.host
-  end
 end

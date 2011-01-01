@@ -9,8 +9,11 @@ currentLive = false
 currentContainer = false
 form_data = {}
 
-window.copypasta = copypasta = {$ : false, page_id : copypasta_page_id}
+copypasta = {$ : false, page_id : copypasta_page_id}
 copypasta.debug = window.copypasta_debug || window.location.hash.indexOf('debug') > 0
+
+if copypasta.debug
+  window.copypasta = copypasta
 
 debug_msg = (msg)->
   if copypasta.debug
@@ -51,6 +54,16 @@ dialog = (src) ->
     $(paths.iframe).attr('src', src)
   $(paths.dialog)
 
+hide_dialog = ()->
+  dialog().find(paths.cancel_btn).click()
+
+hide_dialog_overlay = ()->
+  $(paths.overlay).fadeOut ()->
+    debug_msg("Overlay hidden")
+
+resize_dialog = (data)->
+  dialog().animate({height : data.h + 'px'})
+
 activate = () ->
   pos = $(this).offset()
   pos.top = pos.top + 'px'
@@ -69,7 +82,10 @@ deactivate = () ->
 watch = (el) ->
   $(paths.active + ' ' + el).live('mouseover', activate)
 
-show_widget = () ->
+lightbox_widget = ()->
+  show_widget('copy-pasta-lightbox').lightbox_me()
+
+show_widget = (css_class) ->
   e = currentLive
   e.original_text ?= e.innerHTML
 
@@ -81,7 +97,9 @@ show_widget = () ->
     'edit[url]' : window.location.href
     'edit[element_path]' : copypasta.getElementCssPath(e, currentContainer)
 
-  dialog('http://localhost:3000/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(copypasta.page_id)).lightbox_me()
+  d = dialog('http://localhost:3000/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(copypasta.page_id))
+  d.attr('class', css_class) if css_class?
+  d
 
 load_iframe_form = (id)->
   if id? && form_data[id]?
@@ -100,22 +118,21 @@ receive_from_iframe = (e) ->
   debug_msg("Parent receive: " + data.label + " from " + e.origin)
   if data.label == 'ready'
     unless load_iframe_form(data.form_id)
-      $(paths.overlay).fadeOut ()->
-        debug_msg("Overlay hidden")
+      #have to wait til after form data postMessage, otherwise
+      hide_dialog_overlay()
   else if data.label == 'form_data_loaded'
-      $(paths.overlay).fadeOut ()->
-        debug_msg("Overlay hidden")
+    hide_dialog_overlay()
   else if data.label == 'finished'
-    dialog().find(paths.cancel_btn).click()
+    hide_dialog()
   else if data.label == 'resize'
-    $(paths.iframe).animate({height : data.h + 'px'})
+    resize_dialog(data)
 
 init = ()->
   lightbox_me_init($)
   watch el for el in ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
 
   $(paths.indicator).live('mouseout', deactivate)
-  $(paths.indicator).live('click', show_widget)
+  $(paths.indicator).live('click', lightbox_widget)
 
   $(paths.btn + '.off').live 'click', ()->
     images.load()

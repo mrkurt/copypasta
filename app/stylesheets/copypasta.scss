@@ -2,31 +2,47 @@
 @import 'compass/css3/gradient';
 @import 'compass/css3/opacity';
 
+$lightbox_width: 420px;
+$lightbox_height: 345px;
+
+$menu_width: 120px;
+$menu_height: 400px;
+
 #copy-pasta-dialog{
-  width: 420px;
-  @include border-radius(9px);
-  padding: 10px;
-  background: url(../../images/translucent-black.png);
-  &.copy-pasta-loading #copy-pasta-overlay{
-    width: 420px;
-    height: 345px;
+  display: none;
+
+  &.copy-pasta-menu{
+    position: absolute;
+  }
+
+  &.copy-pasta-lightbox{
+    width: $lightbox_width;
+    height: $lightbox_height;
+    @include border-radius(9px);
+    padding: 10px;
+    background: url(../../images/translucent-black.png);
+
+    #copy-pasta-overlay{
+      width: $lightbox_width;
+      height: $lightbox_height;
+    }
+  }
+
+  #copy-pasta-overlay{
     z-index: 3;
-    display: block;
+    display: none;
+    position: absolute;
     background: #fff url(../../images/loading.gif) no-repeat center center;
     @include opacity(0.8);
   }
 }
-#copy-pasta-overlay{
-  display: none;
-  position: absolute;
-}
 #copy-pasta-iframe{
   background-color: #f6f6f6;
-  height: 345px;
+  height: 100%;
+  width: 100%;
   padding: 0;
   margin: 0;
   z-index: 2;
-  width: 100%;
 }
 #copy-pasta-edit-indicator{
   background: url(../../images/translucent-blue.png);

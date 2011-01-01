@@ -1,5 +1,5 @@
 (function() {
-  var $, activate, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog, form_data, ids, images, indicator, init, load_iframe_form, paths, queue, receive_from_iframe, s, scripts, send_to_iframe, show_widget, static_host, watch;
+  var $, activate, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog, form_data, hide_dialog, hide_dialog_overlay, ids, images, indicator, init, lightbox_widget, load_iframe_form, paths, queue, receive_from_iframe, resize_dialog, s, scripts, send_to_iframe, show_widget, static_host, watch;
   static_host = "http://copypasta.heroku.com";
   css = document.createElement('link');
   css.rel = "stylesheet";
@@ -9,11 +9,14 @@
   currentLive = false;
   currentContainer = false;
   form_data = {};
-  window.copypasta = copypasta = {
+  copypasta = {
     $: false,
     page_id: copypasta_page_id
   };
   copypasta.debug = window.copypasta_debug || window.location.hash.indexOf('debug') > 0;
+  if (copypasta.debug) {
+    window.copypasta = copypasta;
+  }
   debug_msg = function(msg) {
     if (copypasta.debug) {
       return console.debug(msg);
@@ -57,6 +60,19 @@
     }
     return $(paths.dialog);
   };
+  hide_dialog = function() {
+    return dialog().find(paths.cancel_btn).click();
+  };
+  hide_dialog_overlay = function() {
+    return $(paths.overlay).fadeOut(function() {
+      return debug_msg("Overlay hidden");
+    });
+  };
+  resize_dialog = function(data) {
+    return dialog().animate({
+      height: data.h + 'px'
+    });
+  };
   activate = function() {
     var pos, sz;
     pos = $(this).offset();
@@ -76,8 +92,11 @@
   watch = function(el) {
     return $(paths.active + ' ' + el).live('mouseover', activate);
   };
-  show_widget = function() {
-    var e, _ref;
+  lightbox_widget = function() {
+    return show_widget('copy-pasta-lightbox').lightbox_me();
+  };
+  show_widget = function(css_class) {
+    var d, e, _ref;
     e = currentLive;
     (_ref = e.original_text) != null ? _ref : e.original_text = e.innerHTML;
     indicator().addClass('loading');
@@ -87,7 +106,11 @@
       'edit[url]': window.location.href,
       'edit[element_path]': copypasta.getElementCssPath(e, currentContainer)
     };
-    return dialog('http://copypasta.heroku.com/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(copypasta.page_id)).lightbox_me();
+    d = dialog('http://copypasta.heroku.com/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(copypasta.page_id));
+    if (css_class != null) {
+      d.attr('class', css_class);
+    }
+    return d;
   };
   load_iframe_form = function(id) {
     if ((id != null) && (form_data[id] != null)) {
@@ -112,20 +135,14 @@
     debug_msg("Parent receive: " + data.label + " from " + e.origin);
     if (data.label === 'ready') {
       if (!load_iframe_form(data.form_id)) {
-        return $(paths.overlay).fadeOut(function() {
-          return debug_msg("Overlay hidden");
-        });
+        return hide_dialog_overlay();
       }
     } else if (data.label === 'form_data_loaded') {
-      return $(paths.overlay).fadeOut(function() {
-        return debug_msg("Overlay hidden");
-      });
+      return hide_dialog_overlay();
     } else if (data.label === 'finished') {
-      return dialog().find(paths.cancel_btn).click();
+      return hide_dialog();
     } else if (data.label === 'resize') {
-      return $(paths.iframe).animate({
-        height: data.h + 'px'
-      });
+      return resize_dialog(data);
     }
   };
   init = function() {
@@ -137,7 +154,7 @@
       watch(el);
     }
     $(paths.indicator).live('mouseout', deactivate);
-    $(paths.indicator).live('click', show_widget);
+    $(paths.indicator).live('click', lightbox_widget);
     $(paths.btn + '.off').live('click', function() {
       var btn;
       images.load();
