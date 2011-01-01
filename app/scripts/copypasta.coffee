@@ -10,7 +10,7 @@ currentLive = false
 currentContainer = false
 form_data = {}
 
-window.copypasta = copypasta = {$ : false, page_id : copypasta_page_id}
+window.copypasta = copypasta = {$ : false, page_id : window.copypasta_page_id}
 copypasta.debug = window.copypasta_debug || window.location.hash.indexOf('debug') > 0
 
 debug_msg = (msg)->
@@ -98,7 +98,7 @@ show_widget = (css_class) ->
     'edit[url]' : window.location.href
     'edit[element_path]' : copypasta.getElementCssPath(e, currentContainer)
 
-  d = dialog('http://localhost:3000/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(window.copypasta.page_id))
+  d = dialog('http://localhost:3000/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(copypasta.page_id))
   d.attr('class', css_class) if css_class?
   d
 
