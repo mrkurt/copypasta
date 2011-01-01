@@ -1,6 +1,7 @@
+static_host = "http://localhost:3000"
 css = document.createElement('link')
 css.rel = "stylesheet"
-css.href = "http://localhost:3000/stylesheets/compiled/copypasta.css"
+css.href = static_host + "/stylesheets/compiled/copypasta.css"
 document.documentElement.childNodes[0].appendChild(css)
 
 $ = false
@@ -99,8 +100,8 @@ iframe_action = (e) ->
   if data.label == 'ready'
     iframe_ready = true
     send_queued()
-    $(paths.overlay).fadeOut()
     load_iframe_form(data.form_id) if data.form_id?
+    $(paths.overlay).fadeOut()
   else if data.label == 'finished'
     dialog().find(paths.cancel_btn).click()
   else if data.label == 'resize'
@@ -114,6 +115,7 @@ init = ()->
   $(paths.indicator).live('click', show_widget)
 
   $(paths.btn + '.off').live 'click', ()->
+    images.load()
     btn = $(this)
     btn.removeClass('off').addClass('on')
     currentContainer = $(btn.attr('href')).addClass('copy-pasta-active').get(0)
@@ -164,6 +166,16 @@ scripts.load = (queue, callback) ->
         callback()
   scripts.load(queue, callback) if queue.length > 0
   document.documentElement.childNodes[0].appendChild(s)
+
+images = [
+  "translucent-black.png",
+  "translucent-blue.png",
+  "loading.gif"
+]
+images.load = ()->
+  for i in images
+    img = new Image
+    img.src = static_host + '/images/' + i
 
 queue = (s for s in scripts when s? && !s.test())
 

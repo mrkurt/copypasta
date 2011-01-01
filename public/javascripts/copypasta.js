@@ -1,8 +1,9 @@
 (function() {
-  var $, activate, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, dialog, form_data, ids, iframe_action, iframe_ready, indicator, init, load_iframe_form, paths, queue, s, scripts, send_queued, send_to_iframe, send_to_iframe_queue, show_widget, watch;
+  var $, activate, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, dialog, form_data, ids, iframe_action, iframe_ready, images, indicator, init, load_iframe_form, paths, queue, s, scripts, send_queued, send_to_iframe, send_to_iframe_queue, show_widget, static_host, watch;
+  static_host = "http://copypasta.heroku.com";
   css = document.createElement('link');
   css.rel = "stylesheet";
-  css.href = "http://copypasta.heroku.com/stylesheets/compiled/copypasta.css";
+  css.href = static_host + "/stylesheets/compiled/copypasta.css";
   document.documentElement.childNodes[0].appendChild(css);
   $ = false;
   currentLive = false;
@@ -117,10 +118,10 @@
     if (data.label === 'ready') {
       iframe_ready = true;
       send_queued();
-      $(paths.overlay).fadeOut();
       if (data.form_id != null) {
-        return load_iframe_form(data.form_id);
+        load_iframe_form(data.form_id);
       }
+      return $(paths.overlay).fadeOut();
     } else if (data.label === 'finished') {
       return dialog().find(paths.cancel_btn).click();
     } else if (data.label === 'resize') {
@@ -141,6 +142,7 @@
     $(paths.indicator).live('click', show_widget);
     $(paths.btn + '.off').live('click', function() {
       var btn;
+      images.load();
       btn = $(this);
       btn.removeClass('off').addClass('on');
       return currentContainer = $(btn.attr('href')).addClass('copy-pasta-active').get(0);
@@ -230,6 +232,17 @@
       scripts.load(queue, callback);
     }
     return document.documentElement.childNodes[0].appendChild(s);
+  };
+  images = ["translucent-black.png", "translucent-blue.png", "loading.gif"];
+  images.load = function() {
+    var i, img, _i, _len, _results;
+    _results = [];
+    for (_i = 0, _len = images.length; _i < _len; _i++) {
+      i = images[_i];
+      img = new Image;
+      _results.push(img.src = static_host + '/images/' + i);
+    }
+    return _results;
   };
   queue = (function() {
     var _i, _len, _results;
