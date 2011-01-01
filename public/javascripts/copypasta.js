@@ -48,12 +48,12 @@
       $('body').append(blank_dialog);
     }
     if (src != null) {
+      $(paths.overlay).show();
+      iframe_ready = false;
       src = src + "&" + Math.random();
       if (copypasta.debug) {
         src += '#debug';
       }
-      $(paths.overlay).show();
-      iframe_ready = false;
       $(paths.iframe).attr('src', src);
     }
     return $(paths.dialog);
@@ -126,13 +126,12 @@
     debug_msg("Parent receive: " + data.label + " from " + e.origin);
     if (data.label === 'ready') {
       iframe_ready = true;
+      $(paths.overlay).fadeOut();
       send_queued();
       if (data.form_id != null) {
-        load_iframe_form(data.form_id);
+        return load_iframe_form(data.form_id);
       }
-      return $(paths.overlay).fadeOut();
     } else if (data.label === 'finished') {
-      iframe_ready = false;
       return dialog().find(paths.cancel_btn).click();
     } else if (data.label === 'resize') {
       return $(paths.iframe).animate({

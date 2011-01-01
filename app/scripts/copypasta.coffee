@@ -45,10 +45,10 @@ dialog = (src) ->
   if $(paths.dialog).length == 0
     $('body').append(blank_dialog)
   if src?
-    src = src + "&" + Math.random()
-    src += '#debug' if copypasta.debug
     $(paths.overlay).show()
     iframe_ready = false
+    src = src + "&" + Math.random()
+    src += '#debug' if copypasta.debug
     $(paths.iframe).attr('src', src)
   $(paths.dialog)
 
@@ -109,11 +109,10 @@ receive_from_iframe = (e) ->
   debug_msg("Parent receive: " + data.label + " from " + e.origin)
   if data.label == 'ready'
     iframe_ready = true
+    $(paths.overlay).fadeOut()
     send_queued()
     load_iframe_form(data.form_id) if data.form_id?
-    $(paths.overlay).fadeOut()
   else if data.label == 'finished'
-    iframe_ready = false
     dialog().find(paths.cancel_btn).click()
   else if data.label == 'resize'
     $(paths.iframe).animate({height : data.h + 'px'})
