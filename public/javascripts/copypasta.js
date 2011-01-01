@@ -181,7 +181,7 @@
       images.load();
       btn = $(this);
       btn.removeClass('off').addClass('on');
-      return currentContainer = $(btn.attr('href')).addClass('copy-pasta-active').get(0);
+      return currentContainer = $(btn.attr('href') || 'body').addClass('copy-pasta-active').get(0);
     });
     $(paths.btn + '.on').live('click', function() {
       var btn;

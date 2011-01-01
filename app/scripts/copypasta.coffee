@@ -138,7 +138,7 @@ init = ()->
     images.load()
     btn = $(this)
     btn.removeClass('off').addClass('on')
-    currentContainer = $(btn.attr('href')).addClass('copy-pasta-active').get(0)
+    currentContainer = $(btn.attr('href') || 'body').addClass('copy-pasta-active').get(0)
 
   $(paths.btn + '.on').live 'click', ()->
     btn = $(this)
