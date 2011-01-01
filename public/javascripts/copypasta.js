@@ -1,13 +1,25 @@
 (function() {
-  var $, activate, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog, form_data, hide_dialog, hide_dialog_overlay, ids, images, indicator, init, lightbox_widget, load_iframe_form, paths, queue, receive_from_iframe, resize_dialog, s, scripts, send_to_iframe, show_widget, static_host, watch;
+  var $, activate, append_to_element, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog, e, form_data, hide_dialog, hide_dialog_overlay, ids, images, indicator, init, lightbox_widget, load_iframe_form, paths, queue, receive_from_iframe, resize_dialog, s, scripts, send_to_iframe, show_widget, static_host, watch;
   if (window.postMessage == null) {
     return;
   }
+  append_to_element = ((function() {
+    var _i, _len, _ref, _results;
+    _ref = document.documentElement.childNodes;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      e = _ref[_i];
+      if (e.nodeType === 1) {
+        _results.push(e);
+      }
+    }
+    return _results;
+  })())[0];
   static_host = "http://copypasta.heroku.com";
   css = document.createElement('link');
   css.rel = "stylesheet";
   css.href = static_host + "/stylesheets/compiled/copypasta.css";
-  document.documentElement.childNodes[0].appendChild(css);
+  append_to_element.appendChild(css);
   $ = false;
   currentLive = false;
   currentContainer = false;
@@ -107,7 +119,7 @@
     });
   };
   show_widget = function(css_class) {
-    var d, e, _ref;
+    var d, _ref;
     e = currentLive;
     (_ref = e.original_text) != null ? _ref : e.original_text = e.innerHTML;
     indicator().addClass('loading');
@@ -255,7 +267,7 @@
     if (queue.length > 0) {
       scripts.load(queue, callback);
     }
-    return document.documentElement.childNodes[0].appendChild(s);
+    return append_to_element.appendChild(s);
   };
   images = ["translucent-blue.png", "translucent-black.png", "loading.gif"];
   images.load = function() {

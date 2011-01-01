@@ -1,9 +1,11 @@
 return unless window.postMessage?
+
+append_to_element = (e for e in document.documentElement.childNodes when e.nodeType == 1)[0]
 static_host = "http://localhost:3000"
 css = document.createElement('link')
 css.rel = "stylesheet"
 css.href = static_host + "/stylesheets/compiled/copypasta.css"
-document.documentElement.childNodes[0].appendChild(css)
+append_to_element.appendChild(css)
 
 $ = false
 currentLive = false
@@ -184,7 +186,7 @@ scripts.load = (queue, callback) ->
       if remaining.length == 0
         callback()
   scripts.load(queue, callback) if queue.length > 0
-  document.documentElement.childNodes[0].appendChild(s)
+  append_to_element.appendChild(s)
 
 images = [
   "translucent-blue.png",
