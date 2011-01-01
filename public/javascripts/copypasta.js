@@ -36,7 +36,7 @@
     iframe: '#' + ids.iframe,
     overlay: '#' + ids.overlay
   };
-  blank_dialog = '<div id="' + ids.dialog + '" class="copy-pasta-loading"><div id="copy-pasta-overlay"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe><input type="button" class="close" id="copy-pasta-cancel" style="display:none;"></div>';
+  blank_dialog = '<div id="' + ids.dialog + '" class="copy-pasta-loading"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe><input type="button" class="close" id="' + ids.cancel_btn + '" style="display:none;"></div>';
   indicator = function() {
     if ($(paths.indicator).length === 0) {
       $('body').append('<div id="' + ids.indicator + '"><p>click to correct</p></div>');
@@ -49,6 +49,7 @@
     }
     if (src != null) {
       $(paths.overlay).show();
+      debug_msg("Overlay shown");
       iframe_ready = false;
       src = src + "&" + Math.random();
       if (copypasta.debug) {
@@ -90,6 +91,14 @@
     };
     return dialog('http://copypasta.heroku.com/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(copypasta.page_id)).lightbox_me();
   };
+  load_iframe_form = function(id) {
+    if ((id != null) && (form_data[id] != null)) {
+      return send_to_iframe({
+        'label': 'form_data',
+        'data': form_data[id]
+      });
+    }
+  };
   send_to_iframe_queue = [];
   send_to_iframe = function(msg) {
     if (iframe_ready) {
@@ -108,14 +117,6 @@
     }
     return send_to_iframe_queue = [];
   };
-  load_iframe_form = function(id) {
-    if ((id != null) && (form_data[id] != null)) {
-      return send_to_iframe({
-        'label': 'form_data',
-        'data': form_data[id]
-      });
-    }
-  };
   receive_from_iframe = function(e) {
     var data;
     if (e.origin !== 'http://copypasta.heroku.com') {
@@ -127,6 +128,7 @@
     if (data.label === 'ready') {
       iframe_ready = true;
       $(paths.overlay).fadeOut();
+      debug_msg("Overlay hidden");
       send_queued();
       if (data.form_id != null) {
         return load_iframe_form(data.form_id);

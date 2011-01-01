@@ -34,7 +34,7 @@ paths =
   overlay: '#' + ids.overlay
 
 
-blank_dialog = '<div id="' + ids.dialog + '" class="copy-pasta-loading"><div id="copy-pasta-overlay"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe><input type="button" class="close" id="copy-pasta-cancel" style="display:none;"></div>'
+blank_dialog = '<div id="' + ids.dialog + '" class="copy-pasta-loading"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe><input type="button" class="close" id="' + ids.cancel_btn + '" style="display:none;"></div>'
 
 indicator = () ->
   if $(paths.indicator).length == 0
@@ -46,6 +46,7 @@ dialog = (src) ->
     $('body').append(blank_dialog)
   if src?
     $(paths.overlay).show()
+    debug_msg("Overlay shown")
     iframe_ready = false
     src = src + "&" + Math.random()
     src += '#debug' if copypasta.debug
@@ -84,6 +85,10 @@ show_widget = () ->
 
   dialog('http://localhost:3000/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(copypasta.page_id)).lightbox_me()
 
+load_iframe_form = (id)->
+  if id? && form_data[id]?
+    send_to_iframe('label' : 'form_data', 'data' : form_data[id])
+
 send_to_iframe_queue = []
 send_to_iframe = (msg) ->
   if iframe_ready
@@ -97,10 +102,6 @@ send_queued = () ->
   send_to_iframe m for m in send_to_iframe_queue
   send_to_iframe_queue = []
 
-load_iframe_form = (id)->
-  if id? && form_data[id]?
-    send_to_iframe('label' : 'form_data', 'data' : form_data[id])
-
 receive_from_iframe = (e) ->
   unless e.origin == 'http://localhost:3000'
     debug_msg(e)
@@ -110,6 +111,7 @@ receive_from_iframe = (e) ->
   if data.label == 'ready'
     iframe_ready = true
     $(paths.overlay).fadeOut()
+    debug_msg("Overlay hidden")
     send_queued()
     load_iframe_form(data.form_id) if data.form_id?
   else if data.label == 'finished'
