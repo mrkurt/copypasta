@@ -44,7 +44,7 @@ dialog = (src) ->
   if src?
     $(paths.overlay).show()
     iframe_ready = false
-    $(paths.iframe).attr('src', src) if src?
+    $(paths.iframe).attr('src', src)
   $(paths.dialog)
 
 activate = () ->
@@ -103,6 +103,7 @@ iframe_action = (e) ->
     load_iframe_form(data.form_id) if data.form_id?
     $(paths.overlay).fadeOut()
   else if data.label == 'finished'
+    iframe_ready = false
     dialog().find(paths.cancel_btn).click()
   else if data.label == 'resize'
     $(paths.iframe).animate({height : data.h + 'px'})

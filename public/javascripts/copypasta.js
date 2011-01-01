@@ -47,9 +47,7 @@
     if (src != null) {
       $(paths.overlay).show();
       iframe_ready = false;
-      if (src != null) {
-        $(paths.iframe).attr('src', src);
-      }
+      $(paths.iframe).attr('src', src);
     }
     return $(paths.dialog);
   };
@@ -123,6 +121,7 @@
       }
       return $(paths.overlay).fadeOut();
     } else if (data.label === 'finished') {
+      iframe_ready = false;
       return dialog().find(paths.cancel_btn).click();
     } else if (data.label === 'resize') {
       return $(paths.iframe).animate({
