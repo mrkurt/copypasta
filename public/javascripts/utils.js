@@ -699,6 +699,7 @@ window.copypasta.modal_init = (function ($) {
 				if (s.d.placeholder) {
 					var ph = $('#simplemodal-placeholder');
 					// save changes to the data?
+          console.debug(s.o);
 					if (s.o.persist) {
 						// insert the (possibly) modified data back into the DOM
 						ph.replaceWith(s.d.data.removeClass('simplemodal-data').css('display', s.display));

@@ -33,38 +33,13 @@ paths =
   iframe: '#' + ids.iframe
   overlay: '#' + ids.overlay
 
-
-blank_dialog = '<div id="' + ids.dialog + '" class="copy-pasta-loading"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>'
-
 indicator = () ->
   if $(paths.indicator).length == 0
     $('body').append('<div id="' + ids.indicator + '"><p>click to correct</p></div>')
     $(paths.indicator).bind('mouseout', deactivate)
-    $(paths.indicator).bind('click', lightbox_widget)
+    $(paths.indicator).bind('click', show_edit_dialog)
 
   $(paths.indicator)
-
-dialog = (src) ->
-  if $(paths.dialog).length == 0
-    $('body').append(blank_dialog)
-  if src?
-    $(paths.overlay).show()
-    debug_msg("Overlay shown")
-    src = src + "&" + Math.random()
-    src += '#debug' if copypasta.debug
-    debug_msg("Loading iframe: " + src)
-    $(paths.iframe).attr('src', src)
-  $(paths.dialog)
-
-hide_dialog = ()->
-  $.modal.close()
-
-hide_dialog_overlay = ()->
-  $(paths.overlay).fadeOut ()->
-    debug_msg("Overlay hidden")
-
-resize_dialog = (data)->
-  dialog().animate({height : data.h + 'px'})
 
 activate = () ->
   pos = $(this).offset()
@@ -84,25 +59,57 @@ deactivate = () ->
 watch = (el) ->
   $(paths.active + ' ' + el).live('mouseover', activate)
 
-lightbox_widget = ()->
-  copypasta.modal_init($) unless $.fn.modal
-  show_widget('copy-pasta-lightbox').modal { escClose: true, overlayClose: true, overlayId : 'copy-pasta-lightbox-overlay', containerId : 'copy-pasta-lightbox-container', opacity: 70, position: ['10%',0] }
+blank_dialog = '<div id="' + ids.dialog + '" class="copy-pasta-loading"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>'
 
-show_widget = (css_class) ->
+hide_dialog_overlay = ()->
+  $(paths.overlay).fadeOut ()->
+    debug_msg("Overlay hidden")
+
+resize_dialog = (data)->
+  $(paths.dialog).animate({height : data.h + 'px'})
+
+show_edit_dialog = ()->
   e = currentLive
   e.original_text ?= e.innerHTML
-
-  indicator().addClass('loading')
 
   form_data.new_edit =
     'edit[original]' : e.original_text
     'edit[proposed]' : e.original_text
     'edit[url]' : window.location.href
     'edit[element_path]' : copypasta.getElementCssPath(e, currentContainer)
+  
+  url = 'http://localhost:3000/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(copypasta.page_id)
 
-  d = dialog('http://localhost:3000/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(copypasta.page_id))
-  d.attr('class', css_class) if css_class?
-  d
+  show_dialog(url, 'lightbox')
+
+dialog_types =
+  default:
+    options: { escClose: true, overlayClose: true, overlayId : 'copy-pasta-lightbox-overlay', containerId : 'copy-pasta-lightbox-container', opacity: 70, persist: true}
+  lightbox:
+    class: 'copy-pasta-lightbox'
+    options: { position: ['10%'] }
+
+show_dialog = (src, type) ->
+  copypasta.modal_init($) unless $.fn.modal
+  t = dialog_types.default
+  t.options.onShow = ()->
+    if t.class?
+      $(paths.dialog).addClass(t.class)
+    if src?
+      $(paths.overlay).show()
+      debug_msg("Overlay shown")
+      src = src
+      src += '#debug' if copypasta.debug
+      debug_msg("Loading iframe: " + src)
+      $(paths.iframe).attr('src', src)
+
+  if type? && dialog_types[type]?
+    t = dialog_types[type]
+    t.options = {} unless t.options?
+    t.options = $.extend(t.options, dialog_types.default.options) unless t.extended
+    t.extended = true
+
+  $.modal(blank_dialog, t.options)
 
 load_iframe_form = (id)->
   if id? && form_data[id]?
@@ -126,7 +133,7 @@ receive_from_iframe = (e) ->
   else if data.label == 'form_data_loaded'
     hide_dialog_overlay()
   else if data.label == 'finished'
-    hide_dialog()
+    $.modal.close() if $.modal?
   else if data.label == 'resize'
     resize_dialog(data)
 

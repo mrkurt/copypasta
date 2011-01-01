@@ -1,5 +1,5 @@
 (function() {
-  var $, activate, append_to_element, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog, e, form_data, hide_dialog, hide_dialog_overlay, ids, images, indicator, init, lightbox_widget, load_iframe_form, paths, queue, receive_from_iframe, resize_dialog, s, scripts, send_to_iframe, show_widget, static_host, watch;
+  var $, activate, append_to_element, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, form_data, hide_dialog_overlay, ids, images, indicator, init, load_iframe_form, paths, queue, receive_from_iframe, resize_dialog, s, scripts, send_to_iframe, show_dialog, show_edit_dialog, static_host, watch;
   if (window.postMessage == null) {
     return;
   }
@@ -49,43 +49,13 @@
     iframe: '#' + ids.iframe,
     overlay: '#' + ids.overlay
   };
-  blank_dialog = '<div id="' + ids.dialog + '" class="copy-pasta-loading"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>';
   indicator = function() {
     if ($(paths.indicator).length === 0) {
       $('body').append('<div id="' + ids.indicator + '"><p>click to correct</p></div>');
       $(paths.indicator).bind('mouseout', deactivate);
-      $(paths.indicator).bind('click', lightbox_widget);
+      $(paths.indicator).bind('click', show_edit_dialog);
     }
     return $(paths.indicator);
-  };
-  dialog = function(src) {
-    if ($(paths.dialog).length === 0) {
-      $('body').append(blank_dialog);
-    }
-    if (src != null) {
-      $(paths.overlay).show();
-      debug_msg("Overlay shown");
-      src = src + "&" + Math.random();
-      if (copypasta.debug) {
-        src += '#debug';
-      }
-      debug_msg("Loading iframe: " + src);
-      $(paths.iframe).attr('src', src);
-    }
-    return $(paths.dialog);
-  };
-  hide_dialog = function() {
-    return $.modal.close();
-  };
-  hide_dialog_overlay = function() {
-    return $(paths.overlay).fadeOut(function() {
-      return debug_msg("Overlay hidden");
-    });
-  };
-  resize_dialog = function(data) {
-    return dialog().animate({
-      height: data.h + 'px'
-    });
   };
   activate = function() {
     var pos, sz;
@@ -106,35 +76,80 @@
   watch = function(el) {
     return $(paths.active + ' ' + el).live('mouseover', activate);
   };
-  lightbox_widget = function() {
-    if (!$.fn.modal) {
-      copypasta.modal_init($);
-    }
-    return show_widget('copy-pasta-lightbox').modal({
-      escClose: true,
-      overlayClose: true,
-      overlayId: 'copy-pasta-lightbox-overlay',
-      containerId: 'copy-pasta-lightbox-container',
-      opacity: 70,
-      position: ['10%', 0]
+  blank_dialog = '<div id="' + ids.dialog + '" class="copy-pasta-loading"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>';
+  hide_dialog_overlay = function() {
+    return $(paths.overlay).fadeOut(function() {
+      return debug_msg("Overlay hidden");
     });
   };
-  show_widget = function(css_class) {
-    var d, _ref;
+  resize_dialog = function(data) {
+    return $(paths.dialog).animate({
+      height: data.h + 'px'
+    });
+  };
+  show_edit_dialog = function() {
+    var url, _ref;
     e = currentLive;
     (_ref = e.original_text) != null ? _ref : e.original_text = e.innerHTML;
-    indicator().addClass('loading');
     form_data.new_edit = {
       'edit[original]': e.original_text,
       'edit[proposed]': e.original_text,
       'edit[url]': window.location.href,
       'edit[element_path]': copypasta.getElementCssPath(e, currentContainer)
     };
-    d = dialog('http://copypasta.heroku.com/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(copypasta.page_id));
-    if (css_class != null) {
-      d.attr('class', css_class);
+    url = 'http://copypasta.heroku.com/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(copypasta.page_id);
+    return show_dialog(url, 'lightbox');
+  };
+  dialog_types = {
+    "default": {
+      options: {
+        escClose: true,
+        overlayClose: true,
+        overlayId: 'copy-pasta-lightbox-overlay',
+        containerId: 'copy-pasta-lightbox-container',
+        opacity: 70,
+        persist: true
+      }
+    },
+    lightbox: {
+      "class": 'copy-pasta-lightbox',
+      options: {
+        position: ['10%']
+      }
     }
-    return d;
+  };
+  show_dialog = function(src, type) {
+    var t;
+    if (!$.fn.modal) {
+      copypasta.modal_init($);
+    }
+    t = dialog_types["default"];
+    t.options.onShow = function() {
+      if (t["class"] != null) {
+        $(paths.dialog).addClass(t["class"]);
+      }
+      if (src != null) {
+        $(paths.overlay).show();
+        debug_msg("Overlay shown");
+        src = src;
+        if (copypasta.debug) {
+          src += '#debug';
+        }
+        debug_msg("Loading iframe: " + src);
+        return $(paths.iframe).attr('src', src);
+      }
+    };
+    if ((type != null) && (dialog_types[type] != null)) {
+      t = dialog_types[type];
+      if (t.options == null) {
+        t.options = {};
+      }
+      if (!t.extended) {
+        t.options = $.extend(t.options, dialog_types["default"].options);
+      }
+      t.extended = true;
+    }
+    return $.modal(blank_dialog, t.options);
   };
   load_iframe_form = function(id) {
     if ((id != null) && (form_data[id] != null)) {
@@ -164,7 +179,9 @@
     } else if (data.label === 'form_data_loaded') {
       return hide_dialog_overlay();
     } else if (data.label === 'finished') {
-      return hide_dialog();
+      if ($.modal != null) {
+        return $.modal.close();
+      }
     } else if (data.label === 'resize') {
       return resize_dialog(data);
     }
