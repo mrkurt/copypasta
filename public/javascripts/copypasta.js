@@ -76,7 +76,7 @@
   watch = function(el) {
     return $(paths.active + ' ' + el).live('mouseover', activate);
   };
-  blank_dialog = '<div id="' + ids.dialog + '" class="copy-pasta-loading"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>';
+  blank_dialog = '<div id="' + ids.dialog + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>';
   hide_dialog_overlay = function() {
     return $(paths.overlay).fadeOut(function() {
       return debug_msg("Overlay hidden");
@@ -114,7 +114,8 @@
     lightbox: {
       "class": 'copy-pasta-lightbox',
       options: {
-        position: ['10%']
+        position: ['10%'],
+        minWidth: 420
       }
     }
   };

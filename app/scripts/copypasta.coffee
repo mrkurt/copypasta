@@ -59,7 +59,7 @@ deactivate = () ->
 watch = (el) ->
   $(paths.active + ' ' + el).live('mouseover', activate)
 
-blank_dialog = '<div id="' + ids.dialog + '" class="copy-pasta-loading"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>'
+blank_dialog = '<div id="' + ids.dialog + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>'
 
 hide_dialog_overlay = ()->
   $(paths.overlay).fadeOut ()->
@@ -87,7 +87,7 @@ dialog_types =
     options: { escClose: true, overlayClose: true, overlayId : 'copy-pasta-lightbox-overlay', containerId : 'copy-pasta-lightbox-container', opacity: 70, persist: true}
   lightbox:
     class: 'copy-pasta-lightbox'
-    options: { position: ['10%'] }
+    options: { position: ['10%'], minWidth: 420 }
 
 show_dialog = (src, type) ->
   copypasta.modal_init($) unless $.fn.modal
