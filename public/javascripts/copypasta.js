@@ -1,5 +1,5 @@
 (function() {
-  var $, activate, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog, form_data, ids, iframe_ready, images, indicator, init, load_iframe_form, paths, queue, receive_from_iframe, s, scripts, send_queued, send_to_iframe, send_to_iframe_queue, show_widget, static_host, watch;
+  var $, activate, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog, form_data, ids, images, indicator, init, load_iframe_form, paths, queue, receive_from_iframe, s, scripts, send_to_iframe, show_widget, static_host, watch;
   static_host = "http://copypasta.heroku.com";
   css = document.createElement('link');
   css.rel = "stylesheet";
@@ -8,7 +8,6 @@
   $ = false;
   currentLive = false;
   currentContainer = false;
-  iframe_ready = false;
   form_data = {};
   window.copypasta = copypasta = {
     $: false,
@@ -50,7 +49,6 @@
     if (src != null) {
       $(paths.overlay).show();
       debug_msg("Overlay shown");
-      iframe_ready = false;
       src = src + "&" + Math.random();
       if (copypasta.debug) {
         src += '#debug';
@@ -99,23 +97,10 @@
       });
     }
   };
-  send_to_iframe_queue = [];
   send_to_iframe = function(msg) {
-    if (iframe_ready) {
-      debug_msg("Parent send: " + msg.label + " to http://copypasta.heroku.com");
-      msg = JSON.stringify(msg);
-      return $(paths.iframe).get(0).contentWindow.postMessage(msg, 'http://copypasta.heroku.com');
-    } else {
-      return send_to_iframe_queue.push(msg);
-    }
-  };
-  send_queued = function() {
-    var m, _i, _len;
-    for (_i = 0, _len = send_to_iframe_queue.length; _i < _len; _i++) {
-      m = send_to_iframe_queue[_i];
-      send_to_iframe(m);
-    }
-    return send_to_iframe_queue = [];
+    debug_msg("Parent send: " + msg.label + " to http://copypasta.heroku.com");
+    msg = JSON.stringify(msg);
+    return $(paths.iframe).get(0).contentWindow.postMessage(msg, 'http://copypasta.heroku.com');
   };
   receive_from_iframe = function(e) {
     var data;
@@ -126,13 +111,9 @@
     data = JSON.parse(e.data);
     debug_msg("Parent receive: " + data.label + " from " + e.origin);
     if (data.label === 'ready') {
-      iframe_ready = true;
-      if (data.form_id != null) {
-        load_iframe_form(data.form_id);
-      }
+      load_iframe_form(data.form_id);
       return $(paths.overlay).fadeOut(function() {
-        debug_msg("Overlay hidden");
-        return send_queued();
+        return debug_msg("Overlay hidden");
       });
     } else if (data.label === 'finished') {
       return dialog().find(paths.cancel_btn).click();

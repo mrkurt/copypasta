@@ -20,6 +20,7 @@ fill_form = (data) ->
     attr = $(this).attr('name')
     if attr of data
       $(this).val(data[attr])
+  send_message { label : 'form_data_loaded' }
 
 receive_message = (e)->
   unless parent_url.indexOf(e.origin) == 0

@@ -7,7 +7,6 @@ document.documentElement.childNodes[0].appendChild(css)
 $ = false
 currentLive = false
 currentContainer = false
-iframe_ready = false
 form_data = {}
 
 window.copypasta = copypasta = {$ : false, page_id : copypasta_page_id}
@@ -47,7 +46,6 @@ dialog = (src) ->
   if src?
     $(paths.overlay).show()
     debug_msg("Overlay shown")
-    iframe_ready = false
     src = src + "&" + Math.random()
     src += '#debug' if copypasta.debug
     $(paths.iframe).attr('src', src)
@@ -89,18 +87,10 @@ load_iframe_form = (id)->
   if id? && form_data[id]?
     send_to_iframe('label' : 'form_data', 'data' : form_data[id])
 
-send_to_iframe_queue = []
 send_to_iframe = (msg) ->
-  if iframe_ready
-    debug_msg("Parent send: " + msg.label + " to http://localhost:3000")
-    msg = JSON.stringify(msg)
-    $(paths.iframe).get(0).contentWindow.postMessage(msg, 'http://localhost:3000')
-  else
-    send_to_iframe_queue.push msg
-
-send_queued = () ->
-  send_to_iframe m for m in send_to_iframe_queue
-  send_to_iframe_queue = []
+  debug_msg("Parent send: " + msg.label + " to http://localhost:3000")
+  msg = JSON.stringify(msg)
+  $(paths.iframe).get(0).contentWindow.postMessage(msg, 'http://localhost:3000')
 
 receive_from_iframe = (e) ->
   unless e.origin == 'http://localhost:3000'
@@ -109,11 +99,9 @@ receive_from_iframe = (e) ->
   data = JSON.parse(e.data)
   debug_msg("Parent receive: " + data.label + " from " + e.origin)
   if data.label == 'ready'
-    iframe_ready = true
-    load_iframe_form(data.form_id) if data.form_id?
+    load_iframe_form(data.form_id)
     $(paths.overlay).fadeOut ()->
       debug_msg("Overlay hidden")
-      send_queued()
   else if data.label == 'finished'
     dialog().find(paths.cancel_btn).click()
   else if data.label == 'resize'

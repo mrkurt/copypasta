@@ -21,12 +21,15 @@
     return parent.postMessage(msg, parent_url);
   };
   fill_form = function(data) {
-    return $('form input, form textarea').each(function() {
+    $('form input, form textarea').each(function() {
       var attr;
       attr = $(this).attr('name');
       if (attr in data) {
         return $(this).val(data[attr]);
       }
+    });
+    return send_message({
+      label: 'form_data_loaded'
     });
   };
   receive_message = function(e) {
