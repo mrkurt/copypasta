@@ -87,7 +87,7 @@ dialog_types =
     options: { escClose: true, overlayClose: true, overlayId : 'copy-pasta-lightbox-overlay', containerId : 'copy-pasta-lightbox-container', opacity: 70, persist: true}
   lightbox:
     class: 'copy-pasta-lightbox'
-    options: { position: ['10%'], minWidth: 420 }
+    options: { position: ['10%'], minWidth: 440 }
 
 show_dialog = (src, type) ->
   copypasta.modal_init($) unless $.fn.modal

@@ -115,7 +115,7 @@
       "class": 'copy-pasta-lightbox',
       options: {
         position: ['10%'],
-        minWidth: 420
+        minWidth: 440
       }
     }
   };
