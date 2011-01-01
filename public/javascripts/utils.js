@@ -56,7 +56,7 @@ window.copypasta.getElementTreeCssPath = function(element, root)
 */
 
 
-var lightbox_me_init = (function($) {
+window.copypasta.lightbox_init = (function($) {
 
     $.fn.lightbox_me = function(options) {
 

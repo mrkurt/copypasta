@@ -9,11 +9,8 @@ currentLive = false
 currentContainer = false
 form_data = {}
 
-copypasta = {$ : false, page_id : copypasta_page_id}
+window.copypasta = copypasta = {$ : false, page_id : copypasta_page_id}
 copypasta.debug = window.copypasta_debug || window.location.hash.indexOf('debug') > 0
-
-if copypasta.debug
-  window.copypasta = copypasta
 
 debug_msg = (msg)->
   if copypasta.debug
@@ -83,6 +80,7 @@ watch = (el) ->
   $(paths.active + ' ' + el).live('mouseover', activate)
 
 lightbox_widget = ()->
+  copypasta.lightbox_init($) unless $.fn.lightbox_me
   show_widget('copy-pasta-lightbox').lightbox_me()
 
 show_widget = (css_class) ->
@@ -128,7 +126,6 @@ receive_from_iframe = (e) ->
     resize_dialog(data)
 
 init = ()->
-  lightbox_me_init($)
   watch el for el in ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
 
   $(paths.indicator).live('mouseout', deactivate)
@@ -159,7 +156,7 @@ scripts = [
         (copypasta.$ = $ = window.jQuery).noConflict(1)
     },
     {
-      test: ()-> window.jQuery && window.jQuery.fn.lightbox_me
+      test: ()-> copypasta.getElementCssPath && window.jQuery && window.jQuery.fn.lightbox_me
       src: 'http://localhost:3000/javascripts/utils.min.js'
     },
     { #json lib for ie8 in quirks mode
@@ -188,8 +185,8 @@ scripts.load = (queue, callback) ->
   document.documentElement.childNodes[0].appendChild(s)
 
 images = [
-  "translucent-black.png",
   "translucent-blue.png",
+  "translucent-black.png",
   "loading.gif"
 ]
 images.load = ()->

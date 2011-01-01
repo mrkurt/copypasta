@@ -9,14 +9,11 @@
   currentLive = false;
   currentContainer = false;
   form_data = {};
-  copypasta = {
+  window.copypasta = copypasta = {
     $: false,
     page_id: copypasta_page_id
   };
   copypasta.debug = window.copypasta_debug || window.location.hash.indexOf('debug') > 0;
-  if (copypasta.debug) {
-    window.copypasta = copypasta;
-  }
   debug_msg = function(msg) {
     if (copypasta.debug) {
       return console.debug(msg);
@@ -93,6 +90,9 @@
     return $(paths.active + ' ' + el).live('mouseover', activate);
   };
   lightbox_widget = function() {
+    if (!$.fn.lightbox_me) {
+      copypasta.lightbox_init($);
+    }
     return show_widget('copy-pasta-lightbox').lightbox_me();
   };
   show_widget = function(css_class) {
@@ -147,7 +147,6 @@
   };
   init = function() {
     var el, _i, _len, _ref;
-    lightbox_me_init($);
     _ref = ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5'];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       el = _ref[_i];
@@ -188,7 +187,7 @@
       }
     }, {
       test: function() {
-        return window.jQuery && window.jQuery.fn.lightbox_me;
+        return copypasta.getElementCssPath && window.jQuery && window.jQuery.fn.lightbox_me;
       },
       src: 'http://copypasta.heroku.com/javascripts/utils.min.js'
     }, {
@@ -248,7 +247,7 @@
     }
     return document.documentElement.childNodes[0].appendChild(s);
   };
-  images = ["translucent-black.png", "translucent-blue.png", "loading.gif"];
+  images = ["translucent-blue.png", "translucent-black.png", "loading.gif"];
   images.load = function() {
     var i, img, _i, _len, _results;
     _results = [];
