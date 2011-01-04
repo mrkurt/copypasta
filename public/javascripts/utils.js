@@ -17,8 +17,8 @@ window.copypasta.getElementTreeCssPath = function(element, root)
         for (var sibling = element.previousSibling; sibling; sibling = sibling.previousSibling)
         {
             // Ignore document type declaration.
-            if (sibling.nodeType == Node.DOCUMENT_TYPE_NODE)
-                continue;
+            //if (sibling.nodeType == Node.DOCUMENT_TYPE_NODE)
+            //    continue;
 
             if (sibling.nodeName == element.nodeName)
                 ++index;
