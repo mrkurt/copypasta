@@ -12,10 +12,10 @@
   =f.text_area :proposed
   %p.field
     =f.label :user_name, 'Your name:'
-    =f.text_field :user_name
+    =f.text_field :user_name, :placeholder => ' Optional '
   %p.field
     =f.label :email, 'Email:'
-    =f.text_field :email
+    =f.text_field :email, :placeholder => ' Optional '
   %p.options
     %input{:type => 'button', :value => 'Cancel', :class => 'close secondary'}
     =f.submit 'Submit Changes'
