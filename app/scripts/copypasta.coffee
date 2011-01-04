@@ -72,13 +72,13 @@ show_edit_dialog = ()->
   e = currentLive
   e.original_text ?= e.innerHTML
 
+  page_id = copypasta.page_id ? ''
   form_data.new_edit =
     'edit[original]' : e.original_text
     'edit[proposed]' : e.original_text
     'edit[url]' : window.location.href
     'edit[element_path]' : copypasta.getElementCssPath(e, currentContainer)
   
-  page_id = copypasta.page_id ? ''
   url = 'http://localhost:3000/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(page_id)
 
   show_dialog(url, 'lightbox')
@@ -89,6 +89,9 @@ dialog_types =
   lightbox:
     class: 'copy-pasta-lightbox'
     options: { position: ['10%'], minWidth: 440 }
+  widget:
+    class: 'copy-pasta-widget'
+    options: { position: ['10%', '0%'], modal: false }
 
 show_dialog = (src, type) ->
   copypasta.modal_init($) unless $.fn.modal
@@ -195,7 +198,7 @@ scripts.load = (queue, callback) ->
   s.src = def.src
   s.onload = s.onreadystatechange = ()->
     d = this.readyState
-    if !def.loaded && (!d || d == 'loaded' || d == 'complete')
+    if def.state != 'loaded' && (!d || d == 'loaded' || d == 'complete')
       def.state = 'loaded'
       def.callback() if def.callback?
       remaining = (i for i in queue when i.state != 'loaded')

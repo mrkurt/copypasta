@@ -35,7 +35,7 @@ class EditsController < ApplicationController
     key = (params[:page] && !params[:page][:key].blank?) ? params[:page][:key] : Digest::MD5.hexdigest(params[:url])
     @page = Page.where(:key => key, :host => host).first
     unless @page
-      @page = Page.new(params[:page]) unless @page
+      @page = Page.new(params[:page])
       @page.host = host
       @page.key = key
       @page.url = params[:url]

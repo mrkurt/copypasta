@@ -91,13 +91,13 @@
     var page_id, url, _ref, _ref2;
     e = currentLive;
     (_ref = e.original_text) != null ? _ref : e.original_text = e.innerHTML;
+    page_id = (_ref2 = copypasta.page_id) != null ? _ref2 : '';
     form_data.new_edit = {
       'edit[original]': e.original_text,
       'edit[proposed]': e.original_text,
       'edit[url]': window.location.href,
       'edit[element_path]': copypasta.getElementCssPath(e, currentContainer)
     };
-    page_id = (_ref2 = copypasta.page_id) != null ? _ref2 : '';
     url = 'http://copypasta.heroku.com/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(page_id);
     return show_dialog(url, 'lightbox');
   };
@@ -117,6 +117,13 @@
       options: {
         position: ['10%'],
         minWidth: 440
+      }
+    },
+    widget: {
+      "class": 'copy-pasta-widget',
+      options: {
+        position: ['10%', '0%'],
+        modal: false
       }
     }
   };
@@ -271,7 +278,7 @@
     s.onload = s.onreadystatechange = function() {
       var d, i;
       d = this.readyState;
-      if (!def.loaded && (!d || d === 'loaded' || d === 'complete')) {
+      if (def.state !== 'loaded' && (!d || d === 'loaded' || d === 'complete')) {
         def.state = 'loaded';
         if (def.callback != null) {
           def.callback();
