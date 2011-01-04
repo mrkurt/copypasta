@@ -14,7 +14,8 @@
                 = f.to_s.humanize
                 = e
     =yield
-    =javascript_include_tag 'jquery-1.4.2.min', 'application'
+    =javascript_include_tag 'json2.min'
+    =javascript_include_tag 'jquery-1.4.4.min'
     =javascript_include_tag 'framed'
     :javascript
       parent_url = '#{escape_javascript params[:url]}';
