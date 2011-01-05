@@ -1,0 +1,5 @@
+%h1=@page.key
+-@page.edits.each do |edit|
+  .edit= edit.proposed
+%p.options
+  %input{:type => 'button', :value => 'Close', :class => 'close secondary'}

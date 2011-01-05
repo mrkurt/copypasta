@@ -2,7 +2,8 @@ class EditsController < ApplicationController
   before_filter :require_url!
 
   def index
-
+    @page = load_page
+    render :layout => (params[:view] || true)
   end
 
   def show

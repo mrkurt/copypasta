@@ -32,6 +32,7 @@ paths =
   active: '.copy-pasta-active'
   iframe: '#' + ids.iframe
   overlay: '#' + ids.overlay
+  status: '.copy-pasta-button .status'
 
 indicator = () ->
   if $(paths.indicator).length == 0
@@ -81,39 +82,49 @@ show_edit_dialog = ()->
   
   url = 'http://localhost:3000/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(page_id)
 
-  show_dialog(url, 'lightbox')
+  show_dialog(url, 'edit')
+
+show_info_dialog = ()->
+  page_id = copypasta.page_id ? ''
+  url = 'http://localhost:3000/edits?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(page_id)
+
+  show_dialog(url, 'info')
 
 dialog_types =
   default:
     options: { escClose: true, overlayClose: true, overlayId : 'copy-pasta-lightbox-overlay', containerId : 'copy-pasta-lightbox-container', opacity: 70, persist: true}
-  lightbox:
+  edit:
     class: 'copy-pasta-lightbox'
-    options: { position: ['10%'], minWidth: 440 }
-  widget:
+  info:
     class: 'copy-pasta-widget'
-    options: { position: ['10%', '0%'], modal: false }
+    options: { position: [0, '0%'], modal: false }
 
 show_dialog = (src, type) ->
   copypasta.modal_init($) unless $.fn.modal
-  t = dialog_types.default
-  t.options.onShow = ()->
-    if t.class?
-      $(paths.dialog).addClass(t.class)
-    if src?
-      $(paths.overlay).show()
-      debug_msg("Overlay shown")
-      src = src
-      src += '#debug' if copypasta.debug
-      debug_msg("Loading iframe: " + src)
-      $(paths.iframe).attr('src', src)
 
-  if type? && dialog_types[type]?
-    t = dialog_types[type]
-    t.options = {} unless t.options?
-    t.options = $.extend(t.options, dialog_types.default.options) unless t.extended
-    t.extended = true
+  if $.modal && $('#copy-pasta-lightbox-container').length > 0
+    $.modal.close()
+    setTimeout (()-> show_dialog(src,type)), 11 #modal closes async in 10ms
+  else
+    t = dialog_types.default
+    t.options.onShow = ()->
+      if t.class?
+        $(paths.dialog).addClass(t.class)
+      if src?
+        $(paths.overlay).show()
+        debug_msg("Overlay shown")
+        src = src
+        src += '#debug' if copypasta.debug
+        debug_msg("Loading iframe: " + src)
+        $(paths.iframe).attr('src', src)
 
-  $.modal(blank_dialog, t.options)
+    if type? && dialog_types[type]?
+      t = dialog_types[type]
+      t.options = {} unless t.options?
+      t.options = $.extend(t.options, dialog_types.default.options) unless t.extended
+      t.extended = true
+
+    $.modal(blank_dialog, t.options)
 
 load_iframe_form = (id)->
   if id? && form_data[id]?
@@ -149,16 +160,25 @@ init = ()->
     currentContainer = $('body').addClass('copy-pasta-active').get(0)
 
   $(paths.btn + '.off').live 'click', ()->
-    images.load()
-    btn = $(this)
-    btn.removeClass('off').addClass('on')
-    currentContainer = $(btn.attr('href') || 'body').addClass('copy-pasta-active').get(0)
+    if $(this).hasClass('on')
+      btn = $(this)
+      btn.removeClass('on')
+      $(btn.attr('href')).removeClass('copy-pasta-active')
+      currentContainer = false
+    else
+      images.load()
+      btn = $(this)
+      btn.addClass('on')
+      currentContainer = $(btn.attr('href') || 'body').addClass('copy-pasta-active').get(0)
 
-  $(paths.btn + '.on').live 'click', ()->
-    btn = $(this)
-    btn.removeClass('on').addClass('off')
-    $(btn.attr('href')).removeClass('copy-pasta-active')
-    currentContainer = false
+  $(paths.btn + ' .status').live 'click', ()->
+    if $(this).hasClass('on')
+      $(this).removeClass('on')
+      $.modal.close()
+    else
+      $(this).addClass('on')
+      show_info_dialog()
+    return false
 
   if window.addEventListener?
     window.addEventListener('message', receive_from_iframe, false)
