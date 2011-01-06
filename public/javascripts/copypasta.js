@@ -1,7 +1,7 @@
 (function() {
-  var $, activate, append_to_element, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, form_data, hide_dialog_overlay, ids, images, indicator, init, load_iframe_form, paths, queue, receive_from_iframe, resize_dialog, s, scripts, send_to_iframe, show_dialog, show_edit_dialog, show_info_dialog, static_host, watch;
+  var $, activate, append_to_element, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, form_data, hide_dialog_overlay, hide_edit_previews, ids, images, indicator, init, load_iframe_form, paths, queue, receive_from_iframe, resize_dialog, s, scripts, send_to_iframe, show_dialog, show_dialog_overlay, show_edit_dialog, show_edit_preview, show_info_dialog, static_host, watch;
   if (window.postMessage == null) {
-    return;
+    r345eturn;
   }
   append_to_element = ((function() {
     var _i, _len, _ref, _results;
@@ -77,7 +77,14 @@
   watch = function(el) {
     return $(paths.active + ' ' + el).live('mouseover', activate);
   };
-  blank_dialog = '<div id="' + ids.dialog + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>';
+  blank_dialog = function(class_name) {
+    return '<div id="' + ids.dialog + '" class="' + class_name + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>';
+  };
+  show_dialog_overlay = function() {
+    return $(paths.overlay).fadeIn(function() {
+      return debug_msg("Overlay shown");
+    });
+  };
   hide_dialog_overlay = function() {
     return $(paths.overlay).fadeOut(function() {
       return debug_msg("Overlay hidden");
@@ -125,8 +132,8 @@
     info: {
       "class": 'copy-pasta-widget',
       options: {
-        position: [0, '0%'],
-        modal: false
+        modal: false,
+        position: [200, '0%']
       }
     }
   };
@@ -143,9 +150,6 @@
     } else {
       t = dialog_types["default"];
       t.options.onShow = function() {
-        if (t["class"] != null) {
-          $(paths.dialog).addClass(t["class"]);
-        }
         if (src != null) {
           $(paths.overlay).show();
           debug_msg("Overlay shown");
@@ -167,8 +171,24 @@
         }
         t.extended = true;
       }
-      return $.modal(blank_dialog, t.options);
+      return $.modal(blank_dialog(t["class"]), t.options);
     }
+  };
+  show_edit_preview = function(data) {
+    var pos, target;
+    debug_msg('Previewing ' + data.element_path);
+    target = $(currentContainer).find(data.element_path);
+    pos = target.position();
+    window.scrollTo(pos.top, pos.left);
+    target.attr('original', target.html());
+    return target.html(data.proposed).addClass('copy-pasta-preview');
+  };
+  hide_edit_previews = function() {
+    return $('.copy-pasta-preview').each(function() {
+      var o;
+      o = $(this).attr('original');
+      return $(this).removeClass('copy-pasta-preview').html(o);
+    });
   };
   load_iframe_form = function(id) {
     if ((id != null) && (form_data[id] != null)) {
@@ -197,10 +217,13 @@
       }
     } else if (data.label === 'form_data_loaded') {
       return hide_dialog_overlay();
+    } else if (data.label === 'preview') {
+      return show_edit_preview(data);
     } else if (data.label === 'finished') {
       if ($.modal != null) {
-        return $.modal.close();
+        $.modal.close();
       }
+      return hide_edit_previews();
     } else if (data.label === 'resize') {
       return resize_dialog(data);
     }
@@ -231,11 +254,14 @@
       }
     });
     $(paths.btn + ' .status').live('click', function() {
+      var p;
       if ($(this).hasClass('on')) {
         $(this).removeClass('on');
         $.modal.close();
       } else {
         $(this).addClass('on');
+        p = $(this).parent().attr('href') || 'body';
+        currentContainer = $(p).get(0);
         show_info_dialog();
       }
       return false;

@@ -59,7 +59,7 @@ p{
   margin: 10px;
   padding: 0px;
 }
-#edit-create-success p.options{
+p.options{
   text-align: right;
   input[value=Done]{ font-weight: bold; }
 }
@@ -106,5 +106,9 @@ form{
   color: #666;
   font-size: 80%;
 }
-ins.diffmod{ background-color: #AFA; text-decoration: none; }
-del.diffmod{ background-color: #FAA; text-decoration: line-through; }
+
+.edits{
+  .edit{
+    .data{ display: none; }
+  }
+}

@@ -63,5 +63,12 @@
       'label': 'finished'
     });
   });
+  $('.edits .edit').live('click', function() {
+    return send_message({
+      label: 'preview',
+      proposed: $(this).find('.proposed').html(),
+      element_path: $(this).find('.element_path').html()
+    });
+  });
   $(init);
 }).call(this);

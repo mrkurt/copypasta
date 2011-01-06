@@ -41,4 +41,10 @@ init = ()->
   resize()
 
 $('.close').live 'click', ()-> send_message({'label' : 'finished'})
+$('.edits .edit').live 'click', ()->
+  send_message {
+    label: 'preview'
+    proposed: $(this).find('.proposed').html()
+    element_path: $(this).find('.element_path').html()
+  }
 $(init)

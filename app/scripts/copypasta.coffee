@@ -1,4 +1,4 @@
-return unless window.postMessage?
+r345eturn unless window.postMessage?
 
 append_to_element = (e for e in document.documentElement.childNodes when e.nodeType == 1)[0]
 static_host = "http://localhost:3000"
@@ -60,7 +60,11 @@ deactivate = () ->
 watch = (el) ->
   $(paths.active + ' ' + el).live('mouseover', activate)
 
-blank_dialog = '<div id="' + ids.dialog + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>'
+blank_dialog = (class_name) -> '<div id="' + ids.dialog + '" class="' + class_name + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>'
+
+show_dialog_overlay = ()->
+  $(paths.overlay).fadeIn ()->
+    debug_msg("Overlay shown")
 
 hide_dialog_overlay = ()->
   $(paths.overlay).fadeOut ()->
@@ -97,7 +101,7 @@ dialog_types =
     class: 'copy-pasta-lightbox'
   info:
     class: 'copy-pasta-widget'
-    options: { position: [0, '0%'], modal: false }
+    options: { modal: false, position: [200, '0%'] }
 
 show_dialog = (src, type) ->
   copypasta.modal_init($) unless $.fn.modal
@@ -108,8 +112,6 @@ show_dialog = (src, type) ->
   else
     t = dialog_types.default
     t.options.onShow = ()->
-      if t.class?
-        $(paths.dialog).addClass(t.class)
       if src?
         $(paths.overlay).show()
         debug_msg("Overlay shown")
@@ -124,7 +126,20 @@ show_dialog = (src, type) ->
       t.options = $.extend(t.options, dialog_types.default.options) unless t.extended
       t.extended = true
 
-    $.modal(blank_dialog, t.options)
+    $.modal(blank_dialog(t.class), t.options)
+
+show_edit_preview = (data)->
+  debug_msg('Previewing ' + data.element_path)
+  target = $(currentContainer).find(data.element_path)
+  pos = target.position()
+  window.scrollTo(pos.top, pos.left)
+  target.attr('original', target.html())
+  target.html(data.proposed).addClass('copy-pasta-preview')
+
+hide_edit_previews = ()->
+  $('.copy-pasta-preview').each ()->
+    o = $(this).attr('original')
+    $(this).removeClass('copy-pasta-preview').html(o)
 
 load_iframe_form = (id)->
   if id? && form_data[id]?
@@ -147,8 +162,11 @@ receive_from_iframe = (e) ->
       hide_dialog_overlay()
   else if data.label == 'form_data_loaded'
     hide_dialog_overlay()
+  else if data.label == 'preview'
+    show_edit_preview(data)
   else if data.label == 'finished'
     $.modal.close() if $.modal?
+    hide_edit_previews()
   else if data.label == 'resize'
     resize_dialog(data)
 
@@ -177,6 +195,8 @@ init = ()->
       $.modal.close()
     else
       $(this).addClass('on')
+      p = $(this).parent().attr('href') || 'body'
+      currentContainer = $(p).get(0)
       show_info_dialog()
     return false
 

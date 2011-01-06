@@ -1,5 +1,12 @@
-%h1=@page.key
--@page.edits.each do |edit|
-  .edit= edit.proposed
+%h2= edit_count
+%ul.edits
+  -@page.edits.each do |edit|
+    %li.edit
+      = edit_time(edit)
+      ago
+      = edit_author(edit)
+      .data
+        .element_path!= edit.element_path
+        .proposed!= diff_edit(edit, false)
 %p.options
   %input{:type => 'button', :value => 'Close', :class => 'close secondary'}
