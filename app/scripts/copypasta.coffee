@@ -139,7 +139,7 @@ show_edit_preview = (data)->
 
 hide_edit_previews = ()->
   $('.copy-pasta-preview').each ()->
-    o = $(this).attr('original')
+    o = this.original_text ? $(this).html()
     $(this).removeClass('copy-pasta-preview').html(o)
 
 load_iframe_form = (id)->

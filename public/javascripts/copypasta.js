@@ -187,8 +187,8 @@
   };
   hide_edit_previews = function() {
     return $('.copy-pasta-preview').each(function() {
-      var o;
-      o = $(this).attr('original');
+      var o, _ref;
+      o = (_ref = this.original_text) != null ? _ref : $(this).html();
       return $(this).removeClass('copy-pasta-preview').html(o);
     });
   };
