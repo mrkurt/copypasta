@@ -180,8 +180,8 @@
     target = $(currentContainer).find(data.element_path);
     pos = target.position();
     window.scrollTo(pos.left, pos.top);
-    if (target.attr('original') == null) {
-      target.attr('original', target.html());
+    if (target.get(0).original_text == null) {
+      target.get(0).original_text = target.html();
     }
     return target.html(data.proposed).addClass('copy-pasta-preview');
   };
