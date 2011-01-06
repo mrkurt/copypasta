@@ -133,7 +133,6 @@ show_edit_preview = (data)->
   target = $(currentContainer).find(data.element_path)
   pos = target.position()
   window.scrollTo(pos.top, pos.left)
-  console.debug(target.attr('original'))
   unless target.attr('original')?
     target.attr('original', target.html())
   target.html(data.proposed).addClass('copy-pasta-preview')
