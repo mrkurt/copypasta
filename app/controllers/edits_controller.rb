@@ -25,6 +25,7 @@ class EditsController < ApplicationController
   end
 
   def new
+    headers['Cache-Control'] = 'no-cache'
     @page = load_page
     @edit = Edit.new(params[:edit])
     @edit.url = params[:url] if @edit.url.blank?
