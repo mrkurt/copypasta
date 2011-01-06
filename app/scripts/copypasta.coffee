@@ -84,7 +84,7 @@ show_edit_dialog = ()->
     'edit[url]' : window.location.href
     'edit[element_path]' : copypasta.getElementCssPath(e, currentContainer)
   
-  url = 'http://localhost:3000/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(page_id)
+  url = 'http://localhost:3000/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(page_id) + '&' + Math.random()
 
   show_dialog(url, 'edit')
 
