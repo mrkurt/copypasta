@@ -183,7 +183,6 @@ init = ()->
       btn = $(this)
       btn.removeClass('on')
       $(btn.attr('href')).removeClass('copy-pasta-active')
-      currentContainer = false
     else
       images.load()
       btn = $(this)
@@ -191,14 +190,9 @@ init = ()->
       currentContainer = $(btn.attr('href') || 'body').addClass('copy-pasta-active').get(0)
 
   $(paths.btn + ' .status').live 'click', ()->
-    if $(this).hasClass('on')
-      $(this).removeClass('on')
-      $.modal.close()
-    else
-      $(this).addClass('on')
-      p = $(this).parent().attr('href') || 'body'
-      currentContainer = $(p).get(0)
-      show_info_dialog()
+    p = $(this).parent().attr('href') || 'body'
+    currentContainer = $(p).get(0)
+    show_info_dialog()
     return false
 
   if window.addEventListener?

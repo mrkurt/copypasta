@@ -246,8 +246,7 @@
       if ($(this).hasClass('on')) {
         btn = $(this);
         btn.removeClass('on');
-        $(btn.attr('href')).removeClass('copy-pasta-active');
-        return currentContainer = false;
+        return $(btn.attr('href')).removeClass('copy-pasta-active');
       } else {
         images.load();
         btn = $(this);
@@ -257,15 +256,9 @@
     });
     $(paths.btn + ' .status').live('click', function() {
       var p;
-      if ($(this).hasClass('on')) {
-        $(this).removeClass('on');
-        $.modal.close();
-      } else {
-        $(this).addClass('on');
-        p = $(this).parent().attr('href') || 'body';
-        currentContainer = $(p).get(0);
-        show_info_dialog();
-      }
+      p = $(this).parent().attr('href') || 'body';
+      currentContainer = $(p).get(0);
+      show_info_dialog();
       return false;
     });
     if (window.addEventListener != null) {
