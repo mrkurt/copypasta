@@ -58,8 +58,8 @@ $menu_height: 400px;
   }
 }
 
-ins.diffmod{ background-color: #AFA; text-decoration: none; }
-del.diffmod{ background-color: #FAA; text-decoration: line-through; }
+ins.diffmod, ins.diffins{ background-color: #AFA; text-decoration: none; }
+del.diffmod, del.diffdel{ background-color: #FAA; text-decoration: line-through; }
 
 #copy-pasta-iframe{
   background-color: #f6f6f6;

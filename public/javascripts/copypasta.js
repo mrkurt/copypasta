@@ -179,7 +179,7 @@
     debug_msg('Previewing ' + data.element_path);
     target = $(currentContainer).find(data.element_path);
     pos = target.position();
-    window.scrollTo(pos.top, pos.left);
+    window.scrollTo(pos.left, pos.top);
     if (target.attr('original') == null) {
       target.attr('original', target.html());
     }
