@@ -121,7 +121,7 @@ del.diffmod, del.diffdel{ background-color: #FAA; text-decoration: line-through;
   margin-left: -10px;
 }
 
-.copy-pasta-button{
+#copy-pasta-button{
   padding: 10px;
   background-color: #009;
   color: #fff;
@@ -130,19 +130,19 @@ del.diffmod, del.diffdel{ background-color: #FAA; text-decoration: line-through;
   cursor: pointer;
 }
 
-.copy-pasta-button .help{
+#copy-pasta-button .help{
   display: none;
 }
 
-.copy-pasta-button.on{
+#copy-pasta-button.on{
   background-color: #090;
   cursor: auto;
 }
 
-.copy-pasta-button.on .help{
+#copy-pasta-button.on .help{
   display: block;
 }
 
-.copy-pasta-button.on .prompt{
+#copy-pasta-button.on .prompt{
   display: none;
 }

@@ -1,5 +1,5 @@
 (function() {
-  var $, activate, append_to_element, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, form_data, hide_dialog_overlay, hide_edit_preview, hide_edit_previews, ids, images, indicator, init, is_scrolled_into_view, load_iframe_form, paths, queue, receive_from_iframe, resize_dialog, s, scripts, send_to_iframe, show_dialog, show_dialog_overlay, show_edit_dialog, show_edit_preview, show_info_dialog, static_host, watch;
+  var $, activate, append_to_element, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, find_current_url, form_data, hide_dialog_overlay, hide_edit_preview, hide_edit_previews, ids, images, indicator, init, is_scrolled_into_view, load_iframe_form, paths, queue, receive_from_iframe, resize_dialog, s, scripts, send_to_iframe, show_dialog, show_dialog_overlay, show_edit_dialog, show_edit_preview, show_info_dialog, static_host, watch;
   if (window.postMessage == null) {
     r345eturn;
   }
@@ -26,10 +26,10 @@
   form_data = {};
   window.copypasta = copypasta = {
     $: false,
-    page_id: window.copypasta_page_id,
-    auto_start: window.copypasta_auto_start
+    page_id: window.copypasta_page_id
   };
-  copypasta.debug = window.copypasta_debug || window.location.hash.indexOf('debug') > 0;
+  copypasta.debug = window.copypasta_debug || window.location.hash.indexOf('copypasta-debug') > 0;
+  copypasta.auto_start = window.copypasta_auto_start || window.location.hash.indexOf('copypasta-auto') > 0;
   debug_msg = function(msg) {
     if (copypasta.debug) {
       return console.debug(msg);
@@ -39,16 +39,17 @@
     indicator: 'copy-pasta-edit-indicator',
     dialog: 'copy-pasta-dialog',
     iframe: 'copy-pasta-iframe',
-    overlay: 'copy-pasta-overlay'
+    overlay: 'copy-pasta-overlay',
+    btn: 'copy-pasta-button'
   };
   paths = {
     indicator: '#' + ids.indicator,
     dialog: '#' + ids.dialog,
-    btn: '.copy-pasta-button',
+    btn: '#' + ids.btn,
     active: '.copy-pasta-active',
     iframe: '#' + ids.iframe,
     overlay: '#' + ids.overlay,
-    status: '.copy-pasta-button .status'
+    status: '#copy-pasta-button .status'
   };
   indicator = function() {
     if ($(paths.indicator).length === 0) {
@@ -77,6 +78,9 @@
   watch = function(el) {
     return $(paths.active + ' ' + el).live('mouseover', activate);
   };
+  find_current_url = function() {
+    return ($('link[rel=canonical]').attr('href') || window.location.href).replace(/&?copypasta-[a-z]+&?/g, '').replace(/#$/, '');
+  };
   blank_dialog = function(class_name) {
     return '<div id="' + ids.dialog + '" class="' + class_name + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>';
   };
@@ -92,7 +96,7 @@
   };
   resize_dialog = function(data) {
     return $(paths.dialog).animate({
-      height: data.h + 'px'
+      height: data.h
     });
   };
   show_edit_dialog = function() {
@@ -103,16 +107,16 @@
     form_data.new_edit = {
       'edit[original]': e.original_text,
       'edit[proposed]': e.original_text,
-      'edit[url]': window.location.href,
+      'edit[url]': find_current_url(),
       'edit[element_path]': copypasta.getElementCssPath(e, currentContainer)
     };
-    url = 'https://copypasta.heroku.com/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(page_id);
+    url = 'https://copypasta.heroku.com/edits/new?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id);
     return show_dialog(url, 'edit');
   };
   show_info_dialog = function() {
     var page_id, url, _ref;
     page_id = (_ref = copypasta.page_id) != null ? _ref : '';
-    url = 'https://copypasta.heroku.com/edits?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(page_id);
+    url = 'https://copypasta.heroku.com/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id);
     return show_dialog(url, 'info');
   };
   dialog_types = {
@@ -257,11 +261,10 @@
       watch(el);
     }
     if (copypasta.auto_start) {
-      $(paths.btn).removeClass('off').addClass('on');
       currentContainer = $('body').addClass('copy-pasta-active').get(0);
       show_info_dialog();
     }
-    $(paths.btn + '.off').live('click', function() {
+    $(paths.btn).live('click', function() {
       var btn;
       if ($(this).hasClass('on')) {
         btn = $(this);

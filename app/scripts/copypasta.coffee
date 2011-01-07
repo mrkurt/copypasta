@@ -12,8 +12,9 @@ currentLive = false
 currentContainer = false
 form_data = {}
 
-window.copypasta = copypasta = {$ : false, page_id : window.copypasta_page_id, auto_start : window.copypasta_auto_start}
-copypasta.debug = window.copypasta_debug || window.location.hash.indexOf('debug') > 0
+window.copypasta = copypasta = {$ : false, page_id : window.copypasta_page_id}
+copypasta.debug = window.copypasta_debug || window.location.hash.indexOf('copypasta-debug') > 0
+copypasta.auto_start = window.copypasta_auto_start || window.location.hash.indexOf('copypasta-auto') > 0
 
 debug_msg = (msg)->
   if copypasta.debug
@@ -24,15 +25,16 @@ ids =
   dialog: 'copy-pasta-dialog'
   iframe : 'copy-pasta-iframe'
   overlay: 'copy-pasta-overlay'
+  btn: 'copy-pasta-button'
 
 paths =
   indicator: '#' + ids.indicator
   dialog: '#' + ids.dialog
-  btn: '.copy-pasta-button'
+  btn: '#' + ids.btn
   active: '.copy-pasta-active'
   iframe: '#' + ids.iframe
   overlay: '#' + ids.overlay
-  status: '.copy-pasta-button .status'
+  status: '#copy-pasta-button .status'
 
 indicator = () ->
   if $(paths.indicator).length == 0
@@ -60,6 +62,9 @@ deactivate = () ->
 watch = (el) ->
   $(paths.active + ' ' + el).live('mouseover', activate)
 
+find_current_url = ()->
+  ($('link[rel=canonical]').attr('href') || window.location.href).replace(/&?copypasta-[a-z]+&?/g,'').replace(/#$/,'')
+
 blank_dialog = (class_name) -> '<div id="' + ids.dialog + '" class="' + class_name + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>'
 
 show_dialog_overlay = ()->
@@ -71,7 +76,7 @@ hide_dialog_overlay = ()->
     debug_msg("Overlay hidden")
 
 resize_dialog = (data)->
-  $(paths.dialog).animate({height : data.h + 'px'})
+  $(paths.dialog).animate {height : data.h}
 
 show_edit_dialog = ()->
   e = currentLive
@@ -81,16 +86,16 @@ show_edit_dialog = ()->
   form_data.new_edit =
     'edit[original]' : e.original_text
     'edit[proposed]' : e.original_text
-    'edit[url]' : window.location.href
+    'edit[url]' : find_current_url()
     'edit[element_path]' : copypasta.getElementCssPath(e, currentContainer)
   
-  url = 'http://localhost:3000/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(page_id)
+  url = 'http://localhost:3000/edits/new?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id)
 
   show_dialog(url, 'edit')
 
 show_info_dialog = ()->
   page_id = copypasta.page_id ? ''
-  url = 'http://localhost:3000/edits?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(page_id)
+  url = 'http://localhost:3000/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id)
 
   show_dialog(url, 'info')
 
@@ -191,11 +196,10 @@ init = ()->
   watch el for el in ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
 
   if copypasta.auto_start
-    $(paths.btn).removeClass('off').addClass('on')
     currentContainer = $('body').addClass('copy-pasta-active').get(0)
     show_info_dialog()
 
-  $(paths.btn + '.off').live 'click', ()->
+  $(paths.btn).live 'click', ()->
     if $(this).hasClass('on')
       btn = $(this)
       btn.removeClass('on')
