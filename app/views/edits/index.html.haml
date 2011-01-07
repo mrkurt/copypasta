@@ -1,5 +1,9 @@
 %h2.edits
   = edit_count
+%h3 Tokens
+%ul
+  -session.keys.each do |k|
+    %li= "#{k}= #{session[k]}"
 %table.edits
   %tr
     %th.title.hint
@@ -9,13 +13,15 @@
       |
       =link_to_unless @filter == 'rejected', 'Rejected', url_for(params.merge({:filter => 'rejected'}))
     %th.preview.hint show
-  -@page.edits.where(:status => @filter).each do |edit|
+  -@edits.each do |edit|
     %tr
       %td.title
         = edit_author(edit)
         %p.hint
           = edit_time(edit)
           ago
+        -if is_editor_for?(edit)
+          %p Yay!
       %td.preview
         %input{:type => 'checkbox', :class => 'edit-preview-toggle', :value => diff_edit(edit, false), :disabled => edit.status != 'new'}
         %input{:type => 'hidden', :class => 'element_path', :value => edit.element_path}

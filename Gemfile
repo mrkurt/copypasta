@@ -4,7 +4,7 @@ gem 'rails', '3.0.3'
 gem 'haml', '3.0.24'
 gem 'compass'
 
-gem 'bcrypt-ruby' #hashing
+gem 'bcrypt-ruby', :require => 'bcrypt' #hashing
 gem 'sqlite3'
 
 gem 'loofah'

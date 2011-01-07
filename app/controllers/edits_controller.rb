@@ -1,9 +1,13 @@
 class EditsController < ApplicationController
-  before_filter :require_url!
+  before_filter :require_url!, :except => :index
 
   def index
     @filter = params[:filter] || 'new'
-    @page = load_page
+    if @page = load_page
+      @edits = @page.edits.where(:status => @filter)
+    else
+      @edits = Edit.where(:status => @filter)
+    end
     render :layout => (params[:view] || true)
   end
 
@@ -35,6 +39,7 @@ class EditsController < ApplicationController
 
   def load_page(create = false)
     return @page if @page
+    return nil unless (params[:page] && !params[:page][:key].blank?) || params[:url]
     key = (params[:page] && !params[:page][:key].blank?) ? params[:page][:key] : Digest::MD5.hexdigest(params[:url])
     @page = Page.where(:key => key, :host => host).first
     unless @page

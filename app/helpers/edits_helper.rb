@@ -22,18 +22,20 @@ module EditsHelper
     end
   end
 
-  def edit_count(page = nil)
-    page ||= @page
+  def edit_count(edits = nil)
+    edits ||= @edits
 
-    status = params[:filter] || 'new'
-    count = page.edits.where(:status => status).count
-
-    if count == 0
+    if edits.count == 0
       "No page edits yet"
-    elsif count == 1
-      "1 #{status} page edit"
+    elsif edits.count == 1
+      "1 page edit"
     else
-      "#{count} #{status} page edits"
+      "#{edits.count} page edits"
     end
+  end
+
+  def is_editor_for?(edit = nil)
+    edit ||= @edit
+    controller.is_editor_for?(edit.page.host)
   end
 end

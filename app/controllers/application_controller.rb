@@ -12,4 +12,10 @@ class ApplicationController < ActionController::Base
     raise "No URL specified" unless u.host
     @host = u.host
   end
+
+  def is_editor_for?(host)
+    t = session["editor_key_#{host}"]
+    return false if t.nil?
+    EditorToken.where(:key => t).first || false
+  end
 end

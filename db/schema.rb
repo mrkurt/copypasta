@@ -10,7 +10,29 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101231161822) do
+ActiveRecord::Schema.define(:version => 20110107201325) do
+
+  create_table "editor_tokens", :force => true do |t|
+    t.integer  "editor_id"
+    t.string   "key"
+    t.datetime "expires_at"
+    t.integer  "use_count"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "editor_tokens", ["key"], :name => "index_editor_tokens_on_key", :unique => true
+
+  create_table "editors", :force => true do |t|
+    t.string   "email"
+    t.string   "host"
+    t.string   "key"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "editors", ["host", "email"], :name => "index_editors_on_host_and_email", :unique => true
+  add_index "editors", ["host"], :name => "index_editors_on_host"
 
   create_table "edits", :force => true do |t|
     t.string   "url"

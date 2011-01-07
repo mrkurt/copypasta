@@ -1,5 +1,8 @@
 CopyPasta::Application.routes.draw do
   resources :edits
+  resource :session, :only => [:new]
+  
+  root :to => 'edits#index'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
