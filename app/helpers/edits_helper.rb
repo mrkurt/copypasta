@@ -23,14 +23,17 @@ module EditsHelper
   end
 
   def edit_count(page = nil)
-    page = @page
+    page ||= @page
 
-    if page.edits.count == 0
-      "No edits yet"
-    elsif page.edits.count == 1
-      "1 edit"
+    status = params[:filter] || 'new'
+    count = page.edits.where(:status => status).count
+
+    if count == 0
+      "No page edits yet"
+    elsif count == 1
+      "1 #{status} page edit"
     else
-      "#{page.edits.count} edits"
+      "#{count} #{status} page edits"
     end
   end
 end

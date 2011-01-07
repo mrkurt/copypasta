@@ -41,10 +41,17 @@ init = ()->
   resize()
 
 $('.close').live 'click', ()-> send_message({'label' : 'finished'})
-$('.edits .edit').live 'click', ()->
-  send_message {
-    label: 'preview'
-    proposed: $(this).find('.proposed').html()
-    element_path: $(this).find('.element_path').html()
-  }
+$('input.edit-preview-toggle').live 'change', ()->
+  if this.checked
+    send_message {
+      label: 'preview'
+      proposed: $(this).val()
+      element_path: $(this).parent().find('.element_path').val()
+    }
+  else
+    send_message {
+      label: 'preview-off'
+      element_path: $(this).parent().find('.element_path').val()
+
+    }
 $(init)

@@ -1,12 +1,23 @@
-%h2= edit_count
-%ul.edits
-  -@page.edits.each do |edit|
-    %li.edit
-      = edit_time(edit)
-      ago
-      = edit_author(edit)
-      .data
-        .element_path!= edit.element_path
-        .proposed!= diff_edit(edit, false)
+%h2.edits
+  = edit_count
+%table.edits
+  %tr
+    %th.title.hint
+      =link_to_unless @filter == 'new', 'New', url_for(params.merge({:filter => 'new'}))
+      |
+      =link_to_unless @filter == 'accepted', 'Accepted', url_for(params.merge({:filter => 'accepted'}))
+      |
+      =link_to_unless @filter == 'rejected', 'Rejected', url_for(params.merge({:filter => 'rejected'}))
+    %th.preview.hint show
+  -@page.edits.where(:status => @filter).each do |edit|
+    %tr
+      %td.title
+        = edit_author(edit)
+        %p.hint
+          = edit_time(edit)
+          ago
+      %td.preview
+        %input{:type => 'checkbox', :class => 'edit-preview-toggle', :value => diff_edit(edit, false), :disabled => edit.status != 'new'}
+        %input{:type => 'hidden', :class => 'element_path', :value => edit.element_path}
 %p.options
   %input{:type => 'button', :value => 'Close', :class => 'close secondary'}

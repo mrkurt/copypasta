@@ -107,8 +107,28 @@ form{
   font-size: 80%;
 }
 
-.edits{
-  .edit{
-    .data{ display: none; }
+h2.edits{
+  padding: 10px;
+  padding-left: 10px;
+  padding-bottom: 0px;
+  margin: 0;
+  font-size: 120%;
+}
+table.edits{
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  td{
+    margin: 0;
+    padding: 3px;
+    background-color: #fff;
   }
+  p.hint{
+    margin: 0; padding: 0;
+    padding-top: 3px;
+  }
+  .preview{ text-align: center; }
+  .title { text-align: left; padding-left: 10px; }
+  
+  a{ color: #888;}
 }
