@@ -53,22 +53,29 @@
       });
     }
     send_message({
-      'label': 'ready',
+      label: 'ready',
       form_id: $('form').attr('id')
     });
     return resize();
   };
   $('.close').live('click', function() {
     return send_message({
-      'label': 'finished'
+      label: 'finished'
     });
   });
-  $('.edits .edit').live('click', function() {
-    return send_message({
-      label: 'preview',
-      proposed: $(this).find('.proposed').html(),
-      element_path: $(this).find('.element_path').html()
-    });
+  $('input.edit-preview-toggle').live('change', function() {
+    if (this.checked) {
+      return send_message({
+        label: 'preview',
+        proposed: $(this).val(),
+        element_path: $(this).parent().find('.element_path').val()
+      });
+    } else {
+      return send_message({
+        label: 'preview-off',
+        element_path: $(this).parent().find('.element_path').val()
+      });
+    }
   });
   $(init);
 }).call(this);

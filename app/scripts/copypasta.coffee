@@ -101,7 +101,7 @@ dialog_types =
     class: 'copy-pasta-lightbox'
   info:
     class: 'copy-pasta-widget'
-    options: { modal: false, position: [200, '0%'] }
+    options: { modal: false, position: [100, '0%'] }
 
 show_dialog = (src, type) ->
   copypasta.modal_init($) unless $.fn.modal
@@ -132,15 +132,29 @@ show_edit_preview = (data)->
   debug_msg('Previewing ' + data.element_path)
   target = $(currentContainer).find(data.element_path)
   pos = target.position()
-  window.scrollTo(pos.left, pos.top)
   unless target.get(0).original_text?
     target.get(0).original_text = target.html()
-  target.html(data.proposed).addClass('copy-pasta-preview')
+  s = if $('html').scrollTop(1) > 0 then 'html' else 'body'
+  $(s).animate {scrollTop : pos.top}, ()->
+    target.html(data.proposed).addClass('copy-pasta-preview')
+
+hide_edit_preview = (path)->
+  target = $(currentContainer).find(path)
+  target.removeClass('copy-pasta-preview').html(target.get(0).original_text)
 
 hide_edit_previews = ()->
   $('.copy-pasta-preview').each ()->
     o = this.original_text ? $(this).html()
     $(this).removeClass('copy-pasta-preview').html(o)
+
+is_scrolled_into_view = (elem)->
+    docViewTop = $(window).scrollTop()
+    docViewBottom = docViewTop + $(window).height()
+
+    elemTop = $(elem).offset().top
+    elemBottom = elemTop + $(elem).height()
+
+    (elemBottom >= docViewTop) && (elemTop <= docViewBottom)&& (elemBottom <= docViewBottom) &&  (elemTop >= docViewTop)
 
 load_iframe_form = (id)->
   if id? && form_data[id]?
@@ -165,6 +179,8 @@ receive_from_iframe = (e) ->
     hide_dialog_overlay()
   else if data.label == 'preview'
     show_edit_preview(data)
+  else if data.label == 'preview-off'
+    hide_edit_preview(data.element_path)
   else if data.label == 'finished'
     $.modal.close() if $.modal?
     hide_edit_previews()
@@ -177,6 +193,7 @@ init = ()->
   if copypasta.auto_start
     $(paths.btn).removeClass('off').addClass('on')
     currentContainer = $('body').addClass('copy-pasta-active').get(0)
+    show_info_dialog()
 
   $(paths.btn + '.off').live 'click', ()->
     if $(this).hasClass('on')

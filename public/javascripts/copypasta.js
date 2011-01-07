@@ -1,5 +1,5 @@
 (function() {
-  var $, activate, append_to_element, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, form_data, hide_dialog_overlay, hide_edit_previews, ids, images, indicator, init, load_iframe_form, paths, queue, receive_from_iframe, resize_dialog, s, scripts, send_to_iframe, show_dialog, show_dialog_overlay, show_edit_dialog, show_edit_preview, show_info_dialog, static_host, watch;
+  var $, activate, append_to_element, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, form_data, hide_dialog_overlay, hide_edit_preview, hide_edit_previews, ids, images, indicator, init, is_scrolled_into_view, load_iframe_form, paths, queue, receive_from_iframe, resize_dialog, s, scripts, send_to_iframe, show_dialog, show_dialog_overlay, show_edit_dialog, show_edit_preview, show_info_dialog, static_host, watch;
   if (window.postMessage == null) {
     r345eturn;
   }
@@ -133,7 +133,7 @@
       "class": 'copy-pasta-widget',
       options: {
         modal: false,
-        position: [200, '0%']
+        position: [100, '0%']
       }
     }
   };
@@ -175,15 +175,24 @@
     }
   };
   show_edit_preview = function(data) {
-    var pos, target;
+    var pos, s, target;
     debug_msg('Previewing ' + data.element_path);
     target = $(currentContainer).find(data.element_path);
     pos = target.position();
-    window.scrollTo(pos.left, pos.top);
     if (target.get(0).original_text == null) {
       target.get(0).original_text = target.html();
     }
-    return target.html(data.proposed).addClass('copy-pasta-preview');
+    s = $('html').scrollTop(1) > 0 ? 'html' : 'body';
+    return $(s).animate({
+      scrollTop: pos.top
+    }, function() {
+      return target.html(data.proposed).addClass('copy-pasta-preview');
+    });
+  };
+  hide_edit_preview = function(path) {
+    var target;
+    target = $(currentContainer).find(path);
+    return target.removeClass('copy-pasta-preview').html(target.get(0).original_text);
   };
   hide_edit_previews = function() {
     return $('.copy-pasta-preview').each(function() {
@@ -191,6 +200,14 @@
       o = (_ref = this.original_text) != null ? _ref : $(this).html();
       return $(this).removeClass('copy-pasta-preview').html(o);
     });
+  };
+  is_scrolled_into_view = function(elem) {
+    var docViewBottom, docViewTop, elemBottom, elemTop;
+    docViewTop = $(window).scrollTop();
+    docViewBottom = docViewTop + $(window).height();
+    elemTop = $(elem).offset().top;
+    elemBottom = elemTop + $(elem).height();
+    return (elemBottom >= docViewTop) && (elemTop <= docViewBottom) && (elemBottom <= docViewBottom) && (elemTop >= docViewTop);
   };
   load_iframe_form = function(id) {
     if ((id != null) && (form_data[id] != null)) {
@@ -221,6 +238,8 @@
       return hide_dialog_overlay();
     } else if (data.label === 'preview') {
       return show_edit_preview(data);
+    } else if (data.label === 'preview-off') {
+      return hide_edit_preview(data.element_path);
     } else if (data.label === 'finished') {
       if ($.modal != null) {
         $.modal.close();
@@ -240,6 +259,7 @@
     if (copypasta.auto_start) {
       $(paths.btn).removeClass('off').addClass('on');
       currentContainer = $('body').addClass('copy-pasta-active').get(0);
+      show_info_dialog();
     }
     $(paths.btn + '.off').live('click', function() {
       var btn;

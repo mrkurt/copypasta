@@ -37,14 +37,21 @@ init = ()->
   else if window.attachEvent?
     window.attachEvent('onmessage', ()-> receive_message(event))
 
-  send_message({'label' : 'ready', form_id : $('form').attr('id')})
+  send_message({label : 'ready', form_id : $('form').attr('id')})
   resize()
 
-$('.close').live 'click', ()-> send_message({'label' : 'finished'})
-$('.edits .edit').live 'click', ()->
-  send_message {
-    label: 'preview'
-    proposed: $(this).find('.proposed').html()
-    element_path: $(this).find('.element_path').html()
-  }
+$('.close').live 'click', ()-> send_message({label : 'finished'})
+$('input.edit-preview-toggle').live 'change', ()->
+  if this.checked
+    send_message {
+      label: 'preview'
+      proposed: $(this).val()
+      element_path: $(this).parent().find('.element_path').val()
+    }
+  else
+    send_message {
+      label: 'preview-off'
+      element_path: $(this).parent().find('.element_path').val()
+
+    }
 $(init)
