@@ -15,7 +15,7 @@
     }
     return _results;
   })())[0];
-  static_host = "http://copypasta.heroku.com";
+  static_host = "https://copypasta.heroku.com";
   css = document.createElement('link');
   css.rel = "stylesheet";
   css.href = static_host + "/stylesheets/compiled/copypasta.css";
@@ -106,13 +106,13 @@
       'edit[url]': window.location.href,
       'edit[element_path]': copypasta.getElementCssPath(e, currentContainer)
     };
-    url = 'http://copypasta.heroku.com/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(page_id);
+    url = 'https://copypasta.heroku.com/edits/new?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(page_id);
     return show_dialog(url, 'edit');
   };
   show_info_dialog = function() {
     var page_id, url, _ref;
     page_id = (_ref = copypasta.page_id) != null ? _ref : '';
-    url = 'http://copypasta.heroku.com/edits?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(page_id);
+    url = 'https://copypasta.heroku.com/edits?view=framed&url=' + escape(window.location.href) + '&page[key]=' + escape(page_id);
     return show_dialog(url, 'info');
   };
   dialog_types = {
@@ -218,13 +218,13 @@
     }
   };
   send_to_iframe = function(msg) {
-    debug_msg("Parent send: " + msg.label + " to http://copypasta.heroku.com");
+    debug_msg("Parent send: " + msg.label + " to https://copypasta.heroku.com");
     msg = JSON.stringify(msg);
-    return $(paths.iframe).get(0).contentWindow.postMessage(msg, 'http://copypasta.heroku.com');
+    return $(paths.iframe).get(0).contentWindow.postMessage(msg, 'https://copypasta.heroku.com');
   };
   receive_from_iframe = function(e) {
     var data;
-    if (e.origin !== 'http://copypasta.heroku.com') {
+    if (e.origin !== 'https://copypasta.heroku.com') {
       debug_msg(e);
       return;
     }
@@ -298,7 +298,7 @@
           return true;
         }
       },
-      src: 'http://copypasta.heroku.com/javascripts/jquery-1.4.4.min.js',
+      src: 'https://copypasta.heroku.com/javascripts/jquery-1.4.4.min.js',
       callback: function() {
         (copypasta.$ = $ = window.jQuery).noConflict(1);
         return debug_msg("Loaded own jquery: version " + $.fn.jquery);
@@ -307,12 +307,12 @@
       test: function() {
         return copypasta.getElementCssPath && window.jQuery && window.jQuery.fn.lightbox_me;
       },
-      src: 'http://copypasta.heroku.com/javascripts/utils.js'
+      src: 'https://copypasta.heroku.com/javascripts/utils.js'
     }, {
       test: function() {
         return window.JSON;
       },
-      src: 'http://copypasta.heroku.com/javascripts/json2.min.js'
+      src: 'https://copypasta.heroku.com/javascripts/json2.min.js'
     }
   ];
   scripts.load = function(queue, callback) {
