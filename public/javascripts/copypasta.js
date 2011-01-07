@@ -1,7 +1,8 @@
 (function() {
-  var $, activate, append_to_element, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, find_current_url, form_data, hide_dialog_overlay, hide_edit_preview, hide_edit_previews, ids, images, indicator, init, is_scrolled_into_view, load_iframe_form, paths, queue, receive_from_iframe, resize_dialog, s, scripts, send_to_iframe, show_dialog, show_dialog_overlay, show_edit_dialog, show_edit_preview, show_info_dialog, static_host, watch;
-  if (window.postMessage == null) {
-    r345eturn;
+  var $, activate, append_to_element, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, find_current_url, form_data, hide_dialog_overlay, hide_edit_preview, hide_edit_previews, ids, images, indicator, init, is_scrolled_into_view, load_iframe_form, paths, queue, receive_from_iframe, resize_dialog, s, scripts, send_to_iframe, show_dialog, show_dialog_overlay, show_edit_dialog, show_edit_preview, show_info_dialog, static_host, w, watch;
+  w = window;
+  if (!w.postMessage) {
+    return;
   }
   append_to_element = ((function() {
     var _i, _len, _ref, _results;
@@ -24,12 +25,12 @@
   currentLive = false;
   currentContainer = false;
   form_data = {};
-  window.copypasta = copypasta = {
+  w.copypasta = copypasta = {
     $: false,
-    page_id: window.copypasta_page_id
+    page_id: w.copypasta_page_id
   };
-  copypasta.debug = window.copypasta_debug || window.location.hash.indexOf('copypasta-debug') > 0;
-  copypasta.auto_start = window.copypasta_auto_start || window.location.hash.indexOf('copypasta-auto') > 0;
+  copypasta.debug = w.copypasta_debug || w.location.hash.indexOf('copypasta-debug') > 0;
+  copypasta.auto_start = w.copypasta_auto_start || w.location.hash.indexOf('copypasta-auto') > 0;
   debug_msg = function(msg) {
     if (copypasta.debug) {
       return console.debug(msg);
@@ -79,7 +80,7 @@
     return $(paths.active + ' ' + el).live('mouseover', activate);
   };
   find_current_url = function() {
-    return ($('link[rel=canonical]').attr('href') || window.location.href).replace(/&?copypasta-[a-z]+&?/g, '').replace(/#$/, '');
+    return ($('link[rel=canonical]').attr('href') || w.location.href).replace(/&?copypasta-[a-z]+&?/g, '').replace(/#$/, '');
   };
   blank_dialog = function(class_name) {
     return '<div id="' + ids.dialog + '" class="' + class_name + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>';
@@ -154,7 +155,7 @@
     } else {
       t = dialog_types["default"];
       t.options.onShow = function() {
-        if (src != null) {
+        if (src) {
           $(paths.overlay).show();
           debug_msg("Overlay shown");
           src = src;
@@ -165,9 +166,9 @@
           return $(paths.iframe).attr('src', src);
         }
       };
-      if ((type != null) && (dialog_types[type] != null)) {
+      if (type && dialog_types[type]) {
         t = dialog_types[type];
-        if (t.options == null) {
+        if (!t.options) {
           t.options = {};
         }
         if (!t.extended) {
@@ -183,7 +184,7 @@
     debug_msg('Previewing ' + data.element_path);
     target = $(currentContainer).find(data.element_path);
     pos = target.position();
-    if (target.get(0).original_text == null) {
+    if (!target.get(0).original_text) {
       target.get(0).original_text = target.html();
     }
     s = $('html').scrollTop(1) > 0 ? 'html' : 'body';
@@ -214,7 +215,7 @@
     return (elemBottom >= docViewTop) && (elemTop <= docViewBottom) && (elemBottom <= docViewBottom) && (elemTop >= docViewTop);
   };
   load_iframe_form = function(id) {
-    if ((id != null) && (form_data[id] != null)) {
+    if (id && form_data[id]) {
       return send_to_iframe({
         'label': 'form_data',
         'data': form_data[id]
@@ -245,7 +246,7 @@
     } else if (data.label === 'preview-off') {
       return hide_edit_preview(data.element_path);
     } else if (data.label === 'finished') {
-      if ($.modal != null) {
+      if ($.modal) {
         $.modal.close();
       }
       return hide_edit_previews();
@@ -264,7 +265,7 @@
       currentContainer = $('body').addClass('copy-pasta-active').get(0);
       show_info_dialog();
     }
-    $(paths.btn).live('click', function() {
+    $(paths.btn + '.off').live('click', function() {
       var btn;
       if ($(this).hasClass('on')) {
         btn = $(this);
@@ -284,10 +285,10 @@
       show_info_dialog();
       return false;
     });
-    if (window.addEventListener != null) {
-      return window.addEventListener('message', receive_from_iframe, false);
-    } else if (window.attachEvent != null) {
-      return window.attachEvent('onmessage', function() {
+    if (w.addEventListener) {
+      return w.addEventListener('message', receive_from_iframe, false);
+    } else if (w.attachEvent) {
+      return w.attachEvent('onmessage', function() {
         return receive_from_iframe(event);
       });
     }
@@ -295,27 +296,22 @@
   scripts = [
     {
       test: function() {
-        if (window.jQuery && window.jQuery.fn && window.jQuery.fn.jquery > "1.3") {
-          $ = window.jQuery;
+        if (w.jQuery && w.jQuery.fn && w.jQuery.fn.jquery > "1.3") {
+          $ = w.jQuery;
           debug_msg("Using existing jquery: version " + $.fn.jquery);
           return true;
         }
       },
       src: 'https://copypasta.heroku.com/javascripts/jquery-1.4.4.min.js',
       callback: function() {
-        (copypasta.$ = $ = window.jQuery).noConflict(1);
+        (copypasta.$ = $ = w.jQuery).noConflict(1);
         return debug_msg("Loaded own jquery: version " + $.fn.jquery);
       }
     }, {
       test: function() {
-        return copypasta.getElementCssPath && window.jQuery && window.jQuery.fn.lightbox_me;
+        return copypasta.getElementCssPath && w.jQuery && w.jQuery.fn.lightbox_me;
       },
       src: 'https://copypasta.heroku.com/javascripts/utils.js'
-    }, {
-      test: function() {
-        return window.JSON;
-      },
-      src: 'https://copypasta.heroku.com/javascripts/json2.min.js'
     }
   ];
   scripts.load = function(queue, callback) {
@@ -325,7 +321,7 @@
       _results = [];
       for (_i = 0, _len = queue.length; _i < _len; _i++) {
         i = queue[_i];
-        if (!(i.state != null)) {
+        if (!i.state) {
           _results.push(i);
         }
       }
@@ -344,7 +340,7 @@
       d = this.readyState;
       if (def.state !== 'loaded' && (!d || d === 'loaded' || d === 'complete')) {
         def.state = 'loaded';
-        if (def.callback != null) {
+        if (def.callback) {
           def.callback();
         }
         remaining = (function() {
@@ -384,7 +380,7 @@
     _results = [];
     for (_i = 0, _len = scripts.length; _i < _len; _i++) {
       s = scripts[_i];
-      if ((s != null) && !s.test()) {
+      if (s && !s.test()) {
         _results.push(s);
       }
     }

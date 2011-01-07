@@ -1,4 +1,5 @@
-r345eturn unless window.postMessage?
+w = window
+return unless w.postMessage
 
 append_to_element = (e for e in document.documentElement.childNodes when e.nodeType == 1)[0]
 static_host = "http://localhost:3000"
@@ -12,9 +13,9 @@ currentLive = false
 currentContainer = false
 form_data = {}
 
-window.copypasta = copypasta = {$ : false, page_id : window.copypasta_page_id}
-copypasta.debug = window.copypasta_debug || window.location.hash.indexOf('copypasta-debug') > 0
-copypasta.auto_start = window.copypasta_auto_start || window.location.hash.indexOf('copypasta-auto') > 0
+w.copypasta = copypasta = {$ : false, page_id : w.copypasta_page_id}
+copypasta.debug = w.copypasta_debug || w.location.hash.indexOf('copypasta-debug') > 0
+copypasta.auto_start = w.copypasta_auto_start || w.location.hash.indexOf('copypasta-auto') > 0
 
 debug_msg = (msg)->
   if copypasta.debug
@@ -63,7 +64,7 @@ watch = (el) ->
   $(paths.active + ' ' + el).live('mouseover', activate)
 
 find_current_url = ()->
-  ($('link[rel=canonical]').attr('href') || window.location.href).replace(/&?copypasta-[a-z]+&?/g,'').replace(/#$/,'')
+  ($('link[rel=canonical]').attr('href') || w.location.href).replace(/&?copypasta-[a-z]+&?/g,'').replace(/#$/,'')
 
 blank_dialog = (class_name) -> '<div id="' + ids.dialog + '" class="' + class_name + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>'
 
@@ -117,7 +118,7 @@ show_dialog = (src, type) ->
   else
     t = dialog_types.default
     t.options.onShow = ()->
-      if src?
+      if src
         $(paths.overlay).show()
         debug_msg("Overlay shown")
         src = src
@@ -125,9 +126,9 @@ show_dialog = (src, type) ->
         debug_msg("Loading iframe: " + src)
         $(paths.iframe).attr('src', src)
 
-    if type? && dialog_types[type]?
+    if type && dialog_types[type]
       t = dialog_types[type]
-      t.options = {} unless t.options?
+      t.options = {} unless t.options
       t.options = $.extend(t.options, dialog_types.default.options) unless t.extended
       t.extended = true
 
@@ -137,7 +138,7 @@ show_edit_preview = (data)->
   debug_msg('Previewing ' + data.element_path)
   target = $(currentContainer).find(data.element_path)
   pos = target.position()
-  unless target.get(0).original_text?
+  unless target.get(0).original_text
     target.get(0).original_text = target.html()
   s = if $('html').scrollTop(1) > 0 then 'html' else 'body'
   $(s).animate {scrollTop : pos.top}, ()->
@@ -162,7 +163,7 @@ is_scrolled_into_view = (elem)->
     (elemBottom >= docViewTop) && (elemTop <= docViewBottom)&& (elemBottom <= docViewBottom) &&  (elemTop >= docViewTop)
 
 load_iframe_form = (id)->
-  if id? && form_data[id]?
+  if id && form_data[id]
     send_to_iframe('label' : 'form_data', 'data' : form_data[id])
 
 send_to_iframe = (msg) ->
@@ -187,7 +188,7 @@ receive_from_iframe = (e) ->
   else if data.label == 'preview-off'
     hide_edit_preview(data.element_path)
   else if data.label == 'finished'
-    $.modal.close() if $.modal?
+    $.modal.close() if $.modal
     hide_edit_previews()
   else if data.label == 'resize'
     resize_dialog(data)
@@ -199,7 +200,7 @@ init = ()->
     currentContainer = $('body').addClass('copy-pasta-active').get(0)
     show_info_dialog()
 
-  $(paths.btn).live 'click', ()->
+  $(paths.btn + '.off').live 'click', ()->
     if $(this).hasClass('on')
       btn = $(this)
       btn.removeClass('on')
@@ -216,36 +217,32 @@ init = ()->
     show_info_dialog()
     return false
 
-  if window.addEventListener?
-    window.addEventListener('message', receive_from_iframe, false)
-  else if window.attachEvent?
-    window.attachEvent('onmessage', ()-> receive_from_iframe(event))
+  if w.addEventListener
+    w.addEventListener('message', receive_from_iframe, false)
+  else if w.attachEvent
+    w.attachEvent('onmessage', ()-> receive_from_iframe(event))
 
 scripts = [
     {
       test: ()->
-        if window.jQuery && window.jQuery.fn && window.jQuery.fn.jquery > "1.3"
-          $ = window.jQuery
+        if w.jQuery && w.jQuery.fn && w.jQuery.fn.jquery > "1.3"
+          $ = w.jQuery
           debug_msg("Using existing jquery: version " + $.fn.jquery)
           true
       #src: 'http://localhost:3000/javascripts/jquery-1.3.min.js'
       src: 'http://localhost:3000/javascripts/jquery-1.4.4.min.js'
       callback : ()->
-        (copypasta.$ = $ = window.jQuery).noConflict(1)
+        (copypasta.$ = $ = w.jQuery).noConflict(1)
         debug_msg("Loaded own jquery: version " + $.fn.jquery)
     },
     {
-      test: ()-> copypasta.getElementCssPath && window.jQuery && window.jQuery.fn.lightbox_me
+      test: ()-> copypasta.getElementCssPath && w.jQuery && w.jQuery.fn.lightbox_me
       src: 'http://localhost:3000/javascripts/utils.js'
-    },
-    { #json lib for ie8 in quirks mode
-      test: ()-> window.JSON
-      src: 'http://localhost:3000/javascripts/json2.min.js'
     }
-  ]
+]
 
 scripts.load = (queue, callback) ->
-  remaining = (i for i in queue when !i.state?)
+  remaining = (i for i in queue when !i.state)
   return if remaining.length == 0
   def = remaining.pop()
   def.state = 'pending'
@@ -256,7 +253,7 @@ scripts.load = (queue, callback) ->
     d = this.readyState
     if def.state != 'loaded' && (!d || d == 'loaded' || d == 'complete')
       def.state = 'loaded'
-      def.callback() if def.callback?
+      def.callback() if def.callback
       remaining = (i for i in queue when i.state != 'loaded')
       if remaining.length == 0
         callback()
@@ -273,7 +270,7 @@ images.load = ()->
     img = new Image
     img.src = static_host + '/images/' + i
 
-queue = (s for s in scripts when s? && !s.test())
+queue = (s for s in scripts when s && !s.test())
 
 if queue.length > 0
   scripts.load(queue, init)
