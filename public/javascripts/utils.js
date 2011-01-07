@@ -29,7 +29,7 @@ window.copypasta.getElementTreeCssPath = function(element, root)
         paths.splice(0, 0, tagName + pathIndex);
     }
 
-    return paths.length ? paths.join(" ") : null;
+    return paths.length ? '> ' + paths.join(" > ") : null;
 };
 
 /*
