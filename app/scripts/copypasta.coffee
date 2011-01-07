@@ -193,6 +193,7 @@ init = ()->
   if copypasta.auto_start
     $(paths.btn).removeClass('off').addClass('on')
     currentContainer = $('body').addClass('copy-pasta-active').get(0)
+    show_info_dialog()
 
   $(paths.btn + '.off').live 'click', ()->
     if $(this).hasClass('on')

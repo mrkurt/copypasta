@@ -53,14 +53,14 @@
       });
     }
     send_message({
-      'label': 'ready',
+      label: 'ready',
       form_id: $('form').attr('id')
     });
     return resize();
   };
   $('.close').live('click', function() {
     return send_message({
-      'label': 'finished'
+      label: 'finished'
     });
   });
   $('input.edit-preview-toggle').live('change', function() {

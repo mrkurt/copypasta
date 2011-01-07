@@ -37,10 +37,10 @@ init = ()->
   else if window.attachEvent?
     window.attachEvent('onmessage', ()-> receive_message(event))
 
-  send_message({'label' : 'ready', form_id : $('form').attr('id')})
+  send_message({label : 'ready', form_id : $('form').attr('id')})
   resize()
 
-$('.close').live 'click', ()-> send_message({'label' : 'finished'})
+$('.close').live 'click', ()-> send_message({label : 'finished'})
 $('input.edit-preview-toggle').live 'change', ()->
   if this.checked
     send_message {
