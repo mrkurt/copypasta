@@ -54,7 +54,7 @@
     }
     send_message({
       label: 'ready',
-      form_id: $('form').attr('id')
+      form_id: $('form.primary').attr('id')
     });
     return resize();
   };
@@ -76,6 +76,12 @@
         element_path: $(this).parent().find('.element_path').val()
       });
     }
+  });
+  $('form.editor-options input').live('change', function() {
+    return $(this).closest('form').submit();
+  });
+  $('input.back').live('click', function() {
+    return history.go(-1);
   });
   $(init);
 }).call(this);

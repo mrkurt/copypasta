@@ -1,5 +1,5 @@
 class EditsController < ApplicationController
-  before_filter :require_url!, :except => :index
+  before_filter :require_url!, :only => [:new, :create]
 
   def index
     @filter = params[:filter] || 'new'
@@ -27,6 +27,15 @@ class EditsController < ApplicationController
       view = 'edits/new'
     end
     render view, :layout => (params[:view] || true)
+  end
+
+  def update
+    @edit = Edit.find(params[:id])
+    raise "No yuo!" unless is_editor_for?(@edit.page.host)
+    @edit.status = params[:edit][:status] if params[:edit][:status]
+    @edit.update_attributes!(params[:edit])
+
+    render :layout => (params[:view] || true)
   end
 
   def new

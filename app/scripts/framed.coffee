@@ -37,7 +37,7 @@ init = ()->
   else if window.attachEvent?
     window.attachEvent('onmessage', ()-> receive_message(event))
 
-  send_message({label : 'ready', form_id : $('form').attr('id')})
+  send_message({label : 'ready', form_id : $('form.primary').attr('id')})
   resize()
 
 $('.close').live 'click', ()-> send_message({label : 'finished'})
@@ -54,4 +54,11 @@ $('input.edit-preview-toggle').live 'change', ()->
       element_path: $(this).parent().find('.element_path').val()
 
     }
+
+$('form.editor-options input').live 'change', ()->
+  $(this).closest('form').submit()
+
+$('input.back').live 'click', ()->
+  history.go(-1)
+
 $(init)

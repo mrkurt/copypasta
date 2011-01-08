@@ -178,6 +178,7 @@ receive_from_iframe = (e) ->
   data = JSON.parse(e.data)
   debug_msg("Parent receive: " + data.label + " from " + e.origin)
   if data.label == 'ready'
+    console.debug(data)
     unless load_iframe_form(data.form_id)
       #have to wait til after form data postMessage, otherwise
       hide_dialog_overlay()

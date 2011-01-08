@@ -236,6 +236,7 @@
     data = JSON.parse(e.data);
     debug_msg("Parent receive: " + data.label + " from " + e.origin);
     if (data.label === 'ready') {
+      console.debug(data);
       if (!load_iframe_form(data.form_id)) {
         return hide_dialog_overlay();
       }

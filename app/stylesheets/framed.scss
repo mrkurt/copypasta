@@ -55,9 +55,19 @@ body{
   border: 1px solid green;
   background: mix(#fff, green, 80%);
 }
-p{ 
+p, h1, h2, h3, h4{ 
   margin: 10px;
   padding: 0px;
+}
+p.hint{
+  margin: 0px 10px;
+}
+
+textarea{
+  display: block;
+  margin: 0px auto;
+  width: 90%;
+  height: 150px;
 }
 p.options{
   text-align: right;
@@ -114,6 +124,9 @@ h2.edits{
   margin: 0;
   font-size: 120%;
 }
+.code{
+  font-family: monospace;
+}
 table.edits{
   margin: 0;
   padding: 0;
@@ -128,7 +141,30 @@ table.edits{
     padding-top: 3px;
   }
   .preview{ text-align: center; }
-  .title { text-align: left; padding-left: 10px; }
+  .title{ 
+    text-align: left; 
+    padding-left: 10px; 
+
+    .editor-options{
+      float: right;
+      margin: 0; padding: 0;
+      width: auto;
+    }
+    p.accept, p.reject{
+      line-height: 100%;
+      white-space: nowrap;
+      margin: 0; padding: 0;
+      padding: 5px;
+      font-size: 80%;
+      font-weight: bold;
+      text-align: left;
+    
+      input{ height: 10px; width: 10px; margin: 0; vertical-align: baseline; }
+    }
+
+    p.accept{ background-color: #EFE; color: #060; }
+    p.reject{ background-color: #FEE; color: #600; }
+  }
   
   a{ color: #888;}
 }

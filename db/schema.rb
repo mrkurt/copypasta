@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(:version => 20110107201325) do
     t.integer  "editor_id"
     t.string   "key"
     t.datetime "expires_at"
-    t.integer  "use_count"
+    t.integer  "use_count",  :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end

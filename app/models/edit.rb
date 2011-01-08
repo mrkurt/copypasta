@@ -4,7 +4,7 @@ class Edit < ActiveRecord::Base
 
   belongs_to :page
 
-  validates_inclusion_of :status, :in => ['new', 'rejected', 'applied']
+  validates_inclusion_of :status, :in => ['new', 'rejected', 'accepted']
   validates_presence_of :proposed, :original, :url
 
   validate :proposed_should_be_different
