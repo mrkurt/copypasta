@@ -5,6 +5,6 @@ class SessionsController < ApplicationController
     raise "Invalid key" if token.nil?
     EditorToken.increment_counter(:use_count, token.id)
     session["editor_key_#{token.editor.host}"] = token.key
-    redirect_to '/'
+    redirect_to params[:url] || '/'
   end
 end
