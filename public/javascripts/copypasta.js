@@ -80,7 +80,7 @@
     return $(paths.active + ' ' + el).live('mouseover', activate);
   };
   find_current_url = function() {
-    return ($('link[rel=canonical]').attr('href') || w.location.href).replace(/&?copypasta-[a-z]+&?/g, '').replace(/#$/, '');
+    return ($('link[rel=canonical]').attr('href') || w.location.href).replace(/#?copypasta-[a-z]+/g, '').replace(/#+$/, '');
   };
   blank_dialog = function(class_name) {
     return '<div id="' + ids.dialog + '" class="' + class_name + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>';
@@ -236,7 +236,6 @@
     data = JSON.parse(e.data);
     debug_msg("Parent receive: " + data.label + " from " + e.origin);
     if (data.label === 'ready') {
-      console.debug(data);
       if (!load_iframe_form(data.form_id)) {
         return hide_dialog_overlay();
       }

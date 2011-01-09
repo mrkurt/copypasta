@@ -64,7 +64,7 @@ watch = (el) ->
   $(paths.active + ' ' + el).live('mouseover', activate)
 
 find_current_url = ()->
-  ($('link[rel=canonical]').attr('href') || w.location.href).replace(/&?copypasta-[a-z]+&?/g,'').replace(/#$/,'')
+  ($('link[rel=canonical]').attr('href') || w.location.href).replace(/#?copypasta-[a-z]+/g,'').replace(/#+$/,'')
 
 blank_dialog = (class_name) -> '<div id="' + ids.dialog + '" class="' + class_name + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>'
 
@@ -178,7 +178,6 @@ receive_from_iframe = (e) ->
   data = JSON.parse(e.data)
   debug_msg("Parent receive: " + data.label + " from " + e.origin)
   if data.label == 'ready'
-    console.debug(data)
     unless load_iframe_form(data.form_id)
       #have to wait til after form data postMessage, otherwise
       hide_dialog_overlay()

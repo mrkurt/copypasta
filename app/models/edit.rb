@@ -12,4 +12,8 @@ class Edit < ActiveRecord::Base
   def proposed_should_be_different
     errors[:proposed] << 'fix must have changes' if proposed == original
   end
+
+  def url_with_edits
+    url + '#copypasta-auto'
+  end
 end
