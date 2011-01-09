@@ -1,8 +1,8 @@
-<%=(@edit.user_name || "An anonymous user") %> just submitted a correction for one of your pages:
+<%= raw edit_author %> just submitted a correction for one of your pages:
 <%= @edit.url %>
 
 Proposed changes:
-<%= @edit.proposed %>
+<%= raw @edit.proposed %>
 
 Manage edits for this page:
-<%= new_session_url(:key => @editor.create_token.key, :url => @edit.url) %>
+<%= raw new_session_url(:key => @editor.create_token.key, :url => @edit.url) %>
