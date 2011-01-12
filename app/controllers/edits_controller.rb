@@ -1,9 +1,10 @@
 class EditsController < ApplicationController
   before_filter :require_account!, :only => [:new, :create]
+  before_filter :load_page
 
   def index
     @filter = params[:filter] || 'new'
-    if @page = load_page
+    if @page
       @edits = @page.edits.where(:status => @filter)
     else
       @edits = Edit.where(:status => @filter)
@@ -17,11 +18,11 @@ class EditsController < ApplicationController
   end
 
   def create
-    @page = load_page(true)
     @edit = Edit.new(params[:edit])
     session["email"] = @edit.email
     session["user_name"] = @edit.user_name
     @edit.page = @page
+    @edit.ip_address = request.remote_ip
     if @edit.save
       view = 'edits/create'
     else
@@ -42,7 +43,6 @@ class EditsController < ApplicationController
 
   def new
     headers['Cache-Control'] = 'no-cache'
-    @page = load_page
     @edit = Edit.new(params[:edit])
     @edit.user_name = session["user_name"]
     @edit.email = session["email"]
@@ -50,7 +50,7 @@ class EditsController < ApplicationController
     render :layout => (params[:view] || true)
   end
 
-  def load_page(create = false)
+  def load_page
     return @page if @page
     return nil unless (params[:page] && !params[:page][:key].blank?) || params[:url]
     key = (params[:page] && !params[:page][:key].blank?) ? params[:page][:key] : Digest::MD5.hexdigest(params[:url])
@@ -60,7 +60,7 @@ class EditsController < ApplicationController
       @page.account = account
       @page.key = key
       @page.url = params[:url]
-      @page.save if create
+      @page.save
     end
     @page
   end
