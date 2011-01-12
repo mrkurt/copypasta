@@ -34,7 +34,7 @@ class EditsController < ApplicationController
 
   def update
     @edit = Edit.find(params[:id])
-    raise "No yuo!" unless is_editor_for?(@edit.page.host)
+    raise "No yuo!" unless is_editor_for?(@edit.page.account)
     @edit.status = params[:edit][:status] if params[:edit][:status]
     @edit.update_attributes!(params[:edit])
 

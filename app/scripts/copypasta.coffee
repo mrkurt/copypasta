@@ -2,6 +2,7 @@ w = window
 return unless w.postMessage
 
 append_to_element = (e for e in document.documentElement.childNodes when e.nodeType == 1)[0]
+iframe_host = "http://localhost:3000"
 static_host = "http://localhost:3000"
 css = document.createElement('link')
 css.rel = "stylesheet"
@@ -99,13 +100,13 @@ show_edit_dialog = ()->
     'edit[url]' : find_current_url()
     'edit[element_path]' : copypasta.getElementCssPath(e, currentContainer)
   
-  url = 'http://localhost:3000/edits/new?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id)
+  url = iframe_host + '/edits/new?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id)
 
   show_dialog(url, 'edit')
 
 show_info_dialog = ()->
   page_id = copypasta.page_id ? ''
-  url = 'http://localhost:3000/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id)
+  url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id)
 
   show_dialog(url, 'info')
 

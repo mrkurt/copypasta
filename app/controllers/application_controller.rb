@@ -22,7 +22,8 @@ class ApplicationController < ActionController::Base
     @account
   end
 
-  def is_editor_for?(account)
+  def is_editor_for?(account_or_child)
+    account = ((account_or_child.is_a?(Account) && account_or_child) || account_or_child.account)
     t = session["editor_key_#{account.id}"]
     return false if t.nil?
     EditorToken.where(:key => t).first || false

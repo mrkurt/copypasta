@@ -5,4 +5,4 @@ Proposed changes:
 <%= raw @edit.proposed %>
 
 Manage edits for this page:
-<%= raw new_session_url(:key => @editor.create_token.key, :url => @edit.url) %>
+<%= raw new_session_url(:key => @editor.create_token.key, :url => @edit.url + '#copypasta-auto') %>

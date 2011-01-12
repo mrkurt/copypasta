@@ -1,7 +1,8 @@
 CoffeeScript = require 'coffee-script'
 
 replacements =
-  'http://localhost:3000' : 'https://copypasta.heroku.com'
+  'iframe_host = "http://localhost:3000"' : 'iframe_host = "https://copypasta.heroku.com"'
+  'http://localhost:3000' : 'http://copypasta.heroku.com'
 
 CoffeeScript.on 'compile', (task) ->
   for own key, value of replacements
