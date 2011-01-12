@@ -5,6 +5,6 @@ class EditorMailer < ActionMailer::Base
     @edit = edit
     @editor = editor
 
-    mail(:to => editor.email, :subject => "Corrections for #{edit.page.host}")
+    mail(:to => editor.email, :subject => "Corrections for #{edit.page.url}")
   end
 end

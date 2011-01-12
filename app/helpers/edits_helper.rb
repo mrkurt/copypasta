@@ -36,6 +36,6 @@ module EditsHelper
 
   def is_editor_for?(edit = nil)
     edit ||= @edit
-    controller.is_editor_for?(edit.page.host)
+    controller.is_editor_for?(edit.page.account)
   end
 end

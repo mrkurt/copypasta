@@ -10,7 +10,12 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110107201325) do
+ActiveRecord::Schema.define(:version => 20110112014945) do
+
+  create_table "accounts", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "editor_tokens", :force => true do |t|
     t.integer  "editor_id"
@@ -25,14 +30,15 @@ ActiveRecord::Schema.define(:version => 20110107201325) do
 
   create_table "editors", :force => true do |t|
     t.string   "email"
-    t.string   "host"
     t.string   "key"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "account_id"
+    t.boolean  "is_owner",   :default => false
   end
 
-  add_index "editors", ["host", "email"], :name => "index_editors_on_host_and_email", :unique => true
-  add_index "editors", ["host"], :name => "index_editors_on_host"
+  add_index "editors", ["account_id", "email"], :name => "index_editors_on_account_id_and_email", :unique => true
+  add_index "editors", ["email"], :name => "index_editors_on_host_and_email", :unique => true
 
   create_table "edits", :force => true do |t|
     t.string   "url"
@@ -51,13 +57,21 @@ ActiveRecord::Schema.define(:version => 20110107201325) do
   add_index "edits", ["page_id"], :name => "index_edits_on_page_id"
 
   create_table "pages", :force => true do |t|
-    t.string   "host"
     t.string   "key"
     t.string   "url"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "account_id"
   end
 
-  add_index "pages", ["host", "key"], :name => "index_pages_on_host_and_key", :unique => true
+  add_index "pages", ["account_id", "key"], :name => "index_pages_on_account_id_and_key", :unique => true
+  add_index "pages", ["key"], :name => "index_pages_on_host_and_key", :unique => true
+
+  create_table "sites", :force => true do |t|
+    t.integer  "account_id"
+    t.string   "host"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end

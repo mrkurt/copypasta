@@ -1,5 +1,5 @@
-<%= raw edit_author %> just submitted a correction for one of your pages:
-<%= @edit.url %>
+<%= raw ((@edit.user_name.blank? && '(Anonymous)') || @edit.user_name) %> just submitted a correction for one of your pages:
+<%= raw @edit.url %>
 
 Proposed changes:
 <%= raw @edit.proposed %>

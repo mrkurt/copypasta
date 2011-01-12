@@ -1,5 +1,5 @@
 class EditsController < ApplicationController
-  before_filter :require_url!, :only => [:new, :create]
+  before_filter :require_account!, :only => [:new, :create]
 
   def index
     @filter = params[:filter] || 'new'
@@ -50,10 +50,10 @@ class EditsController < ApplicationController
     return @page if @page
     return nil unless (params[:page] && !params[:page][:key].blank?) || params[:url]
     key = (params[:page] && !params[:page][:key].blank?) ? params[:page][:key] : Digest::MD5.hexdigest(params[:url])
-    @page = Page.where(:key => key, :host => host).first
+    @page = Page.where(:key => key, :account_id => account.id).first
     unless @page
       @page = Page.new(params[:page])
-      @page.host = host
+      @page.account = account
       @page.key = key
       @page.url = params[:url]
       @page.save if create
