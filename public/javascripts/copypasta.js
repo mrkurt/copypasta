@@ -31,6 +31,7 @@
   };
   copypasta.debug = w.copypasta_debug || w.location.hash.indexOf('copypasta-debug') > 0;
   copypasta.auto_start = w.copypasta_auto_start || w.location.hash.indexOf('copypasta-auto') > 0;
+  copypasta.include_url_hash = w.copypasta_include_url_hash || false;
   debug_msg = function(msg) {
     if (copypasta.debug) {
       return console.debug(msg);
@@ -80,7 +81,16 @@
     return $(paths.active + ' ' + el).live('mouseover', activate);
   };
   find_current_url = function() {
-    return ($('link[rel=canonical]').attr('href') || w.location.href).replace(/#?copypasta-[a-z]+/g, '').replace(/#+$/, '');
+    var oh, url;
+    oh = w.location.hash;
+    if (copypasta.include_url_hash) {
+      w.location.hash = w.location.hash.replace(/#?copypasta-[a-z]+/g, '');
+    } else {
+      w.location.hash = '';
+    }
+    url = $('link[rel=canonical]').attr('href') || w.location.href.replace(/#+$/, '');
+    w.location.hash = oh;
+    return url;
   };
   blank_dialog = function(class_name) {
     return '<div id="' + ids.dialog + '" class="' + class_name + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>';
