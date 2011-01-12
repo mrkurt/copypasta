@@ -19,6 +19,8 @@ class EditsController < ApplicationController
   def create
     @page = load_page(true)
     @edit = Edit.new(params[:edit])
+    session["email"] = @edit.email
+    session["user_name"] = @edit.user_name
     @edit.page = @page
     if @edit.save
       view = 'edits/create'
@@ -42,6 +44,8 @@ class EditsController < ApplicationController
     headers['Cache-Control'] = 'no-cache'
     @page = load_page
     @edit = Edit.new(params[:edit])
+    @edit.user_name = session["user_name"]
+    @edit.email = session["email"]
     @edit.url = params[:url] if @edit.url.blank?
     render :layout => (params[:view] || true)
   end

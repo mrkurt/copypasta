@@ -1,35 +1,36 @@
 %h2.edits
   = edit_count
-%table.edits
-  %tr
-    %th.title.hint
-      =link_to_unless @filter == 'new', 'New', url_for(params.merge({:filter => 'new'}))
-      |
-      =link_to_unless @filter == 'accepted', 'Accepted', url_for(params.merge({:filter => 'accepted'}))
-      |
-      =link_to_unless @filter == 'rejected', 'Rejected', url_for(params.merge({:filter => 'rejected'}))
-    %th.preview.hint show
-  -@edits.each do |edit|
+#content
+  %table.edits
     %tr
-      %td.title
-        -if is_editor_for?(edit)
-          =form_for edit, :html => {:class => 'editor-options'} do |f|
-            =hidden_field_tag 'view', params[:view]
-            =hidden_field_tag 'url', params[:url]
-            %p.accept
-              %label
-                =f.radio_button :status, 'accepted'
-                Accept
-            %p.reject
-              %label 
-                =f.radio_button :status, 'rejected'
-                Reject
-        = edit_author(edit)
-        %p.hint
-          = edit_time(edit)
-          ago
-      %td.preview
-        %input{:type => 'checkbox', :class => 'edit-preview-toggle', :value => diff_edit(edit, false)}
-        %input{:type => 'hidden', :class => 'element_path', :value => edit.element_path}
+      %th.title.hint
+        =link_to_unless @filter == 'new', 'New', url_for(params.merge({:filter => 'new'}))
+        |
+        =link_to_unless @filter == 'accepted', 'Accepted', url_for(params.merge({:filter => 'accepted'}))
+        |
+        =link_to_unless @filter == 'rejected', 'Rejected', url_for(params.merge({:filter => 'rejected'}))
+      %th.preview.hint show
+    -@edits.each do |edit|
+      %tr
+        %td.title
+          -if is_editor_for?(edit)
+            =form_for edit, :html => {:class => 'editor-options'} do |f|
+              =hidden_field_tag 'view', params[:view]
+              =hidden_field_tag 'url', params[:url]
+              %p.accept
+                %label
+                  =f.radio_button :status, 'accepted'
+                  Accept
+              %p.reject
+                %label 
+                  =f.radio_button :status, 'rejected'
+                  Reject
+          = edit_author(edit)
+          %p.hint
+            = edit_time(edit)
+            ago
+        %td.preview
+          %input{:type => 'checkbox', :class => 'edit-preview-toggle', :value => diff_edit(edit, false)}
+          %input{:type => 'hidden', :class => 'element_path', :value => edit.element_path}
 %p.options
   %input{:type => 'button', :value => 'Close', :class => 'close secondary'}
