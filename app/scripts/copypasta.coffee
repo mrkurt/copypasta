@@ -183,7 +183,7 @@ send_to_iframe = (msg) ->
   $(paths.iframe).get(0).contentWindow.postMessage(msg, 'http://localhost:3000')
 
 receive_from_iframe = (e) ->
-  unless e.origin == 'http://localhost:3000'
+  unless e.origin == iframe_host
     debug_msg(e)
     return
   data = JSON.parse(e.data)

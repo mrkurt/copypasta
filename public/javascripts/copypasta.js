@@ -240,7 +240,7 @@
   };
   receive_from_iframe = function(e) {
     var data;
-    if (e.origin !== 'http://copypasta.heroku.com') {
+    if (e.origin !== iframe_host) {
       debug_msg(e);
       return;
     }
