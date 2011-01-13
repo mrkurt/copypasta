@@ -273,7 +273,7 @@
       watch(el);
     }
     if (copypasta.auto_start) {
-      currentContainer = $('body').addClass('copy-pasta-active').get(0);
+      currentContainer = $($(paths.btn).attr('href') || 'body').addClass('copy-pasta-active').get(0);
       show_info_dialog();
     }
     $(paths.btn + '.off').live('click', function() {

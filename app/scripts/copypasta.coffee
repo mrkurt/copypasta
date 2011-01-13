@@ -208,7 +208,7 @@ init = ()->
   watch el for el in ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
 
   if copypasta.auto_start
-    currentContainer = $('body').addClass('copy-pasta-active').get(0)
+    currentContainer = $($(paths.btn).attr('href') || 'body').addClass('copy-pasta-active').get(0)
     show_info_dialog()
 
   $(paths.btn + '.off').live 'click', ()->
