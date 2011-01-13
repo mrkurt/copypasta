@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110112014945) do
+ActiveRecord::Schema.define(:version => 20110113142309) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(:version => 20110112014945) do
     t.datetime "updated_at"
     t.string   "email"
     t.string   "user_name"
+    t.boolean  "opt_in",       :default => false
   end
 
   add_index "edits", ["page_id"], :name => "index_edits_on_page_id"
