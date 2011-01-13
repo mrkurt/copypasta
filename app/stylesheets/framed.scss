@@ -90,12 +90,11 @@ form{
   padding: 10px;
   
   textarea{
-    width: 385px;
+    width: 392px;
     height: 250px;
     padding: 2px;
     background-color: #fff;
     @include linear-gradient(color-stops(#ddd 0%, #fff 2%, #fff));
-    margin: 0px auto;
     display: block;
   }
   textarea, input[type=text]{
@@ -121,7 +120,8 @@ form{
     &.field{
       white-space: nowrap;
       text-align: left;
-      input[type=text]{ width: 140px; margin-right: 20px; }
+      input[type=text]{ width: 140px; margin-right: 15px; }
+      padding-left: 5px;
     }
     &.options{
       margin-bottom: 0px;

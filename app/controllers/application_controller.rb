@@ -28,4 +28,8 @@ class ApplicationController < ActionController::Base
     return false if t.nil?
     EditorToken.where(:key => t).first || false
   end
+
+  def no_cache!
+    headers['Cache-Control'] = 'no-cache'
+  end
 end

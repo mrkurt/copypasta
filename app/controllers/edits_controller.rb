@@ -1,4 +1,5 @@
 class EditsController < ApplicationController
+  before_filter :no_cache!
   before_filter :require_account!, :only => [:new, :create]
   before_filter :load_page
 
