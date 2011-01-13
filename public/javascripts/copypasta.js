@@ -1,5 +1,5 @@
 (function() {
-  var $, activate, append_to_element, blank_dialog, copypasta, cover, css, currentContainer, currentLive, deactivate, debug_msg, dialog, e, find_current_url, form_data, hide_dialog_overlay, hide_edit_preview, hide_edit_previews, ids, iframe_host, images, indicator, init, interesting_styles, is_scrolled_into_view, load_iframe_form, paths, queue, receive_from_iframe, resize_dialog, s, scripts, send_to_iframe, show_dialog_overlay, show_edit_dialog, show_edit_preview, show_info_dialog, static_host, w, watch;
+  var $, activate, append_to_element, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, find_current_url, form_data, hide_dialog_overlay, hide_edit_preview, hide_edit_previews, ids, iframe_host, images, indicator, init, is_scrolled_into_view, load_iframe_form, paths, queue, receive_from_iframe, resize_dialog, s, scripts, send_to_iframe, show_dialog, show_dialog_overlay, show_edit_dialog, show_edit_preview, show_info_dialog, static_host, w, watch;
   w = window;
   if (!w.postMessage) {
     return;
@@ -54,37 +54,6 @@
     overlay: '#' + ids.overlay,
     status: '#copy-pasta-button .status'
   };
-  cover = function(bottom, top) {
-    var pos, sz;
-    pos = $(bottom).offset();
-    pos.top = pos.top + 'px';
-    pos.left = pos.left + 'px';
-    sz = {
-      width: $(bottom).outerWidth() + 'px',
-      height: $(bottom).outerHeight() + 'px'
-    };
-    return $(top).css(sz).css(pos).show();
-  };
-  interesting_styles = ['font-family', 'font-size', 'line-height', 'padding', 'background-color', 'color', 'height', 'width'];
-  blank_dialog = function(class_name) {
-    return '<div id="' + ids.dialog + '" class="' + class_name + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>';
-  };
-  dialog = function(src, clss) {
-    if (src != null) {
-      $(paths.dialog).remove();
-    }
-    if ($(paths.dialog).length === 0) {
-      $('body').append(blank_dialog);
-    }
-    if (clss != null) {
-      $(paths.dialog).attr('class', clss);
-    }
-    if (src != null) {
-      $(paths.overlay).show();
-      $(paths.iframe).attr('src', src);
-    }
-    return $(paths.dialog);
-  };
   indicator = function() {
     if ($(paths.indicator).length === 0) {
       $('body').append('<div id="' + ids.indicator + '"><p>click to correct</p></div>');
@@ -94,7 +63,15 @@
     return $(paths.indicator);
   };
   activate = function() {
-    cover(this, indicator());
+    var pos, sz;
+    pos = $(this).offset();
+    pos.top = pos.top + 'px';
+    pos.left = pos.left + 'px';
+    sz = {
+      width: $(this).outerWidth() + 'px',
+      height: $(this).outerHeight() + 'px'
+    };
+    indicator().css(sz).css(pos).show();
     return currentLive = this;
   };
   deactivate = function() {
@@ -116,6 +93,9 @@
     w.location.hash = oh;
     return url;
   };
+  blank_dialog = function(class_name) {
+    return '<div id="' + ids.dialog + '" class="' + class_name + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>';
+  };
   show_dialog_overlay = function() {
     return $(paths.overlay).fadeIn(function() {
       return debug_msg("Overlay shown");
@@ -132,7 +112,7 @@
     });
   };
   show_edit_dialog = function() {
-    var page_id, s, style, url, _ref, _ref2;
+    var page_id, url, _ref, _ref2;
     e = currentLive;
     (_ref = e.original_text) != null ? _ref : e.original_text = e.innerHTML;
     page_id = (_ref2 = copypasta.page_id) != null ? _ref2 : '';
@@ -142,26 +122,73 @@
       'edit[url]': find_current_url(),
       'edit[element_path]': copypasta.getElementCssPath(e, currentContainer)
     };
-    style = ((function() {
-      var _i, _len, _results;
-      _results = [];
-      for (_i = 0, _len = interesting_styles.length; _i < _len; _i++) {
-        s = interesting_styles[_i];
-        _results.push(s + ":" + $(e).css(s));
-      }
-      return _results;
-    })()).join(';');
-    debug_msg("Found style: " + style);
-    url = iframe_host + '/edits/new?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id) + '&style=' + escape(style);
-    indicator().hide();
-    $(e).addClass('copy-pasta-being-edited');
-    return cover(e, dialog(url, 'copy-pasta-inline'));
+    url = iframe_host + '/edits/new?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id);
+    return show_dialog(url, 'edit');
   };
   show_info_dialog = function() {
     var page_id, url, _ref;
     page_id = (_ref = copypasta.page_id) != null ? _ref : '';
     url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id);
-    return dialog(url, 'copy-pasta-widget').fadeIn();
+    return show_dialog(url, 'info');
+  };
+  dialog_types = {
+    "default": {
+      options: {
+        escClose: true,
+        overlayClose: true,
+        overlayId: 'copy-pasta-lightbox-overlay',
+        containerId: 'copy-pasta-lightbox-container',
+        opacity: 70,
+        persist: true
+      }
+    },
+    edit: {
+      "class": 'copy-pasta-lightbox'
+    },
+    info: {
+      "class": 'copy-pasta-widget',
+      options: {
+        modal: false,
+        position: [100, '0%']
+      }
+    }
+  };
+  show_dialog = function(src, type) {
+    var t;
+    if (!$.fn.modal) {
+      copypasta.modal_init($);
+    }
+    if ($.modal && $('#copy-pasta-lightbox-container').length > 0) {
+      $.modal.close();
+      return setTimeout((function() {
+        return show_dialog(src, type);
+      }), 11);
+    } else {
+      t = dialog_types["default"];
+      t.options.onShow = function() {
+        if (src) {
+          $(paths.overlay).show();
+          debug_msg("Overlay shown");
+          src = src;
+          if (copypasta.debug) {
+            src += '#debug';
+          }
+          debug_msg("Loading iframe: " + src);
+          return $(paths.iframe).attr('src', src);
+        }
+      };
+      if (type && dialog_types[type]) {
+        t = dialog_types[type];
+        if (!t.options) {
+          t.options = {};
+        }
+        if (!t.extended) {
+          t.options = $.extend(t.options, dialog_types["default"].options);
+        }
+        t.extended = true;
+      }
+      return $.modal(blank_dialog(t["class"]), t.options);
+    }
   };
   show_edit_preview = function(data) {
     var pos, s, target;
@@ -230,8 +257,9 @@
     } else if (data.label === 'preview-off') {
       return hide_edit_preview(data.element_path);
     } else if (data.label === 'finished') {
-      dialog().remove();
-      $('.copy-pasta-being-edited').removeClass('copy-pasta-being-edited');
+      if ($.modal) {
+        $.modal.close();
+      }
       return hide_edit_previews();
     } else if (data.label === 'resize') {
       return resize_dialog(data);

@@ -39,6 +39,7 @@ paths =
   overlay: '#' + ids.overlay
   status: '#copy-pasta-button .status'
 
+
 indicator = () ->
   if $(paths.indicator).length == 0
     $('body').append('<div id="' + ids.indicator + '"><p>click to correct</p></div>')
