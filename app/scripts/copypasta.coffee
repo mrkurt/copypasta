@@ -178,9 +178,9 @@ load_iframe_form = (id)->
     send_to_iframe('label' : 'form_data', 'data' : form_data[id])
 
 send_to_iframe = (msg) ->
-  debug_msg("Parent send: " + msg.label + " to http://localhost:3000")
+  debug_msg("Parent send: " + msg.label + " to " + iframe_host)
   msg = JSON.stringify(msg)
-  $(paths.iframe).get(0).contentWindow.postMessage(msg, 'http://localhost:3000')
+  $(paths.iframe).get(0).contentWindow.postMessage(msg, iframe_host)
 
 receive_from_iframe = (e) ->
   unless e.origin == iframe_host

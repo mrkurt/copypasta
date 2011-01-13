@@ -234,9 +234,9 @@
     }
   };
   send_to_iframe = function(msg) {
-    debug_msg("Parent send: " + msg.label + " to http://copypasta.heroku.com");
+    debug_msg("Parent send: " + msg.label + " to " + iframe_host);
     msg = JSON.stringify(msg);
-    return $(paths.iframe).get(0).contentWindow.postMessage(msg, 'http://copypasta.heroku.com');
+    return $(paths.iframe).get(0).contentWindow.postMessage(msg, iframe_host);
   };
   receive_from_iframe = function(e) {
     var data;
