@@ -4,4 +4,11 @@ class EditObserver < ActiveRecord::Observer
       EditorMailer.new_edit_notice(edit, editor).deliver
     end
   end
+
+  def after_update(edit)
+    changes = edit.changes
+    if changes['status']
+      UserMailer.edit_status_change_notice(edit)
+    end
+  end
 end
