@@ -77,7 +77,7 @@ find_current_url = ()->
   w.location.hash = oh
   url
 
-blank_dialog = (class_name) -> '<div id="' + ids.dialog + '" class="' + class_name + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>'
+blank_dialog = (class_name) -> '<div id="' + ids.dialog + '" class="' + class_name + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no" id="' + ids.iframe + '" scrolling="no"></iframe></div>'
 
 show_dialog_overlay = ()->
   $(paths.overlay).fadeIn ()->

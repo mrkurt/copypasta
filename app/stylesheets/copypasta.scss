@@ -11,6 +11,8 @@ $widget_height: 200px;
 $menu_width: 120px;
 $menu_height: 400px;
 
+$default-border-radius: 5px;
+
 #copy-pasta-lightbox-overlay{
   background: #000;
 }
@@ -24,7 +26,7 @@ $menu_height: 400px;
   &.copy-pasta-lightbox{
     width: $lightbox_width;
     height: $lightbox_height;
-    @include border-radius(9px);
+    @include border-radius;
     padding: 10px;
     background: url(../../images/translucent-black.png);
 
@@ -40,7 +42,7 @@ $menu_height: 400px;
     padding: 10px;
     padding-left: 0px;
     background: url(../../images/translucent-black.png);
-    @include border-radius(9px);
+    @include border-radius;
     @include border-left-radius(0px);
 
     #copy-pasta-overlay{
@@ -55,6 +57,7 @@ $menu_height: 400px;
     position: absolute;
     background: #fff url(../../images/loading.gif) no-repeat center center;
     @include opacity(0.8);
+    @include border-radius;
   }
 }
 
@@ -63,6 +66,7 @@ del.diffmod, del.diffdel{ background-color: #FAA; text-decoration: line-through;
 
 #copy-pasta-iframe{
   background-color: #f6f6f6;
+  @include border-radius;
   height: 100%;
   width: 100%;
   padding: 0;
@@ -78,10 +82,9 @@ del.diffmod, del.diffdel{ background-color: #FAA; text-decoration: line-through;
   text-align: center;
   cursor: pointer;
   padding: 5px;
-  @include border-radius(5px);
+  @include border-radius;
   margin-left: -6px;
   margin-top: -6px;
-  border: 1px dashed #009;
 
   &.flash p{
     display: none;
@@ -90,10 +93,11 @@ del.diffmod, del.diffdel{ background-color: #FAA; text-decoration: line-through;
 
 #copy-pasta-edit-indicator p{
   font-size: 12px;
+  line-height: 12px;
   font-family: Arial, sans-serif;
   padding: 3px;
   width: 104px;
-  height: 20px;
+  height: 14px;
   background-color: #006;
   border: 1px solid #006;
   color: #fff;
@@ -105,12 +109,12 @@ del.diffmod, del.diffdel{ background-color: #FAA; text-decoration: line-through;
   margin-top: 5px;
   margin-left: -55px;
   z-index: 998;
-  @include border-radius(5px);
-  @include linear-gradient(color-stops(#006, #004));
+  @include border-radius;
+  @include linear-gradient(color-stops(#006, #005));
 }
 
 #copy-pasta-edit-indicator p:before{
-  border-width: 10px;
+  border-width: 10px 7px 10px 7px;
   border-style: solid;
   border-color: transparent;
   border-bottom-color: #006;
@@ -118,7 +122,7 @@ del.diffmod, del.diffdel{ background-color: #FAA; text-decoration: line-through;
   position: absolute;
   top: -20px;
   left: 50%;
-  margin-left: -10px;
+  margin-left: -7px;
 }
 
 #copy-pasta-button{

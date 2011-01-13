@@ -15,11 +15,13 @@ module EditsHelper
   
   def edit_author(edit = nil)
     edit ||= @edit
-    if edit.user_name.blank?
-      "(Anonymous)"
-    else
-      edit.user_name
+    n = edit.user_name
+    if n.blank? && !edit.email.blank?
+      n = edit.email.split('@').first
     end
+
+    n = "(Anonymous)" if n.blank?
+    n
   end
 
   def edit_count(edits = nil)

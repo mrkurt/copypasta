@@ -94,7 +94,7 @@
     return url;
   };
   blank_dialog = function(class_name) {
-    return '<div id="' + ids.dialog + '" class="' + class_name + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no"id="' + ids.iframe + '" scrolling="no"></iframe></div>';
+    return '<div id="' + ids.dialog + '" class="' + class_name + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no" id="' + ids.iframe + '" scrolling="no"></iframe></div>';
   };
   show_dialog_overlay = function() {
     return $(paths.overlay).fadeIn(function() {

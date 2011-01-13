@@ -10,11 +10,12 @@
   =f.hidden_field :original
   =f.text_area :proposed
   %p.field
-    =f.label :user_name, 'Your name:'
-    =f.text_field :user_name, :placeholder => ' Optional '
-  %p.field
-    =f.label :email, 'Email:'
-    =f.text_field :email, :placeholder => ' Optional '
+    %label
+      Your email
+      =f.text_field :email, :placeholder => '(optional)'
+    %label
+      = f.check_box(:opt_in)
+      Want the newsletter?
   %p.options
     %input{:type => 'button', :value => 'Cancel', :class => 'close secondary'}
     =f.submit 'Submit Changes'

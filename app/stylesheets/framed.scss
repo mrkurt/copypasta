@@ -3,6 +3,7 @@
 @import 'compass/css3/box-shadow';
 @import 'compass/css3/inline-block';
 @import 'compass/css3/border-radius';
+$default-border-radius: 5px;
 body{
   font-family: arial, sans-serif;
   font-size: 13px;
@@ -74,6 +75,14 @@ textarea{
 p.options{
   text-align: right;
   input[value=Done]{ font-weight: bold; }
+  position: relative;
+
+  label{
+    display: block;
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+  }
 }
 form{
   width: 400px;
@@ -81,13 +90,23 @@ form{
   padding: 10px;
   
   textarea{
-    width: 394px;
+    width: 385px;
     height: 250px;
     padding: 2px;
+    background-color: #fff;
+    @include linear-gradient(color-stops(#ddd 0%, #fff 2%, #fff));
+    margin: 0px auto;
+    display: block;
   }
   textarea, input[type=text]{
-    border: 1px solid #666;
+    border: 1px solid #999;
+    @include border-radius(3px);
+    padding: 3px;
+  }
+  input[type=text]{
     margin: 0;
+    background-color: #fff;
+    @include linear-gradient(color-stops(#ddd 0%, #fff 10%, #fff));
   }
 
   p{
@@ -100,12 +119,8 @@ form{
       margin: 0;
     }
     &.field{
-      width: 200px;
-      float: left;
       white-space: nowrap;
-      input{
-        width: 127px;
-      }
+      input[type=text]{ width: 140px; margin-right: 20px; }
     }
     &.options{
       margin-bottom: 0px;
