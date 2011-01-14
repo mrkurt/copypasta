@@ -17,9 +17,10 @@ form_data = {}
 w.copypasta = copypasta = {$ : false, page_id : w.copypasta_page_id}
 copypasta.debug = w.copypasta_debug || w.location.hash.indexOf('copypasta-debug') > 0
 copypasta.auto_start = w.copypasta_auto_start || w.location.hash.indexOf('copypasta-auto') > 0
-copypasta.include_url_hash = w.copypasta_include_url_hash || false
+copypasta.include_url_hash = w.copypasta_include_url_hash
+copypasta.content_selector = w.copypasta_content_selector
 
-copypasta.locate_text_container = ()->
+locate_text_container = ()->
   parent = false
   biggest = false
   biggest_count = 0
@@ -220,27 +221,29 @@ receive_from_iframe = (e) ->
     resize_dialog(data)
 
 init = ()->
+  if copypasta.content_selector
+    currentContainer = $(copypasta.content_selector).get(0)
+  else
+    currentContainer = locate_text_container()
+
   watch el for el in ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
 
   if copypasta.auto_start
     $('body').prepend('<div id="copy-pasta-button" class="copy-pasta-default"><div class="prompt">click to help fix errors</div><div class="help">now click the offending text (or click here when done)</div><div class="status">...</div></div>')
-    currentContainer = $($(paths.btn).attr('href')).addClass('copy-pasta-active').get(0)
     show_info_dialog()
 
   $(paths.btn).live 'click', ()->
     if $(this).hasClass('on')
       btn = $(this)
       btn.removeClass('on')
-      $(btn.attr('href')).removeClass('copy-pasta-active')
+      $(currentContainer).removeClass('copy-pasta-active')
     else
       images.load()
       btn = $(this)
       btn.addClass('on')
-      currentContainer = $(btn.attr('href') || 'body').addClass('copy-pasta-active').get(0)
+      $(currentContainer).addClass('copy-pasta-active')
 
   $(paths.btn + ' .status').live 'click', ()->
-    p = $(this).parent().attr('href') || 'body'
-    currentContainer = $(p).get(0)
     show_info_dialog()
     return false
 

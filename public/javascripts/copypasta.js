@@ -1,5 +1,5 @@
 (function() {
-  var $, activate, append_to_element, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, find_current_url, form_data, hide_dialog_overlay, hide_edit_preview, hide_edit_previews, ids, iframe_host, images, indicator, init, is_scrolled_into_view, load_iframe_form, paths, queue, receive_from_iframe, resize_dialog, s, scripts, send_to_iframe, show_dialog, show_dialog_overlay, show_edit_dialog, show_edit_preview, show_info_dialog, static_host, w, watch;
+  var $, activate, append_to_element, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, find_current_url, form_data, hide_dialog_overlay, hide_edit_preview, hide_edit_previews, ids, iframe_host, images, indicator, init, is_scrolled_into_view, load_iframe_form, locate_text_container, paths, queue, receive_from_iframe, resize_dialog, s, scripts, send_to_iframe, show_dialog, show_dialog_overlay, show_edit_dialog, show_edit_preview, show_info_dialog, static_host, w, watch;
   w = window;
   if (!w.postMessage) {
     return;
@@ -32,8 +32,9 @@
   };
   copypasta.debug = w.copypasta_debug || w.location.hash.indexOf('copypasta-debug') > 0;
   copypasta.auto_start = w.copypasta_auto_start || w.location.hash.indexOf('copypasta-auto') > 0;
-  copypasta.include_url_hash = w.copypasta_include_url_hash || false;
-  copypasta.locate_text_container = function() {
+  copypasta.include_url_hash = w.copypasta_include_url_hash;
+  copypasta.content_selector = w.copypasta_content_selector;
+  locate_text_container = function() {
     var biggest, biggest_count, p, parent, parent_count, _i, _len, _ref;
     parent = false;
     biggest = false;
@@ -294,6 +295,11 @@
   };
   init = function() {
     var el, _i, _len, _ref;
+    if (copypasta.content_selector) {
+      currentContainer = $(copypasta.content_selector).get(0);
+    } else {
+      currentContainer = locate_text_container();
+    }
     _ref = ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5'];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       el = _ref[_i];
@@ -301,7 +307,6 @@
     }
     if (copypasta.auto_start) {
       $('body').prepend('<div id="copy-pasta-button" class="copy-pasta-default"><div class="prompt">click to help fix errors</div><div class="help">now click the offending text (or click here when done)</div><div class="status">...</div></div>');
-      currentContainer = $($(paths.btn).attr('href')).addClass('copy-pasta-active').get(0);
       show_info_dialog();
     }
     $(paths.btn).live('click', function() {
@@ -309,18 +314,15 @@
       if ($(this).hasClass('on')) {
         btn = $(this);
         btn.removeClass('on');
-        return $(btn.attr('href')).removeClass('copy-pasta-active');
+        return $(currentContainer).removeClass('copy-pasta-active');
       } else {
         images.load();
         btn = $(this);
         btn.addClass('on');
-        return currentContainer = $(btn.attr('href') || 'body').addClass('copy-pasta-active').get(0);
+        return $(currentContainer).addClass('copy-pasta-active');
       }
     });
     $(paths.btn + ' .status').live('click', function() {
-      var p;
-      p = $(this).parent().attr('href') || 'body';
-      currentContainer = $(p).get(0);
       show_info_dialog();
       return false;
     });
