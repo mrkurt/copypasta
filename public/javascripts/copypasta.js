@@ -33,6 +33,33 @@
   copypasta.debug = w.copypasta_debug || w.location.hash.indexOf('copypasta-debug') > 0;
   copypasta.auto_start = w.copypasta_auto_start || w.location.hash.indexOf('copypasta-auto') > 0;
   copypasta.include_url_hash = w.copypasta_include_url_hash || false;
+  copypasta.locate_text_container = function() {
+    var biggest, biggest_count, p, parent, parent_count, _i, _len, _ref;
+    parent = false;
+    biggest = false;
+    biggest_count = 0;
+    parent_count = 0;
+    _ref = document.getElementsByTagName('p');
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      p = _ref[_i];
+      if (p != null) {
+        if (parent !== p.parentElement) {
+          if (parent_count > biggest_count) {
+            biggest_count = parent_count;
+            biggest = parent;
+          }
+          parent = p.parentElement;
+          parent_count = 0;
+        }
+        parent_count++;
+      }
+    }
+    if (parent_count > biggest_count) {
+      return parent;
+    } else {
+      return biggest;
+    }
+  };
   debug_msg = function(msg) {
     if (copypasta.debug) {
       return console.debug(msg);

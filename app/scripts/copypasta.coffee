@@ -19,6 +19,21 @@ copypasta.debug = w.copypasta_debug || w.location.hash.indexOf('copypasta-debug'
 copypasta.auto_start = w.copypasta_auto_start || w.location.hash.indexOf('copypasta-auto') > 0
 copypasta.include_url_hash = w.copypasta_include_url_hash || false
 
+copypasta.locate_text_container = ()->
+  parent = false
+  biggest = false
+  biggest_count = 0
+  parent_count = 0
+  for p in document.getElementsByTagName('p') when p?
+    if parent != p.parentElement
+      if parent_count > biggest_count
+        biggest_count = parent_count
+        biggest = parent
+      parent = p.parentElement
+      parent_count = 0
+    parent_count++
+  return if parent_count > biggest_count then parent else biggest
+
 debug_msg = (msg)->
   if copypasta.debug
     console.debug(msg)
