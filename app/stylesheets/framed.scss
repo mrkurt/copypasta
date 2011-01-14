@@ -92,10 +92,10 @@ form{
   textarea{
     width: 392px;
     height: 200px;
-    padding: 2px;
     background-color: #fff;
     @include linear-gradient(color-stops(#ddd 0%, #fff 2%, #fff));
     display: block;
+    resize: none;
   }
   textarea, input[type=text]{
     border: 1px solid #999;
