@@ -208,10 +208,11 @@ init = ()->
   watch el for el in ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
 
   if copypasta.auto_start
-    currentContainer = $($(paths.btn).attr('href') || 'body').addClass('copy-pasta-active').get(0)
+    $('body').prepend('<div id="copy-pasta-button" class="copy-pasta-default"><div class="prompt">click to help fix errors</div><div class="help">now click the offending text (or click here when done)</div><div class="status">...</div></div>')
+    currentContainer = $($(paths.btn).attr('href')).addClass('copy-pasta-active').get(0)
     show_info_dialog()
 
-  $(paths.btn + '.off').live 'click', ()->
+  $(paths.btn).live 'click', ()->
     if $(this).hasClass('on')
       btn = $(this)
       btn.removeClass('on')

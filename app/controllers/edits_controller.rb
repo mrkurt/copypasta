@@ -10,6 +10,7 @@ class EditsController < ApplicationController
     else
       @edits = Edit.where(:status => @filter)
     end
+    @edits = @edits.order('id DESC')
     render :layout => (params[:view] || true)
   end
 
@@ -39,7 +40,12 @@ class EditsController < ApplicationController
     @edit.status = params[:edit][:status] if params[:edit][:status]
     @edit.update_attributes!(params[:edit])
 
-    render :layout => (params[:view] || true)
+    if @edit.status == 'rejected'
+      flash[:error] = "Edit rejected"
+      redirect_to (params[:return_to] || request.referer)
+    else
+      render :layout => (params[:view] || true)
+    end
   end
 
   def new

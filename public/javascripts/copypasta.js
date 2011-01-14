@@ -273,10 +273,11 @@
       watch(el);
     }
     if (copypasta.auto_start) {
-      currentContainer = $($(paths.btn).attr('href') || 'body').addClass('copy-pasta-active').get(0);
+      $('body').prepend('<div id="copy-pasta-button" class="copy-pasta-default"><div class="prompt">click to help fix errors</div><div class="help">now click the offending text (or click here when done)</div><div class="status">...</div></div>');
+      currentContainer = $($(paths.btn).attr('href')).addClass('copy-pasta-active').get(0);
       show_info_dialog();
     }
-    $(paths.btn + '.off').live('click', function() {
+    $(paths.btn).live('click', function() {
       var btn;
       if ($(this).hasClass('on')) {
         btn = $(this);
