@@ -333,7 +333,7 @@
     var elements;
     images.load();
     $(paths.btn).addClass('on');
-    elements = $(currentContainer).addClass('copy-pasta-active').find(editable_elements).is(':visible');
+    elements = $(currentContainer).addClass('copy-pasta-active').find(editable_elements).filter(':visible');
     elements.addClass('copy-pasta-editable').bind('click', editable_click);
     return widget();
   };
