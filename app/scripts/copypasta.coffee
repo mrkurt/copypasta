@@ -337,6 +337,7 @@ images = [
   "translucent-blue.png",
   "translucent-black.png",
   "loading.gif"
+  "pencil.png"
 ]
 images.load = ()->
   for i in images
