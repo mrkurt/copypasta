@@ -320,7 +320,7 @@
       return false;
     }
   };
-  start_editing = function() {
+  copypasta.start_editing = start_editing = function() {
     var elements;
     images.load();
     $(paths.btn).addClass('on');
@@ -342,7 +342,6 @@
       currentContainer = $(locate_text_container());
     }
     if (copypasta.auto_start) {
-      $('body').prepend('<div id="copy-pasta-button" class="copy-pasta-default"><div class="prompt">click to help fix errors</div><div class="help">now click the offending text (or click here when done)</div></div>');
       start_editing();
     }
     $(paths.btn).live('click', function() {
