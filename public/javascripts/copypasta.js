@@ -234,7 +234,7 @@
   show_edit_preview = function(data) {
     var pos, s, target;
     debug_msg('Previewing ' + data.element_path);
-    target = $(currentContainer).find(data.element_path);
+    target = $(data.element_path);
     pos = target.position();
     if (!target.get(0).original_text) {
       target.get(0).original_text = target.html();
@@ -248,7 +248,7 @@
   };
   hide_edit_preview = function(path) {
     var target;
-    target = $(currentContainer).find(path);
+    target = $(path);
     return target.removeClass('copy-pasta-preview').html(target.get(0).original_text);
   };
   hide_edit_previews = function() {

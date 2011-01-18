@@ -191,7 +191,7 @@ widget = (src)->
 
 show_edit_preview = (data)->
   debug_msg('Previewing ' + data.element_path)
-  target = $(currentContainer).find(data.element_path)
+  target = $(data.element_path)
   pos = target.position()
   unless target.get(0).original_text
     target.get(0).original_text = target.html()
@@ -200,7 +200,7 @@ show_edit_preview = (data)->
     target.html(data.proposed).addClass('copy-pasta-preview')
 
 hide_edit_preview = (path)->
-  target = $(currentContainer).find(path)
+  target = $(path)
   target.removeClass('copy-pasta-preview').html(target.get(0).original_text)
 
 hide_edit_previews = ()->

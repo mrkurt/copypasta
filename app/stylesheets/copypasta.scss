@@ -32,6 +32,8 @@ $default-border-radius: 5px;
   padding-right: 0px;
   @include border-left-radius;
   z-index: 999;
+  border: 1px solid #eee;
+  border-right-width: 0px;
 
   h1{
     text-align: center;
