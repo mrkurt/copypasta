@@ -19,8 +19,10 @@ copypasta.debug = w.copypasta_debug || w.location.hash.indexOf('copypasta-debug'
 copypasta.auto_start = w.copypasta_auto_start || w.location.hash.indexOf('copypasta-auto') > 0
 copypasta.include_url_hash = w.copypasta_include_url_hash
 copypasta.content_selector = w.copypasta_content_selector
+copypasta.paragraph_threshold = w.copypasta_paragraph_threshold || 1
 
-locate_text_container = ()->
+copypasta.locate_text_container = locate_text_container = ()->
+  containers = []
   parent = false
   biggest = false
   biggest_count = 0
@@ -30,9 +32,12 @@ locate_text_container = ()->
       if parent_count > biggest_count
         biggest_count = parent_count
         biggest = parent
+      containers.push(parent) if parent_count >= copypasta.paragraph_threshold
       parent = p.parentElement
       parent_count = 0
     parent_count++
+  containers.push(parent) if parent_count >= copypasta.paragraph_threshold
+  copypasta.containers = containers
   return if parent_count > biggest_count then parent else biggest
 
 debug_msg = (msg)->
@@ -241,7 +246,6 @@ handle_dialog_message = (data)->
     resize(paths.iframe, data)
 
 editable_elements = 'p, h1, h2, h3, h4, h5, td, th, li'
-editable_element_containers = 'ul,ol,table'
 
 editable_click = (e)->
   if e not instanceof HTMLAnchorElement
@@ -252,9 +256,9 @@ editable_click = (e)->
 start_editing = ()->
   images.load()
   $(paths.btn).addClass('on')
-  elements = $(currentContainer).addClass('copy-pasta-active').children(editable_elements)
+  elements = $(currentContainer).addClass('copy-pasta-active').find(editable_elements)
   #handle containers
-  $.merge(elements, $(currentContainer).children(editable_element_containers).find(editable_elements))
+  #$.merge(elements, $(currentContainer).children(editable_element_containers).find(editable_elements))
 
   elements.addClass('copy-pasta-editable').bind('click', editable_click)
   widget()
@@ -294,7 +298,7 @@ scripts = [
     {
       test: ()->
         if w.jQuery && w.jQuery.fn && w.jQuery.fn.jquery > "1.3"
-          $ = w.jQuery
+          copypasta.$ = $ = w.jQuery
           debug_msg("Using existing jquery: version " + $.fn.jquery)
           true
       #src: 'http://localhost:3000/javascripts/jquery-1.3.min.js'
