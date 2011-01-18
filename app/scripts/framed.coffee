@@ -58,9 +58,8 @@ $('input.edit-preview-toggle').live 'change', ()->
   }
 
 $('form.editor-options input').live 'change', ()->
-  this2 = this
-  $(this).closest('tr').fadeOut ()->
-    $(this2).closest('form').submit()
+  send_message({label : 'loading'})
+  $(this).closest('form').submit()
 
 $('input.back').live 'click', ()->
   history.go(-1)

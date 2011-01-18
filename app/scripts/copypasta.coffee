@@ -58,7 +58,6 @@ ids =
   indicator: 'copy-pasta-edit-indicator'
   dialog: 'copy-pasta-dialog'
   iframe : 'copy-pasta-iframe'
-  overlay: 'copy-pasta-overlay'
   btn: 'copy-pasta-button'
   widget: 'copy-pasta-widget'
 
@@ -68,9 +67,10 @@ paths =
   btn: '#' + ids.btn
   active: '.copy-pasta-active'
   iframe: '#' + ids.iframe
-  overlay: '#' + ids.overlay
+  overlay: '.copy-pasta-overlay'
   status: '#copy-pasta-button .status'
   widget: '#' + ids.widget
+  widget_iframe: '#' + ids.widget + ' iframe'
 
 
 indicator = () ->
@@ -81,23 +81,20 @@ indicator = () ->
 
   $(paths.indicator)
 
-activate = () ->
-  pos = $(this).offset()
-  pos.top = pos.top + 'px'
-  pos.left = pos.left + 'px'
+overlay = (el) ->
+  if $(el).prev(paths.overlay).length == 0
+    $(el).before('<div class="copy-pasta-overlay"></div>')
+
+  $(el).prev(paths.overlay)
+
+cover = (target, element)->
   sz =
-    width: $(this).outerWidth() + 'px'
-    height: $(this).outerHeight() + 'px'
+    width: $(target).outerWidth() + 'px'
+    height: $(target).outerHeight() + 'px'
 
-  indicator().css(sz).css(pos).show()
-  currentLive = this
+  element ||= overlay(target).fadeIn()
 
-deactivate = () ->
-  indicator().hide()
-  currentLive = false
-
-watch = (el) ->
-  $(paths.active + ' ' + el).live('mouseover', activate)
+  $(element).css(sz)
 
 find_current_url = ()->
   oh = w.location.hash
@@ -111,15 +108,7 @@ find_current_url = ()->
   url
 
 #dialog stuff
-blank_dialog = (class_name) -> '<div id="' + ids.dialog + '" class="' + class_name + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no" id="' + ids.iframe + '" scrolling="no"></iframe></div>'
-
-show_dialog_overlay = ()->
-  $(paths.overlay).fadeIn ()->
-    debug_msg("Overlay shown")
-
-hide_dialog_overlay = ()->
-  $(paths.overlay).fadeOut ()->
-    debug_msg("Overlay hidden")
+blank_dialog = (class_name) -> '<div id="' + ids.dialog + '" class="' + class_name + '"><iframe frameborder="no" id="' + ids.iframe + '" scrolling="no"></iframe></div>'
 
 resize = (path, data)->
   $(path).animate {height : data.h}
@@ -155,7 +144,7 @@ show_dialog = (src, type) ->
     t = dialog_types.default
     t.options.onShow = ()->
       if src
-        $(paths.overlay).show()
+        cover paths.iframe
         debug_msg("Overlay shown")
         src = src
         src += '#debug' if copypasta.debug
@@ -185,7 +174,8 @@ widget = (src)->
       src = widget_url()
 
   if src?
-    $(paths.widget).find('iframe').attr('src', src)
+    iframe = $(paths.widget).find('iframe').attr('src', src)
+    cover iframe
   $(paths.widget).show()
 #widget-end
 
@@ -239,7 +229,11 @@ receive_from_iframe = (e) ->
     handle_widget_message(data)
 
 handle_widget_message = (data)->
-  if data.label == 'resize'
+  if data.label == 'ready'
+    overlay(paths.widget_iframe).fadeOut()
+  else if data.label == 'loading'
+    cover paths.widget_iframe
+  else if data.label == 'resize'
     resize(paths.widget + ' iframe', data)
   else if data.label == 'finished'
     end_editing()
@@ -252,9 +246,9 @@ handle_dialog_message = (data)->
   if data.label == 'ready'
     unless load_iframe_form(data.form_id)
       #have to wait til after form data postMessage, otherwise
-      hide_dialog_overlay()
+      overlay(paths.iframe).fadeOut()
   else if data.label == 'form_data_loaded'
-    hide_dialog_overlay()
+    overlay(paths.iframe).fadeOut()
   else if data.label == 'finished'
     $.modal.close() if $.modal
     hide_edit_previews()

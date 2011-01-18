@@ -80,11 +80,10 @@
     });
   });
   $('form.editor-options input').live('change', function() {
-    var this2;
-    this2 = this;
-    return $(this).closest('tr').fadeOut(function() {
-      return $(this2).closest('form').submit();
+    send_message({
+      label: 'loading'
     });
+    return $(this).closest('form').submit();
   });
   $('input.back').live('click', function() {
     return history.go(-1);

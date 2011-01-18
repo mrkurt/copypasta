@@ -22,6 +22,16 @@ $default-border-radius: 5px;
   margin: 0 !important; padding: 0 !important;
   border-width: 0 !important;
 }
+
+.copy-pasta-overlay{
+  z-index: 3;
+  display: none;
+  position: absolute;
+  background: #fff url(../../images/loading.gif) no-repeat center center;
+  @include opacity(0.8);
+  @include border-radius;
+}
+
 #copy-pasta-widget{
   display: none;
   position: fixed;
@@ -42,10 +52,10 @@ $default-border-radius: 5px;
     color: yellow;
   }
   iframe{
-    background: #f6f6f6 url(../../images/loading.gif) no-repeat center center;
     width: $widget-width;
     height: $widget-height;
     @include border-left-radius;
+    background-color: #f6f6f6;
   }
 }
 #copy-pasta-lightbox-overlay{
@@ -86,14 +96,6 @@ $default-border-radius: 5px;
     }
   }
 
-  #copy-pasta-overlay{
-    z-index: 3;
-    display: none;
-    position: absolute;
-    background: #fff url(../../images/loading.gif) no-repeat center center;
-    @include opacity(0.8);
-    @include border-radius;
-  }
 }
 
 ins.diffmod, ins.diffins{ background-color: #AFA; text-decoration: none; }

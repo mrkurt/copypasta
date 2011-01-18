@@ -11,7 +11,8 @@
         =link_to_unless @filter == 'accepted', 'Accepted', url_for(params.merge({:filter => 'accepted'}))
         |
         =link_to_unless @filter == 'rejected', 'Rejected', url_for(params.merge({:filter => 'rejected'}))
-      %th.preview.hint show
+      -if @edits.count > 0
+        %th.preview.hint show
     -@edits.each do |edit|
       %tr
         %td.title
@@ -35,6 +36,6 @@
         %td.preview
           %input{:type => 'radio', :name => 'preview-selector', :class => 'edit-preview-toggle', :value => diff_edit(edit, false)}
           %input{:type => 'hidden', :class => 'element_path', :value => edit.element_path}
-%p.copy-pasta-editable.hint Click text with this icon to make changes
+%p.copy-pasta-editable.hint Click text with this icon to suggest changes
 %p.options
   %input{:type => 'button', :value => 'Close', :class => 'close secondary'}
