@@ -20,6 +20,7 @@ copypasta.auto_start = w.copypasta_auto_start || w.location.hash.indexOf('copypa
 copypasta.include_url_hash = w.copypasta_include_url_hash
 copypasta.content_selector = w.copypasta_content_selector
 copypasta.paragraph_threshold = w.copypasta_paragraph_threshold || 2
+copypasta.character_threshold = w.copypasta_character_threshold || 100
 
 locate_text_container = ()->
   containers = []
@@ -29,7 +30,7 @@ locate_text_container = ()->
 
   for p in document.getElementsByTagName('p')
     if parent != p.parentElement
-      if parent_count >= copypasta.paragraph_threshold || parent_character_count > 30
+      if parent_count >= copypasta.paragraph_threshold || parent_character_count > copypasta.character_threshold
         containers.push(parent)
         debug_msg("Accepting container with " + parent_count + " paragraphs and " + parent_character_count + " characters.")
       else if parent
@@ -41,7 +42,7 @@ locate_text_container = ()->
     parent_count += 1
     parent_character_count += p.innerText.length
 
-  if parent_count >= copypasta.paragraph_threshold || parent_character_count > 30
+  if parent_count >= copypasta.paragraph_threshold || parent_character_count > copypasta.character_threshold
     containers.push(parent)
     debug_msg("Accepting container with " + parent_count + " paragraphs and " + parent_character_count + " characters.")
   else if parent

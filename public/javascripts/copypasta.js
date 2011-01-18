@@ -35,6 +35,7 @@
   copypasta.include_url_hash = w.copypasta_include_url_hash;
   copypasta.content_selector = w.copypasta_content_selector;
   copypasta.paragraph_threshold = w.copypasta_paragraph_threshold || 2;
+  copypasta.character_threshold = w.copypasta_character_threshold || 100;
   locate_text_container = function() {
     var containers, p, parent, parent_character_count, parent_count, _i, _len, _ref;
     containers = [];
@@ -45,7 +46,7 @@
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       p = _ref[_i];
       if (parent !== p.parentElement) {
-        if (parent_count >= copypasta.paragraph_threshold || parent_character_count > 30) {
+        if (parent_count >= copypasta.paragraph_threshold || parent_character_count > copypasta.character_threshold) {
           containers.push(parent);
           debug_msg("Accepting container with " + parent_count + " paragraphs and " + parent_character_count + " characters.");
         } else if (parent) {
@@ -58,7 +59,7 @@
       parent_count += 1;
       parent_character_count += p.innerText.length;
     }
-    if (parent_count >= copypasta.paragraph_threshold || parent_character_count > 30) {
+    if (parent_count >= copypasta.paragraph_threshold || parent_character_count > copypasta.character_threshold) {
       containers.push(parent);
       debug_msg("Accepting container with " + parent_count + " paragraphs and " + parent_character_count + " characters.");
     } else if (parent) {
