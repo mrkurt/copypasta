@@ -19,10 +19,10 @@ copypasta.debug = w.copypasta_debug || w.location.hash.indexOf('copypasta-debug'
 copypasta.auto_start = w.copypasta_auto_start || w.location.hash.indexOf('copypasta-auto') > 0
 copypasta.include_url_hash = w.copypasta_include_url_hash
 copypasta.content_selector = w.copypasta_content_selector
-copypasta.paragraph_threshold = w.copypasta_paragraph_threshold || 2
+copypasta.paragraph_threshold = w.copypasta_paragraph_threshold || 3
 copypasta.character_threshold = w.copypasta_character_threshold || 100
 
-locate_text_container = ()->
+locate_text_containers = ()->
   containers = []
   parent = false
   parent_count = 0
@@ -172,15 +172,21 @@ show_dialog = (src, type) ->
 #dialog-end
 
 #widget stuff
+widget_url = ()->
+  page_id = copypasta.page_id ? ''
+  url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id)
+
 blank_widget = '<div id="' + ids.widget + '"><h1>copypasta</h1><iframe frameborder="no" scrolling="no"></iframe></div>'
-widget = ()->
+
+widget = (src)->
   if $(paths.widget).length == 0
     $('body').append(blank_widget)
-    page_id = copypasta.page_id ? ''
-    url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id)
-    $(paths.widget).show().find('iframe').attr('src', url)
+    unless src?
+      src = widget_url()
 
-  $(paths.widget)
+  if src?
+    $(paths.widget).find('iframe').attr('src', src)
+  $(paths.widget).show()
 #widget-end
 
 show_edit_preview = (data)->
@@ -252,8 +258,9 @@ handle_dialog_message = (data)->
   else if data.label == 'finished'
     $.modal.close() if $.modal
     hide_edit_previews()
+    widget widget_url()
   else if data.label == 'resize'
-    resize(paths.iframe, data)
+    resize(paths.dialog, data)
 
 editable_elements = 'p, h1, h2, h3, h4, h5, td, th, li'
 
@@ -284,7 +291,7 @@ init = ()->
   if copypasta.content_selector
     currentContainer = $(copypasta.content_selector)
   else
-    currentContainer = $(locate_text_container())
+    currentContainer = $(locate_text_containers())
 
   if copypasta.auto_start
     start_editing()

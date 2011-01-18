@@ -1,5 +1,5 @@
 (function() {
-  var $, activate, append_to_element, blank_dialog, blank_widget, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, editable_click, editable_elements, end_editing, find_current_url, form_data, handle_dialog_message, handle_widget_message, hide_dialog_overlay, hide_edit_preview, hide_edit_previews, ids, iframe_host, images, indicator, init, is_scrolled_into_view, load_iframe_form, locate_text_container, paths, queue, receive_from_iframe, resize, s, scripts, send_to_iframe, show_dialog, show_dialog_overlay, show_edit_dialog, show_edit_preview, start_editing, static_host, w, watch, widget;
+  var $, activate, append_to_element, blank_dialog, blank_widget, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, editable_click, editable_elements, end_editing, find_current_url, form_data, handle_dialog_message, handle_widget_message, hide_dialog_overlay, hide_edit_preview, hide_edit_previews, ids, iframe_host, images, indicator, init, is_scrolled_into_view, load_iframe_form, locate_text_containers, paths, queue, receive_from_iframe, resize, s, scripts, send_to_iframe, show_dialog, show_dialog_overlay, show_edit_dialog, show_edit_preview, start_editing, static_host, w, watch, widget, widget_url;
   w = window;
   if (!w.postMessage) {
     return;
@@ -34,9 +34,9 @@
   copypasta.auto_start = w.copypasta_auto_start || w.location.hash.indexOf('copypasta-auto') > 0;
   copypasta.include_url_hash = w.copypasta_include_url_hash;
   copypasta.content_selector = w.copypasta_content_selector;
-  copypasta.paragraph_threshold = w.copypasta_paragraph_threshold || 2;
+  copypasta.paragraph_threshold = w.copypasta_paragraph_threshold || 3;
   copypasta.character_threshold = w.copypasta_character_threshold || 100;
-  locate_text_container = function() {
+  locate_text_containers = function() {
     var containers, p, parent, parent_character_count, parent_count, _i, _len, _ref;
     containers = [];
     parent = false;
@@ -213,16 +213,23 @@
       return $.modal(blank_dialog(t["class"]), t.options);
     }
   };
-  blank_widget = '<div id="' + ids.widget + '"><h1>copypasta</h1><iframe frameborder="no" scrolling="no"></iframe></div>';
-  widget = function() {
+  widget_url = function() {
     var page_id, url, _ref;
+    page_id = (_ref = copypasta.page_id) != null ? _ref : '';
+    return url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id);
+  };
+  blank_widget = '<div id="' + ids.widget + '"><h1>copypasta</h1><iframe frameborder="no" scrolling="no"></iframe></div>';
+  widget = function(src) {
     if ($(paths.widget).length === 0) {
       $('body').append(blank_widget);
-      page_id = (_ref = copypasta.page_id) != null ? _ref : '';
-      url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id);
-      $(paths.widget).show().find('iframe').attr('src', url);
+      if (src == null) {
+        src = widget_url();
+      }
     }
-    return $(paths.widget);
+    if (src != null) {
+      $(paths.widget).find('iframe').attr('src', src);
+    }
+    return $(paths.widget).show();
   };
   show_edit_preview = function(data) {
     var pos, s, target;
@@ -308,9 +315,10 @@
       if ($.modal) {
         $.modal.close();
       }
-      return hide_edit_previews();
+      hide_edit_previews();
+      return widget(widget_url());
     } else if (data.label === 'resize') {
-      return resize(paths.iframe, data);
+      return resize(paths.dialog, data);
     }
   };
   editable_elements = 'p, h1, h2, h3, h4, h5, td, th, li';
@@ -340,7 +348,7 @@
     if (copypasta.content_selector) {
       currentContainer = $(copypasta.content_selector);
     } else {
-      currentContainer = $(locate_text_container());
+      currentContainer = $(locate_text_containers());
     }
     if (copypasta.auto_start) {
       start_editing();
