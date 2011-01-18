@@ -1,18 +1,22 @@
-window.copypasta.getElementCssPath = function(element, root)
+window.copypasta.getElementCssPath = function(element)
 {
     if (element && element.id)
         return '#' + element.id;
     else
-        return window.copypasta.getElementTreeCssPath(element, root);
+        return window.copypasta.getElementTreeCssPath(element);
 };
 
-window.copypasta.getElementTreeCssPath = function(element, root)
+window.copypasta.getElementTreeCssPath = function(element)
 {
     var paths = [];
 
     // Use nodeName (instead of localName) so namespace prefix is included (if any).
-    for (; element && element.nodeType == 1 && element != root; element = element.parentNode)
+    for (; element && element.nodeType == 1; element = element.parentNode)
     {
+        if(element && element.id){
+          paths.splice(0,0, '#' + element.id);
+          break;
+        }
         var index = 0;
         for (var sibling = element.previousSibling; sibling; sibling = sibling.previousSibling)
         {
@@ -26,10 +30,10 @@ window.copypasta.getElementTreeCssPath = function(element, root)
 
         var tagName = element.nodeName.toLowerCase();
         var pathIndex = ":eq(" + index + ")";
-        paths.splice(0, 0, tagName + pathIndex);
+        paths.splice(0, 0, '> ' + tagName + pathIndex);
     }
 
-    return paths.length ? '> ' + paths.join(" > ") : null;
+    return paths.length ? paths.join(" ") : null;
 };
 
 /*

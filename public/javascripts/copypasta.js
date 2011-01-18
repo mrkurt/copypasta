@@ -34,41 +34,37 @@
   copypasta.auto_start = w.copypasta_auto_start || w.location.hash.indexOf('copypasta-auto') > 0;
   copypasta.include_url_hash = w.copypasta_include_url_hash;
   copypasta.content_selector = w.copypasta_content_selector;
-  copypasta.paragraph_threshold = w.copypasta_paragraph_threshold || 1;
-  copypasta.locate_text_container = locate_text_container = function() {
-    var biggest, biggest_count, containers, p, parent, parent_count, _i, _len, _ref;
+  copypasta.paragraph_threshold = w.copypasta_paragraph_threshold || 2;
+  locate_text_container = function() {
+    var containers, p, parent, parent_character_count, parent_count, _i, _len, _ref;
     containers = [];
     parent = false;
-    biggest = false;
-    biggest_count = 0;
     parent_count = 0;
+    parent_character_count = 0;
     _ref = document.getElementsByTagName('p');
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       p = _ref[_i];
-      if (p != null) {
-        if (parent !== p.parentElement) {
-          if (parent_count > biggest_count) {
-            biggest_count = parent_count;
-            biggest = parent;
-          }
-          if (parent_count >= copypasta.paragraph_threshold) {
-            containers.push(parent);
-          }
-          parent = p.parentElement;
-          parent_count = 0;
+      if (parent !== p.parentElement) {
+        if (parent_count >= copypasta.paragraph_threshold || parent_character_count > 30) {
+          containers.push(parent);
+          debug_msg("Accepting container with " + parent_count + " paragraphs and " + parent_character_count + " characters.");
+        } else if (parent) {
+          debug_msg("Rejecting container with " + parent_count + " paragraphs and " + parent_character_count + " characters.");
         }
-        parent_count++;
+        parent = p.parentElement;
+        parent_count = 0;
+        parent_character_count = p.innerText.length;
       }
+      parent_count += 1;
+      parent_character_count += p.innerText.length;
     }
-    if (parent_count >= copypasta.paragraph_threshold) {
+    if (parent_count >= copypasta.paragraph_threshold || parent_character_count > 30) {
       containers.push(parent);
+      debug_msg("Accepting container with " + parent_count + " paragraphs and " + parent_character_count + " characters.");
+    } else if (parent) {
+      debug_msg("Rejecting container with " + parent_count + " paragraphs and " + parent_character_count + " characters.");
     }
-    copypasta.containers = containers;
-    if (parent_count > biggest_count) {
-      return parent;
-    } else {
-      return biggest;
-    }
+    return containers;
   };
   debug_msg = function(msg) {
     if (copypasta.debug) {
@@ -159,7 +155,7 @@
       'edit[original]': e.original_text,
       'edit[proposed]': e.original_text,
       'edit[url]': find_current_url(),
-      'edit[element_path]': copypasta.getElementCssPath(e, currentContainer)
+      'edit[element_path]': copypasta.getElementCssPath(e)
     };
     url = iframe_host + '/edits/new?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id);
     return show_dialog(url, 'edit');
@@ -341,9 +337,9 @@
   };
   init = function() {
     if (copypasta.content_selector) {
-      currentContainer = $(copypasta.content_selector).get(0);
+      currentContainer = $(copypasta.content_selector);
     } else {
-      currentContainer = locate_text_container();
+      currentContainer = $(locate_text_container());
     }
     if (copypasta.auto_start) {
       $('body').prepend('<div id="copy-pasta-button" class="copy-pasta-default"><div class="prompt">click to help fix errors</div><div class="help">now click the offending text (or click here when done)</div></div>');
