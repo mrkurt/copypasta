@@ -273,7 +273,7 @@ editable_click = (e)->
 copypasta.start_editing = start_editing = ()->
   images.load()
   $(paths.btn).addClass('on')
-  elements = $(currentContainer).addClass('copy-pasta-active').find(editable_elements)
+  elements = $(currentContainer).addClass('copy-pasta-active').find(editable_elements).is(':visible')
   #handle containers
   #$.merge(elements, $(currentContainer).children(editable_element_containers).find(editable_elements))
 
