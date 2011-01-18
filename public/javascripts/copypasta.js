@@ -328,8 +328,8 @@
   end_editing = function() {
     $(paths.btn).removeClass('on');
     hide_edit_previews();
-    $(currentContainer).removeClass('copy-pasta-active').children(editable_elements).unbind('click', editable_click);
-    $('.copy-pasta-edit-indicator').remove();
+    $(currentContainer).removeClass('copy-pasta-active');
+    $('.copy-pasta-editable').removeClass('copy-pasta-editable').unbind('click', editable_click);
     return widget().remove();
   };
   init = function() {
