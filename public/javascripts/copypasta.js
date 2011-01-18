@@ -1,5 +1,5 @@
 (function() {
-  var $, activate, append_to_element, blank_dialog, blank_widget, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, editable_click, editable_elements, end_editing, find_current_url, form_data, handle_dialog_message, handle_widget_message, hide_dialog_overlay, hide_edit_preview, hide_edit_previews, ids, iframe_host, images, indicator, init, is_scrolled_into_view, load_iframe_form, locate_text_container, paths, queue, receive_from_iframe, resize, s, scripts, send_to_iframe, show_dialog, show_dialog_overlay, show_edit_dialog, show_edit_preview, start_editing, static_host, w, watch, widget;
+  var $, activate, append_to_element, blank_dialog, blank_widget, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, editable_click, editable_element_containers, editable_elements, end_editing, find_current_url, form_data, handle_dialog_message, handle_widget_message, hide_dialog_overlay, hide_edit_preview, hide_edit_previews, ids, iframe_host, images, indicator, init, is_scrolled_into_view, load_iframe_form, locate_text_container, paths, queue, receive_from_iframe, resize, s, scripts, send_to_iframe, show_dialog, show_dialog_overlay, show_edit_dialog, show_edit_preview, start_editing, static_host, w, watch, widget;
   w = window;
   if (!w.postMessage) {
     return;
@@ -307,27 +307,28 @@
       return resize(paths.iframe, data);
     }
   };
-  editable_elements = 'p, li, h1, h2, h3, h4, h5';
+  editable_elements = 'p, h1, h2, h3, h4, h5, td, th, li';
+  editable_element_containers = 'ul,ol,table';
   editable_click = function(e) {
-    var i;
     if (!(e instanceof HTMLAnchorElement)) {
       currentLive = this;
-      i = $(currentLive).find('.copy-pasta-edit-indicator').remove();
       show_edit_dialog();
-      $(currentLive).append(i);
       return false;
     }
   };
   start_editing = function() {
+    var elements;
     images.load();
     $(paths.btn).addClass('on');
-    $(currentContainer).addClass('copy-pasta-active').find(editable_elements).addClass('copy-pasta-editable').append(' <img class="copy-pasta-edit-indicator" src="' + static_host + '/images/pencil.png" alt="click to edit" />').bind('click', editable_click);
+    elements = $(currentContainer).addClass('copy-pasta-active').children(editable_elements);
+    $.merge(elements, $(currentContainer).children(editable_element_containers).find(editable_elements));
+    elements.addClass('copy-pasta-editable').bind('click', editable_click);
     return widget();
   };
   end_editing = function() {
     $(paths.btn).removeClass('on');
     hide_edit_previews();
-    $(currentContainer).removeClass('copy-pasta-active').find(editable_elements).removeClass('copy-pasta-editable').unbind('click', editable_click);
+    $(currentContainer).removeClass('copy-pasta-active').children(editable_elements).unbind('click', editable_click);
     $('.copy-pasta-edit-indicator').remove();
     return widget().remove();
   };

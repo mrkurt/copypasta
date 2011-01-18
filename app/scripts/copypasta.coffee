@@ -240,25 +240,23 @@ handle_dialog_message = (data)->
   else if data.label == 'resize'
     resize(paths.iframe, data)
 
-editable_elements = 'p, li, h1, h2, h3, h4, h5'
+editable_elements = 'p, h1, h2, h3, h4, h5, td, th, li'
+editable_element_containers = 'ul,ol,table'
 
 editable_click = (e)->
   if e not instanceof HTMLAnchorElement
     currentLive = this
-    i = $(currentLive).find('.copy-pasta-edit-indicator').remove()
     show_edit_dialog()
-    $(currentLive).append(i)
     return false
 
 start_editing = ()->
   images.load()
   $(paths.btn).addClass('on')
-  $(currentContainer)
-    .addClass('copy-pasta-active')
-    .find(editable_elements)
-      .addClass('copy-pasta-editable')
-      .append(' <img class="copy-pasta-edit-indicator" src="' + static_host + '/images/pencil.png" alt="click to edit" />')
-      .bind('click', editable_click)
+  elements = $(currentContainer).addClass('copy-pasta-active').children(editable_elements)
+  #handle containers
+  $.merge(elements, $(currentContainer).children(editable_element_containers).find(editable_elements))
+
+  elements.addClass('copy-pasta-editable').bind('click', editable_click)
   widget()
 
 end_editing = ()->
@@ -266,8 +264,7 @@ end_editing = ()->
   hide_edit_previews()
   $(currentContainer)
     .removeClass('copy-pasta-active')
-    .find(editable_elements)
-      .removeClass('copy-pasta-editable')
+    .children(editable_elements)
       .unbind('click', editable_click)
   $('.copy-pasta-edit-indicator').remove()
   widget().remove()
