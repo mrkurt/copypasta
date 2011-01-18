@@ -5,7 +5,7 @@
 $lightbox_width: 420px;
 $lightbox_height: 348px;
 
-$widget_width: 220px;
+$widget_width: 250px;
 $widget_height: 200px;
 
 $menu_width: 120px;
@@ -13,6 +13,30 @@ $menu_height: 400px;
 
 $default-border-radius: 5px;
 
+#copy-pasta-widget{
+  display: none;
+  position: fixed;
+  top: 100px;
+  right: 0px;
+  background: url(../../images/translucent-black.png);
+  padding: 5px;
+  padding-right: 0px;
+  @include border-left-radius;
+  z-index: 999;
+
+  h1{
+    text-align: center;
+    font-size: 14px;
+    padding: 0; margin: 0;
+    color: yellow;
+  }
+  iframe{
+    background: #f6f6f6 url(../../images/loading.gif) no-repeat center center;
+    width: $widget-width;
+    height: $widget-height;
+    @include border-left-radius;
+  }
+}
 #copy-pasta-lightbox-overlay{
   background: #000;
 }
@@ -75,7 +99,7 @@ del.diffmod, del.diffdel{ background-color: #FAA; text-decoration: line-through;
 }
 #copy-pasta-edit-indicator{
   background: url(../../images/translucent-blue.png);
-  z-index: 999;
+  z-index: 990;
   position: absolute;
   color: #000;
   font-weight: bold;

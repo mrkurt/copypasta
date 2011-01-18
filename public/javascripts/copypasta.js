@@ -1,5 +1,5 @@
 (function() {
-  var $, activate, append_to_element, blank_dialog, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, find_current_url, form_data, hide_dialog_overlay, hide_edit_preview, hide_edit_previews, ids, iframe_host, images, indicator, init, is_scrolled_into_view, load_iframe_form, locate_text_container, paths, queue, receive_from_iframe, resize_dialog, s, scripts, send_to_iframe, show_dialog, show_dialog_overlay, show_edit_dialog, show_edit_preview, show_info_dialog, static_host, w, watch;
+  var $, activate, append_to_element, blank_dialog, blank_widget, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, end_editing, find_current_url, form_data, handle_dialog_message, handle_widget_message, hide_dialog_overlay, hide_edit_preview, hide_edit_previews, ids, iframe_host, images, indicator, init, is_scrolled_into_view, load_iframe_form, locate_text_container, paths, queue, receive_from_iframe, resize, s, scripts, send_to_iframe, show_dialog, show_dialog_overlay, show_edit_dialog, show_edit_preview, start_editing, static_host, w, watch, widget;
   w = window;
   if (!w.postMessage) {
     return;
@@ -71,7 +71,8 @@
     dialog: 'copy-pasta-dialog',
     iframe: 'copy-pasta-iframe',
     overlay: 'copy-pasta-overlay',
-    btn: 'copy-pasta-button'
+    btn: 'copy-pasta-button',
+    widget: 'copy-pasta-widget'
   };
   paths = {
     indicator: '#' + ids.indicator,
@@ -80,7 +81,8 @@
     active: '.copy-pasta-active',
     iframe: '#' + ids.iframe,
     overlay: '#' + ids.overlay,
-    status: '#copy-pasta-button .status'
+    status: '#copy-pasta-button .status',
+    widget: '#' + ids.widget
   };
   indicator = function() {
     if ($(paths.indicator).length === 0) {
@@ -134,8 +136,8 @@
       return debug_msg("Overlay hidden");
     });
   };
-  resize_dialog = function(data) {
-    return $(paths.dialog).animate({
+  resize = function(path, data) {
+    return $(path).animate({
       height: data.h
     });
   };
@@ -153,12 +155,6 @@
     url = iframe_host + '/edits/new?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id);
     return show_dialog(url, 'edit');
   };
-  show_info_dialog = function() {
-    var page_id, url, _ref;
-    page_id = (_ref = copypasta.page_id) != null ? _ref : '';
-    url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id);
-    return show_dialog(url, 'info');
-  };
   dialog_types = {
     "default": {
       options: {
@@ -172,13 +168,6 @@
     },
     edit: {
       "class": 'copy-pasta-lightbox'
-    },
-    info: {
-      "class": 'copy-pasta-widget',
-      options: {
-        modal: false,
-        position: [100, '0%']
-      }
     }
   };
   show_dialog = function(src, type) {
@@ -217,6 +206,17 @@
       }
       return $.modal(blank_dialog(t["class"]), t.options);
     }
+  };
+  blank_widget = '<div id="' + ids.widget + '"><h1>copypasta</h1><iframe frameborder="no" scrolling="no"></iframe></div>';
+  widget = function() {
+    var page_id, url, _ref;
+    if ($(paths.widget).length === 0) {
+      $('body').append(blank_widget);
+      page_id = (_ref = copypasta.page_id) != null ? _ref : '';
+      url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id);
+      $(paths.widget).show().find('iframe').attr('src', url);
+    }
+    return $(paths.widget);
   };
   show_edit_preview = function(data) {
     var pos, s, target;
@@ -273,25 +273,51 @@
       return;
     }
     data = JSON.parse(e.data);
-    debug_msg("Parent receive: " + data.label + " from " + e.origin);
+    debug_msg("Parent receive: " + data.label + " from " + e.origin + ' for frame type: ' + data.frame_type);
+    if (data.frame_type === 'dialog') {
+      return handle_dialog_message(data);
+    } else {
+      return handle_widget_message(data);
+    }
+  };
+  handle_widget_message = function(data) {
+    if (data.label === 'resize') {
+      return resize(paths.widget + ' iframe', data);
+    } else if (data.label === 'finished') {
+      return end_editing();
+    } else if (data.label === 'preview') {
+      return show_edit_preview(data);
+    } else if (data.label === 'preview-off') {
+      return hide_edit_preview(data.element_path);
+    }
+  };
+  handle_dialog_message = function(data) {
     if (data.label === 'ready') {
       if (!load_iframe_form(data.form_id)) {
         return hide_dialog_overlay();
       }
     } else if (data.label === 'form_data_loaded') {
       return hide_dialog_overlay();
-    } else if (data.label === 'preview') {
-      return show_edit_preview(data);
-    } else if (data.label === 'preview-off') {
-      return hide_edit_preview(data.element_path);
     } else if (data.label === 'finished') {
       if ($.modal) {
         $.modal.close();
       }
       return hide_edit_previews();
     } else if (data.label === 'resize') {
-      return resize_dialog(data);
+      return resize(paths.iframe, data);
     }
+  };
+  start_editing = function() {
+    images.load();
+    $(paths.btn).addClass('on');
+    $(currentContainer).addClass('copy-pasta-active');
+    return widget();
+  };
+  end_editing = function() {
+    $(paths.btn).removeClass('on');
+    hide_edit_previews();
+    $(currentContainer).removeClass('copy-pasta-active');
+    return widget().remove();
   };
   init = function() {
     var el, _i, _len, _ref;
@@ -306,24 +332,16 @@
       watch(el);
     }
     if (copypasta.auto_start) {
-      $('body').prepend('<div id="copy-pasta-button" class="copy-pasta-default"><div class="prompt">click to help fix errors</div><div class="help">now click the offending text (or click here when done)</div><div class="status">...</div></div>');
-      show_info_dialog();
+      $('body').prepend('<div id="copy-pasta-button" class="copy-pasta-default"><div class="prompt">click to help fix errors</div><div class="help">now click the offending text (or click here when done)</div></div>');
     }
     $(paths.btn).live('click', function() {
-      var btn;
       if ($(this).hasClass('on')) {
-        btn = $(this);
-        btn.removeClass('on');
-        return $(currentContainer).removeClass('copy-pasta-active');
+        return end_editing();
       } else {
-        images.load();
-        btn = $(this);
-        btn.addClass('on');
-        return $(currentContainer).addClass('copy-pasta-active');
+        return start_editing();
       }
     });
     $(paths.btn + ' .status').live('click', function() {
-      show_info_dialog();
       return false;
     });
     if (w.addEventListener) {

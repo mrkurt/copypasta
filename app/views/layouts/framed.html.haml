@@ -4,7 +4,7 @@
     %title Framed copypasta
     =stylesheet_link_tag 'compiled/framed'
     =stylesheet_link_tag 'compiled/copypasta'
-  %body#copy-pasta-frame
+  %body#copy-pasta-frame{:class => (yield :frame_type).strip}
     -if @errors
       .error
         %ul

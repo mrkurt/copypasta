@@ -45,6 +45,7 @@ ids =
   iframe : 'copy-pasta-iframe'
   overlay: 'copy-pasta-overlay'
   btn: 'copy-pasta-button'
+  widget: 'copy-pasta-widget'
 
 paths =
   indicator: '#' + ids.indicator
@@ -54,6 +55,7 @@ paths =
   iframe: '#' + ids.iframe
   overlay: '#' + ids.overlay
   status: '#copy-pasta-button .status'
+  widget: '#' + ids.widget
 
 
 indicator = () ->
@@ -93,6 +95,7 @@ find_current_url = ()->
   w.location.hash = oh
   url
 
+#dialog stuff
 blank_dialog = (class_name) -> '<div id="' + ids.dialog + '" class="' + class_name + '"><div id="' + ids.overlay + '"></div><iframe frameborder="no" id="' + ids.iframe + '" scrolling="no"></iframe></div>'
 
 show_dialog_overlay = ()->
@@ -103,8 +106,8 @@ hide_dialog_overlay = ()->
   $(paths.overlay).fadeOut ()->
     debug_msg("Overlay hidden")
 
-resize_dialog = (data)->
-  $(paths.dialog).animate {height : data.h}
+resize = (path, data)->
+  $(path).animate {height : data.h}
 
 show_edit_dialog = ()->
   e = currentLive
@@ -121,20 +124,11 @@ show_edit_dialog = ()->
 
   show_dialog(url, 'edit')
 
-show_info_dialog = ()->
-  page_id = copypasta.page_id ? ''
-  url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id)
-
-  show_dialog(url, 'info')
-
 dialog_types =
   default:
     options: { escClose: true, overlayClose: true, overlayId : 'copy-pasta-lightbox-overlay', containerId : 'copy-pasta-lightbox-container', opacity: 70, persist: true}
   edit:
     class: 'copy-pasta-lightbox'
-  info:
-    class: 'copy-pasta-widget'
-    options: { modal: false, position: [100, '0%'] }
 
 show_dialog = (src, type) ->
   copypasta.modal_init($) unless $.fn.modal
@@ -160,6 +154,19 @@ show_dialog = (src, type) ->
       t.extended = true
 
     $.modal(blank_dialog(t.class), t.options)
+#dialog-end
+
+#widget stuff
+blank_widget = '<div id="' + ids.widget + '"><h1>copypasta</h1><iframe frameborder="no" scrolling="no"></iframe></div>'
+widget = ()->
+  if $(paths.widget).length == 0
+    $('body').append(blank_widget)
+    page_id = copypasta.page_id ? ''
+    url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id)
+    $(paths.widget).show().find('iframe').attr('src', url)
+
+  $(paths.widget)
+#widget-end
 
 show_edit_preview = (data)->
   debug_msg('Previewing ' + data.element_path)
@@ -203,22 +210,47 @@ receive_from_iframe = (e) ->
     debug_msg(e)
     return
   data = JSON.parse(e.data)
-  debug_msg("Parent receive: " + data.label + " from " + e.origin)
+  debug_msg("Parent receive: " + data.label + " from " + e.origin + ' for frame type: ' + data.frame_type)
+
+  if data.frame_type == 'dialog'
+    handle_dialog_message(data)
+  else
+    handle_widget_message(data)
+
+handle_widget_message = (data)->
+  if data.label == 'resize'
+    resize(paths.widget + ' iframe', data)
+  else if data.label == 'finished'
+    end_editing()
+  else if data.label == 'preview'
+    show_edit_preview(data)
+  else if data.label == 'preview-off'
+    hide_edit_preview(data.element_path)
+
+handle_dialog_message = (data)->
   if data.label == 'ready'
     unless load_iframe_form(data.form_id)
       #have to wait til after form data postMessage, otherwise
       hide_dialog_overlay()
   else if data.label == 'form_data_loaded'
     hide_dialog_overlay()
-  else if data.label == 'preview'
-    show_edit_preview(data)
-  else if data.label == 'preview-off'
-    hide_edit_preview(data.element_path)
   else if data.label == 'finished'
     $.modal.close() if $.modal
     hide_edit_previews()
   else if data.label == 'resize'
-    resize_dialog(data)
+    resize(paths.iframe, data)
+
+start_editing = ()->
+  images.load()
+  $(paths.btn).addClass('on')
+  $(currentContainer).addClass('copy-pasta-active')
+  widget()
+
+end_editing = ()->
+  $(paths.btn).removeClass('on')
+  hide_edit_previews()
+  $(currentContainer).removeClass('copy-pasta-active')
+  widget().remove()
 
 init = ()->
   if copypasta.content_selector
@@ -229,22 +261,15 @@ init = ()->
   watch el for el in ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
 
   if copypasta.auto_start
-    $('body').prepend('<div id="copy-pasta-button" class="copy-pasta-default"><div class="prompt">click to help fix errors</div><div class="help">now click the offending text (or click here when done)</div><div class="status">...</div></div>')
-    show_info_dialog()
+    $('body').prepend('<div id="copy-pasta-button" class="copy-pasta-default"><div class="prompt">click to help fix errors</div><div class="help">now click the offending text (or click here when done)</div></div>')
 
   $(paths.btn).live 'click', ()->
     if $(this).hasClass('on')
-      btn = $(this)
-      btn.removeClass('on')
-      $(currentContainer).removeClass('copy-pasta-active')
+      end_editing()
     else
-      images.load()
-      btn = $(this)
-      btn.addClass('on')
-      $(currentContainer).addClass('copy-pasta-active')
+      start_editing()
 
   $(paths.btn + ' .status').live 'click', ()->
-    show_info_dialog()
     return false
 
   if w.addEventListener

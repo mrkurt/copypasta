@@ -17,6 +17,7 @@
   };
   send_message = function(msg) {
     debug_msg("Frame send: " + msg.label + " to " + parent_url);
+    msg['frame_type'] = $('body').attr('class');
     msg = JSON.stringify(msg);
     return parent.postMessage(msg, parent_url);
   };

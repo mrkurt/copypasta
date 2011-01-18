@@ -1,3 +1,6 @@
+=content_for :frame_type do
+  dialog
+
 =form_for @edit, :html => {:class => 'primary'} do |f|
   =hidden_field_tag 'view', params[:view] if params[:view]
   =hidden_field_tag 'url', params[:url] if params[:url]
