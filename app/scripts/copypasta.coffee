@@ -351,6 +351,7 @@ scripts.load = (queue, callback) ->
 images = [
   "translucent-blue.png",
   "translucent-black.png",
+  "translucent-black-85.png",
   "loading.gif"
   "pencil.png"
 ]

@@ -442,7 +442,7 @@
     }
     return append_to_element.appendChild(s);
   };
-  images = ["translucent-blue.png", "translucent-black.png", "loading.gif", "pencil.png"];
+  images = ["translucent-blue.png", "translucent-black.png", "translucent-black-85.png", "loading.gif", "pencil.png"];
   images.load = function() {
     var i, img, _i, _len, _results;
     _results = [];
