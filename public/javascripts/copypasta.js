@@ -1,5 +1,5 @@
 (function() {
-  var $, activate, append_to_element, blank_dialog, blank_widget, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, end_editing, find_current_url, form_data, handle_dialog_message, handle_widget_message, hide_dialog_overlay, hide_edit_preview, hide_edit_previews, ids, iframe_host, images, indicator, init, is_scrolled_into_view, load_iframe_form, locate_text_container, paths, queue, receive_from_iframe, resize, s, scripts, send_to_iframe, show_dialog, show_dialog_overlay, show_edit_dialog, show_edit_preview, start_editing, static_host, w, watch, widget;
+  var $, activate, append_to_element, blank_dialog, blank_widget, copypasta, css, currentContainer, currentLive, deactivate, debug_msg, dialog_types, e, editable_click, editable_elements, end_editing, find_current_url, form_data, handle_dialog_message, handle_widget_message, hide_dialog_overlay, hide_edit_preview, hide_edit_previews, ids, iframe_host, images, indicator, init, is_scrolled_into_view, load_iframe_form, locate_text_container, paths, queue, receive_from_iframe, resize, s, scripts, send_to_iframe, show_dialog, show_dialog_overlay, show_edit_dialog, show_edit_preview, start_editing, static_host, w, watch, widget;
   w = window;
   if (!w.postMessage) {
     return;
@@ -307,29 +307,35 @@
       return resize(paths.iframe, data);
     }
   };
+  editable_elements = 'p, li, h1, h2, h3, h4, h5';
+  editable_click = function(e) {
+    var i;
+    if (!(e instanceof HTMLAnchorElement)) {
+      currentLive = this;
+      i = $(currentLive).find('.copy-pasta-edit-indicator').remove();
+      show_edit_dialog();
+      $(currentLive).append(i);
+      return false;
+    }
+  };
   start_editing = function() {
     images.load();
     $(paths.btn).addClass('on');
-    $(currentContainer).addClass('copy-pasta-active');
+    $(currentContainer).addClass('copy-pasta-active').find(editable_elements).addClass('copy-pasta-editable').append(' <img class="copy-pasta-edit-indicator" src="' + static_host + '/images/pencil.png" alt="click to edit" />').bind('click', editable_click);
     return widget();
   };
   end_editing = function() {
     $(paths.btn).removeClass('on');
     hide_edit_previews();
-    $(currentContainer).removeClass('copy-pasta-active');
+    $(currentContainer).removeClass('copy-pasta-active').find(editable_elements).removeClass('copy-pasta-editable').unbind('click', editable_click);
+    $('.copy-pasta-edit-indicator').remove();
     return widget().remove();
   };
   init = function() {
-    var el, _i, _len, _ref;
     if (copypasta.content_selector) {
       currentContainer = $(copypasta.content_selector).get(0);
     } else {
       currentContainer = locate_text_container();
-    }
-    _ref = ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5'];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      el = _ref[_i];
-      watch(el);
     }
     if (copypasta.auto_start) {
       $('body').prepend('<div id="copy-pasta-button" class="copy-pasta-default"><div class="prompt">click to help fix errors</div><div class="help">now click the offending text (or click here when done)</div></div>');

@@ -13,6 +13,15 @@ $menu_height: 400px;
 
 $default-border-radius: 5px;
 
+.copy-pasta-editable{
+  .copy-pasta-edit-indicator{
+    vertical-align: middle !important;
+    margin: 0 !important; padding: 0 !important; border-width: 0 !important;
+    background-color: transparent !important;
+    cursor: pointer !important;
+    position: absolute;
+  }
+}
 #copy-pasta-widget{
   display: none;
   position: fixed;

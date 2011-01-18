@@ -1,5 +1,5 @@
 (function() {
-  var $, copypasta_debug, debug_msg, fill_form, init, receive_message, resize, send_message;
+  var $, copypasta_debug, debug_msg, fill_form, init, last_checked_preview, receive_message, resize, send_message;
   $ = window.jQuery;
   copypasta_debug = window.location.hash.indexOf('debug') > 0;
   debug_msg = function(msg) {
@@ -64,19 +64,20 @@
       label: 'finished'
     });
   });
+  last_checked_preview = false;
   $('input.edit-preview-toggle').live('change', function() {
-    if (this.checked) {
-      return send_message({
-        label: 'preview',
-        proposed: $(this).val(),
-        element_path: $(this).parent().find('.element_path').val()
-      });
-    } else {
-      return send_message({
+    if (last_checked_preview) {
+      send_message({
         label: 'preview-off',
-        element_path: $(this).parent().find('.element_path').val()
+        element_path: last_checked_preview
       });
     }
+    last_checked_preview = $(this).parent().find('.element_path').val();
+    return send_message({
+      label: 'preview',
+      proposed: $(this).val(),
+      element_path: last_checked_preview
+    });
   });
   $('form.editor-options input').live('change', function() {
     var this2;

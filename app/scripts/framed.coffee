@@ -42,19 +42,20 @@ init = ()->
   resize()
 
 $('.close').live 'click', ()-> send_message({label : 'finished'})
+last_checked_preview = false
 $('input.edit-preview-toggle').live 'change', ()->
-  if this.checked
-    send_message {
-      label: 'preview'
-      proposed: $(this).val()
-      element_path: $(this).parent().find('.element_path').val()
-    }
-  else
+  if last_checked_preview
     send_message {
       label: 'preview-off'
-      element_path: $(this).parent().find('.element_path').val()
-
+      element_path: last_checked_preview
     }
+
+  last_checked_preview = $(this).parent().find('.element_path').val()
+  send_message {
+    label: 'preview'
+    proposed: $(this).val()
+    element_path: last_checked_preview
+  }
 
 $('form.editor-options input').live 'change', ()->
   this2 = this

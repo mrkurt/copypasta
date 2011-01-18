@@ -33,7 +33,7 @@
             = edit_time(edit)
             ago
         %td.preview
-          %input{:type => 'checkbox', :class => 'edit-preview-toggle', :value => diff_edit(edit, false)}
+          %input{:type => 'radio', :name => 'preview-selector', :class => 'edit-preview-toggle', :value => diff_edit(edit, false)}
           %input{:type => 'hidden', :class => 'element_path', :value => edit.element_path}
 %p.options
   %input{:type => 'button', :value => 'Close', :class => 'close secondary'}

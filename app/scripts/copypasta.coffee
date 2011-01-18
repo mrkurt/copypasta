@@ -240,16 +240,36 @@ handle_dialog_message = (data)->
   else if data.label == 'resize'
     resize(paths.iframe, data)
 
+editable_elements = 'p, li, h1, h2, h3, h4, h5'
+
+editable_click = (e)->
+  if e not instanceof HTMLAnchorElement
+    currentLive = this
+    i = $(currentLive).find('.copy-pasta-edit-indicator').remove()
+    show_edit_dialog()
+    $(currentLive).append(i)
+    return false
+
 start_editing = ()->
   images.load()
   $(paths.btn).addClass('on')
-  $(currentContainer).addClass('copy-pasta-active')
+  $(currentContainer)
+    .addClass('copy-pasta-active')
+    .find(editable_elements)
+      .addClass('copy-pasta-editable')
+      .append(' <img class="copy-pasta-edit-indicator" src="' + static_host + '/images/pencil.png" alt="click to edit" />')
+      .bind('click', editable_click)
   widget()
 
 end_editing = ()->
   $(paths.btn).removeClass('on')
   hide_edit_previews()
-  $(currentContainer).removeClass('copy-pasta-active')
+  $(currentContainer)
+    .removeClass('copy-pasta-active')
+    .find(editable_elements)
+      .removeClass('copy-pasta-editable')
+      .unbind('click', editable_click)
+  $('.copy-pasta-edit-indicator').remove()
   widget().remove()
 
 init = ()->
@@ -257,8 +277,6 @@ init = ()->
     currentContainer = $(copypasta.content_selector).get(0)
   else
     currentContainer = locate_text_container()
-
-  watch el for el in ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5']
 
   if copypasta.auto_start
     $('body').prepend('<div id="copy-pasta-button" class="copy-pasta-default"><div class="prompt">click to help fix errors</div><div class="help">now click the offending text (or click here when done)</div></div>')
