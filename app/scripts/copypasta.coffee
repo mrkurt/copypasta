@@ -126,6 +126,7 @@ show_edit_dialog = ()->
   
   url = iframe_host + '/edits/new?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id)
 
+  $(paths.widget).hide()
   show_dialog(url, 'edit')
 
 dialog_types =
@@ -252,7 +253,7 @@ handle_dialog_message = (data)->
   else if data.label == 'finished'
     $.modal.close() if $.modal
     hide_edit_previews()
-    widget widget_url()
+    widget().show()
   else if data.label == 'resize'
     resize(paths.dialog, data)
 
