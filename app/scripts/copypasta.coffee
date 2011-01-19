@@ -32,9 +32,6 @@ locate_text_containers = ()->
     if parent != p.parentElement
       if parent_count >= copypasta.paragraph_threshold || parent_character_count > copypasta.character_threshold
         containers.push(parent)
-        debug_msg("Accepting container with " + parent_count + " paragraphs and " + parent_character_count + " characters.")
-      else if parent
-        debug_msg("Rejecting container with " + parent_count + " paragraphs and " + parent_character_count + " characters.")
       parent = p.parentElement
       parent_count = 0
       parent_character_count = p.innerText.length
@@ -44,9 +41,6 @@ locate_text_containers = ()->
 
   if parent_count >= copypasta.paragraph_threshold || parent_character_count > copypasta.character_threshold
     containers.push(parent)
-    debug_msg("Accepting container with " + parent_count + " paragraphs and " + parent_character_count + " characters.")
-  else if parent
-    debug_msg("Rejecting container with " + parent_count + " paragraphs and " + parent_character_count + " characters.")
 
   containers
 

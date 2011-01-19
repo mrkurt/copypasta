@@ -29,6 +29,12 @@ class ApplicationController < ActionController::Base
     EditorToken.where(:key => t).first || false
   end
 
+  def editor_for
+    keys = session.select{|k| k.index('editor_key_') == 0}.map{|k,v| v}
+    EditorToken.where('key in (?)', keys).includes(:editor).map{|et| et.editor.account_id}
+    return []
+  end
+
   def no_cache!
     headers['Cache-Control'] = 'no-cache'
   end

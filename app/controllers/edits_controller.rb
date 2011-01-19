@@ -8,7 +8,7 @@ class EditsController < ApplicationController
     if @page
       @edits = @page.edits.where(:status => @filter)
     else
-      @edits = Edit.where(:status => @filter)
+      @edits = Edit.where(:status => @filter).where('page_id in (select page_id from pages where account_id in (?))', editor_for)
     end
     @edits = @edits.order('id DESC')
     render :layout => (params[:view] || true)
