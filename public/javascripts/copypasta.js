@@ -20,7 +20,7 @@
   static_host = "http://copypasta.credibl.es";
   css = document.createElement('link');
   css.rel = "stylesheet";
-  css.href = static_host + "/stylesheets/compiled/copypasta.css";
+  css.href = static_host + "/stylesheets/compiled/copypasta.css?v=2";
   append_to_element.appendChild(css);
   $ = false;
   currentLive = false;
@@ -199,7 +199,7 @@
     page_id = (_ref = copypasta.page_id) != null ? _ref : '';
     return url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id);
   };
-  blank_widget = '<div id="' + ids.widget + '"><h1>copypasta</h1><iframe frameborder="no" scrolling="no"></iframe></div>';
+  blank_widget = '<div id="' + ids.widget + '"><h1><img src="' + static_host + '/images/logo-small.png" /></h1><iframe frameborder="no" scrolling="no"></iframe></div>';
   widget = function(src) {
     var iframe;
     if ($(paths.widget).length === 0) {
@@ -433,7 +433,7 @@
     }
     return append_to_element.appendChild(s);
   };
-  images = ["translucent-blue.png", "translucent-black.png", "translucent-black-85.png", "loading.gif", "pencil.png"];
+  images = ["translucent-blue.png", "translucent-black.png", "translucent-black-85.png", "loading.gif", "pencil.png", "logo-small.png"];
   images.load = function() {
     var i, img, _i, _len, _results;
     _results = [];
