@@ -46,7 +46,8 @@ locate_text_containers = ()->
 
 debug_msg = (msg)->
   if copypasta.debug
-    console.debug(msg)
+    if console && console.log
+      console.log(msg)
 
 ids =
   indicator: 'copy-pasta-edit-indicator'
@@ -285,9 +286,6 @@ init = ()->
   else
     currentContainer = $(locate_text_containers())
 
-  if copypasta.auto_start
-    start_editing()
-
   $(paths.btn).live 'click', ()->
     if $(this).hasClass('on')
       end_editing()
@@ -301,6 +299,10 @@ init = ()->
     w.addEventListener('message', receive_from_iframe, false)
   else if w.attachEvent
     w.attachEvent('onmessage', ()-> receive_from_iframe(event))
+
+  if copypasta.auto_start
+    start_editing()
+
 
 scripts = [
     {
