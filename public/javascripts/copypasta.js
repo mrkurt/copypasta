@@ -303,7 +303,11 @@
         $.modal.close();
       }
       hide_edit_previews();
-      return widget().show();
+      widget().show();
+      if (data.reload_widget) {
+        cover(paths.widget_iframe);
+        return $(paths.widget_iframe).attr('src', $(paths.widget_iframe).attr('src'));
+      }
     } else if (data.label === 'resize') {
       return resize(paths.dialog, data);
     }

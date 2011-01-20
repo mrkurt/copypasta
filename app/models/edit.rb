@@ -8,6 +8,7 @@ class Edit < ActiveRecord::Base
   validates_presence_of :proposed, :original, :url
 
   validate :proposed_should_be_different
+  before_save :calculate_distance
 
   def proposed_should_be_different
     errors[:proposed] << 'fix must have changes' if proposed == original
@@ -15,5 +16,10 @@ class Edit < ActiveRecord::Base
 
   def url_with_edits
     url + '#copypasta-auto'
+  end
+
+  def calculate_distance
+    return unless distance.nil? || changes['original'] || changes['proposed']
+    self.distance = Text::Levenshtein.distance(original, proposed)
   end
 end

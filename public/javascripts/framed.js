@@ -17,7 +17,9 @@
   };
   send_message = function(msg) {
     debug_msg("Frame send: " + msg.label + " to " + parent_url);
-    msg['frame_type'] = $('body').attr('class');
+    if (!msg.frame_type) {
+      msg['frame_type'] = $('body').attr('class');
+    }
     msg = JSON.stringify(msg);
     return parent.postMessage(msg, parent_url);
   };
@@ -60,9 +62,16 @@
     return resize();
   };
   $('.close').live('click', function() {
-    return send_message({
+    var msg;
+    msg = {
       label: 'finished'
-    });
+    };
+    if ((msg.frame_type = $('body').attr('class')) === 'dialog') {
+      if ($('.success').length > 0) {
+        msg.reload_widget = true;
+      }
+    }
+    return send_message(msg);
   });
   last_checked_preview = false;
   $('input.edit-preview-toggle').live('change', function() {

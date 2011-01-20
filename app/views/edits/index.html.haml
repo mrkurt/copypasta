@@ -20,7 +20,7 @@
             =form_for edit, :html => {:class => 'editor-options'} do |f|
               =hidden_field_tag 'view', params[:view]
               =hidden_field_tag 'url', params[:url]
-              =hidden_field_tag 'return_to', request.request_uri
+              =hidden_field_tag 'return_to', request.fullpath
               %p.accept
                 %label
                   =f.radio_button :status, 'accepted'
@@ -30,7 +30,7 @@
                   =f.radio_button :status, 'rejected'
                   Reject
           = edit_author(edit)
-          %p.hint
+          %p.hint{:title => "distance: #{edit.distance}"}
             = edit_time(edit)
             ago
         %td.preview

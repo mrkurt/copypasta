@@ -12,7 +12,7 @@ resize = () ->
 
 send_message = (msg) ->
   debug_msg("Frame send: " + msg.label + " to " + parent_url)
-  msg['frame_type'] = $('body').attr('class')
+  msg['frame_type'] = $('body').attr('class') unless msg.frame_type
   msg = JSON.stringify(msg)
   parent.postMessage(msg, parent_url)
 
@@ -41,7 +41,11 @@ init = ()->
   send_message({label : 'ready', form_id : $('form.primary').attr('id')})
   resize()
 
-$('.close').live 'click', ()-> send_message({label : 'finished'})
+$('.close').live 'click', ()->
+  msg = {label : 'finished'}
+  if (msg.frame_type = $('body').attr('class')) == 'dialog'
+    msg.reload_widget = true if $('.success').length > 0
+  send_message(msg)
 last_checked_preview = false
 $('input.edit-preview-toggle').live 'change', ()->
   if last_checked_preview

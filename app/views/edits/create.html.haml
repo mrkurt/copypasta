@@ -3,6 +3,6 @@
 
 .success Your edit has been submitted for approval
 #edit-create-success
-  %p!= diff_edit
+  %p.code!= diff_edit
   %p.options
     %input{:type => 'button', :class => 'close', :value => 'Done'}

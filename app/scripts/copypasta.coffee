@@ -248,6 +248,9 @@ handle_dialog_message = (data)->
     $.modal.close() if $.modal
     hide_edit_previews()
     widget().show()
+    if data.reload_widget
+      cover paths.widget_iframe
+      $(paths.widget_iframe).attr('src', $(paths.widget_iframe).attr('src'))
   else if data.label == 'resize'
     resize(paths.dialog, data)
 
