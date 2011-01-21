@@ -63,7 +63,9 @@
   };
   debug_msg = function(msg) {
     if (copypasta.debug) {
-      return console.debug(msg);
+      if (console && console.log) {
+        return console.log(msg);
+      }
     }
   };
   ids = {
@@ -341,9 +343,6 @@
     } else {
       currentContainer = $(locate_text_containers());
     }
-    if (copypasta.auto_start) {
-      start_editing();
-    }
     $(paths.btn).live('click', function() {
       if ($(this).hasClass('on')) {
         return end_editing();
@@ -355,11 +354,14 @@
       return false;
     });
     if (w.addEventListener) {
-      return w.addEventListener('message', receive_from_iframe, false);
+      w.addEventListener('message', receive_from_iframe, false);
     } else if (w.attachEvent) {
-      return w.attachEvent('onmessage', function() {
+      w.attachEvent('onmessage', function() {
         return receive_from_iframe(event);
       });
+    }
+    if (copypasta.auto_start) {
+      return start_editing();
     }
   };
   scripts = [

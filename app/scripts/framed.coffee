@@ -4,7 +4,8 @@ copypasta_debug = window.location.hash.indexOf('debug') > 0
 
 debug_msg = (msg)->
   if copypasta_debug
-    console.debug(msg)
+    if console && console.log
+    console.log(msg)
 
 resize = () ->
   m = {label : 'resize', h: $('html').height()}
@@ -47,7 +48,7 @@ $('.close').live 'click', ()->
     msg.reload_widget = true if $('.success').length > 0
   send_message(msg)
 last_checked_preview = false
-$('input.edit-preview-toggle').live 'change', ()->
+$('input.edit-preview-toggle').live 'click', ()->
   if last_checked_preview
     send_message {
       label: 'preview-off'

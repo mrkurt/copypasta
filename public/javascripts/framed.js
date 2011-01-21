@@ -74,7 +74,7 @@
     return send_message(msg);
   });
   last_checked_preview = false;
-  $('input.edit-preview-toggle').live('change', function() {
+  $('input.edit-preview-toggle').live('click', function() {
     if (last_checked_preview) {
       send_message({
         label: 'preview-off',
