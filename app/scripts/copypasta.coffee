@@ -281,19 +281,17 @@ end_editing = ()->
   widget().remove()
 
 init = ()->
+  return unless window.JSON && window.postMessage #bails out of IE if not standards mode >= ie8
   if copypasta.content_selector
     currentContainer = $(copypasta.content_selector)
   else
     currentContainer = $(locate_text_containers())
 
-  $(paths.btn).live 'click', ()->
+  $(paths.btn).show().bind 'click', ()->
     if $(this).hasClass('on')
       end_editing()
     else
       start_editing()
-
-  $(paths.btn + ' .status').live 'click', ()->
-    return false
 
   if w.addEventListener
     w.addEventListener('message', receive_from_iframe, false)

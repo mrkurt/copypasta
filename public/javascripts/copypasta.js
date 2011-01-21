@@ -338,20 +338,20 @@
     return widget().remove();
   };
   init = function() {
+    if (!(window.JSON && window.postMessage)) {
+      return;
+    }
     if (copypasta.content_selector) {
       currentContainer = $(copypasta.content_selector);
     } else {
       currentContainer = $(locate_text_containers());
     }
-    $(paths.btn).live('click', function() {
+    $(paths.btn).show().bind('click', function() {
       if ($(this).hasClass('on')) {
         return end_editing();
       } else {
         return start_editing();
       }
-    });
-    $(paths.btn + ' .status').live('click', function() {
-      return false;
     });
     if (w.addEventListener) {
       w.addEventListener('message', receive_from_iframe, false);
