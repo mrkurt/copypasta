@@ -21,8 +21,7 @@ class EditsController < ApplicationController
 
   def create
     @edit = Edit.new(params[:edit])
-    session["email"] = @edit.email
-    session["user_name"] = @edit.user_name
+    setcookie 'email', @edit.email
     @edit.page = @page
     @edit.ip_address = request.remote_ip
     if @edit.save
@@ -51,8 +50,8 @@ class EditsController < ApplicationController
   def new
     headers['Cache-Control'] = 'no-cache'
     @edit = Edit.new(params[:edit])
-    @edit.user_name = session["user_name"]
-    @edit.email = session["email"]
+    @edit.user_name = cookies["user_name"]
+    @edit.email = cookies["email"]
     @edit.url = params[:url] if @edit.url.blank?
     render :layout => (params[:view] || true)
   end

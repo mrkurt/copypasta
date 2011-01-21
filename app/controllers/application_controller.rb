@@ -1,6 +1,14 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
+  def setcookie(name, value)
+    cookies.permanent[name] = {
+      :value => value,
+      :secure => Rails.env == 'production',
+      :httponly => true
+    }
+  end
+
   def require_account!
     raise "You must supply either an account ID or a URL" if account.nil?
   end
@@ -24,15 +32,14 @@ class ApplicationController < ActionController::Base
 
   def is_editor_for?(account_or_child)
     account = ((account_or_child.is_a?(Account) && account_or_child) || account_or_child.account)
-    t = session["editor_key_#{account.id}"]
+    t = cookies["editor_key_#{account.id}"]
     return false if t.nil?
     EditorToken.where(:key => t).first || false
   end
 
   def editor_for
-    keys = session.select{|k| k.index('editor_key_') == 0}.map{|k,v| v}
+    keys = cookies.select{|k| k.index('editor_key_') == 0}.map{|k,v| v}
     EditorToken.where('key in (?)', keys).includes(:editor).map{|et| et.editor.account_id}
-    return []
   end
 
   def no_cache!
