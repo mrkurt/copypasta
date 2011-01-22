@@ -313,8 +313,40 @@ module HTMLDiff
     DiffBuilder.new(a, b).build
   end
 
+  def diff_in_context(a, b)
+    d = diff(a,b)
+
+    first = original_length = d.length
+    last = 0
+
+    ['diffins', 'diffdel', 'diffmod'].each do |o|
+      i = d.index(o)
+      first = i if i && i < first
+    end
+
+    ['</ins>', '</del>'].each do |o|
+      i = d.rindex(o)
+      last = i if i && i > last
+    end
+
+    if first < 20 || (first = d.rindex(' ', first - 20)).nil?
+      first = 0
+    end
+
+    if last + 20 >= d.length || (last = d.index(' ', last + 20)).nil?
+      last = d.length
+    end
+
+    d = d.slice(first, last - first)
+
+    d = '...' + d if first > 0
+    d = d + '...' if last < original_length
+    d
+  end
 end
 HTMLDiff.module_eval do
   module_function(:diff)
   public :diff
+  module_function(:diff_in_context)
+  public :diff_in_context
 end
