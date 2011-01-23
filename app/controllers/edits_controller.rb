@@ -33,9 +33,14 @@ class EditsController < ApplicationController
     render view, :layout => (params[:view] || true)
   end
 
+  def edit
+    @edit = Edit.find(params[:id])
+    raise "No yuo!" unless is_editor_for?(@edit.page)
+  end
+
   def update
     @edit = Edit.find(params[:id])
-    raise "No yuo!" unless is_editor_for?(@edit.page.account)
+    raise "No yuo!" unless is_editor_for?(@edit.page)
     @edit.status = params[:edit][:status] if params[:edit][:status]
     @edit.update_attributes!(params[:edit])
 

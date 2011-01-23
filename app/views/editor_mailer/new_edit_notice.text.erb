@@ -1,11 +1,8 @@
 <%= raw ((@edit.email.blank? && '(Anonymous)') || @edit.email) %> just submitted a correction for one of your pages:
 <%= raw @edit.url %>
 
-Original:
-<%= raw @edit.original %>
-
-Proposed changes:
-<%= raw @edit.proposed %>
+Changes:
+<%= raw diff_edit_text(diff_edit_context @edit, false) %>
 
 Manage edits for this page:
 <%= raw new_session_url(:key => @editor.create_token.key, :url => @edit.url + '#copypasta-auto') %>

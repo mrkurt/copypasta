@@ -9,6 +9,7 @@ class Edit < ActiveRecord::Base
 
   validate :proposed_should_be_different
   before_save :calculate_distance
+  before_save :generate_key
 
   def proposed_should_be_different
     errors[:proposed] << 'fix must have changes' if proposed == original
@@ -21,5 +22,10 @@ class Edit < ActiveRecord::Base
   def calculate_distance
     return unless distance.nil? || changes['original'] || changes['proposed']
     self.distance = Text::Levenshtein.distance(original, proposed)
+  end
+
+  def generate_key
+    return unless key.nil?
+    self.key = ActiveSupport::SecureRandom.hex(6)
   end
 end

@@ -329,15 +329,15 @@ module HTMLDiff
       last = i if i && i > last
     end
 
-    if first < 20 || (first = d.rindex(' ', first - 20)).nil?
+    if first < 100 || (first = d.rindex(' ', first - 100)).nil?
       first = 0
     end
 
-    if last + 20 >= d.length || (last = d.index(' ', last + 20)).nil?
+    if last + 100 >= d.length || (last = d.index(' ', last + 100)).nil?
       last = d.length
     end
 
-    d = d.slice(first, last - first)
+    d = d.slice(first, last - first).strip
 
     d = '...' + d if first > 0
     d = d + '...' if last < original_length
