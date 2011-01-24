@@ -11,6 +11,16 @@ class Edit < ActiveRecord::Base
   before_save :calculate_distance
   before_save :generate_key
 
+  def last_message(clear = true)
+    msg = @last_message
+    @last_message = nil if clear
+    msg
+  end
+
+  def last_message=(msg)
+    @last_message = msg
+  end
+  
   def proposed_should_be_different
     errors[:proposed] << 'fix must have changes' if proposed == original
   end

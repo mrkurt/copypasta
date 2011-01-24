@@ -1,0 +1,2 @@
+class SentEmail < Email
+end

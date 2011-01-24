@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110123015947) do
+ActiveRecord::Schema.define(:version => 20110124191226) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
@@ -58,6 +58,17 @@ ActiveRecord::Schema.define(:version => 20110123015947) do
   end
 
   add_index "edits", ["page_id"], :name => "index_edits_on_page_id"
+
+  create_table "emails", :force => true do |t|
+    t.string   "from"
+    t.string   "to"
+    t.string   "subject"
+    t.text     "body_text"
+    t.string   "type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "body_html"
+  end
 
   create_table "pages", :force => true do |t|
     t.string   "key"

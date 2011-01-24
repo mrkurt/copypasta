@@ -1,7 +1,6 @@
 Your proposed edit has been marked as "<%=raw @edit.status%>".
 
 Proposed changes:
-<%=raw @edit.proposed %>
+<%= raw diff_edit_text(diff_edit_context @edit, false) %>
 
-Original:
-<%=raw @edit.original %>
+<%= raw @edit.last_message %>

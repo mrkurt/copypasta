@@ -10,4 +10,8 @@ class EditorMailer < ActionMailer::Base
 
     mail(:to => editor.email, :from => from, :subject => "Corrections for #{edit.page.url}", :bcc => 'kurt@mubble.net')
   end
+
+  def receive(e)
+    ReceivedEmail.from_email(e)
+  end
 end
