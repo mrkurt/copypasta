@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
 
   def editor_for
     keys = cookies.select{|k| k.index('editor_key_') == 0}.map{|k,v| v}
-    EditorToken.where('key in (?)', keys).includes(:editor).map{|et| et.editor.account_id}
+    EditorToken.where('editors_tokens.key in (?)', keys).includes(:editor).map{|et| et.editor.account_id}
   end
 
   def no_cache!
