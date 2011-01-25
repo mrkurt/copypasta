@@ -4,6 +4,7 @@ class UserMailer < ActionMailer::Base
 
   def edit_status_change_notice(edit)
     @edit = edit
-    mail(:to => edit.email, :subject => "Re: Proposed edit on #{edit.page.url}", :bcc => 'kurt@mubble.net')
+    from = "copypasta <copypasta+edit-#{edit.id}@credibl.es>"
+    mail(:to => edit.email, :from => from, :subject => "Re: Proposed edit on #{edit.page.url}", :bcc => 'kurt@mubble.net')
   end
 end
