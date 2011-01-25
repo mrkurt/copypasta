@@ -21,9 +21,10 @@ class EditorMailer < ActionMailer::Base
       e = Edit.where(:id => addr[:id]).first
       ins = ReceivedEmail.parse_body(email.text_part.body.to_s, addr[:key])
 
-      if e && ins[:status] && addr[:key] == e.key
+      if e && addr[:key] == e.key
         e.status = ins[:status]
         e.last_message = ins[:message]
+        e.status = ins[:status] if ins[:status]
         e.save!
       elsif e && addr[:key] != e.key
         Rails.logger.info "Key for #{e.id} didn't match: #{addr[:key]}"
