@@ -24,7 +24,7 @@ class EditorMailer < ActionMailer::Base
       if e && addr[:key] == e.key
         e.status = ins[:status]
         e.last_message = ins[:message]
-        e.status = ins[:status] if ins[:status]
+        e.status = ins[:status] unless ins[:status].blank?
         e.save!
       elsif e && addr[:key] != e.key
         Rails.logger.info "Key for #{e.id} didn't match: #{addr[:key]}"
