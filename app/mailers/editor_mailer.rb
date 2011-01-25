@@ -22,7 +22,6 @@ class EditorMailer < ActionMailer::Base
       ins = ReceivedEmail.parse_body(email.text_part.body.to_s, addr[:key])
 
       if e && addr[:key] == e.key
-        e.status = ins[:status]
         e.last_message = ins[:message]
         unless ins[:status].blank?
           e.status = ins[:status]
