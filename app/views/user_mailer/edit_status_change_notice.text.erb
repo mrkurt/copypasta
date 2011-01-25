@@ -1,6 +1,9 @@
+<% if @edit.changes['status'] %>
 Your proposed edit has been marked as "<%=raw @edit.status%>".
 
 Proposed changes:
-<%= raw diff_edit_text(diff_edit_context @edit, false) %>
+<%=raw diff_edit_text(diff_edit_context @edit, false) %>
 
-<%= raw @edit.last_message %>
+Comments:
+<% end %>
+<%=raw @edit.last_message %>

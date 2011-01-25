@@ -38,16 +38,23 @@ class ReceivedEmail < Email
       # fetches the straight up source of the email for tmail to parse
       source = imap.uid_fetch(uid, ['RFC822']).first.attr['RFC822']
 
-      EditorMailer.receive(source)
+      receive(source)
 
       # there isn't move in imap so we copy to new mailbox and then delete from inbox
-      imap.uid_copy(uid, "[Gmail]/All Mail")
-      imap.uid_store(uid, "+FLAGS", [:Deleted])
+      #imap.uid_copy(uid, "[Gmail]/All Mail")
+      #imap.uid_store(uid, "+FLAGS", [:Deleted])
     end
     
     # expunge removes the deleted emails
     imap.expunge
     imap.logout
     imap.disconnect
+  end
+
+  def self.receive(source)
+    e = new(:raw => source)
+    if e.save
+      EditorMailer.receive(source)
+    end
   end
 end

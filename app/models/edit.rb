@@ -11,10 +11,8 @@ class Edit < ActiveRecord::Base
   before_save :calculate_distance
   before_save :generate_key
 
-  def last_message(clear = true)
-    msg = @last_message
-    @last_message = nil if clear
-    msg
+  def last_message
+    @last_message
   end
 
   def last_message=(msg)
