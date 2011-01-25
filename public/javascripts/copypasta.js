@@ -382,7 +382,7 @@
       test: function() {
         return copypasta.getElementCssPath && w.jQuery && w.jQuery.fn.lightbox_me;
       },
-      src: 'http://copypasta.credibl.es/javascripts/utils.js'
+      src: 'http://copypasta.credibl.es/javascripts/utils.min.js'
     }
   ];
   scripts.load = function(queue, callback) {

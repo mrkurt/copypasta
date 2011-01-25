@@ -317,7 +317,7 @@ scripts = [
     },
     {
       test: ()-> copypasta.getElementCssPath && w.jQuery && w.jQuery.fn.lightbox_me
-      src: 'http://localhost:3000/javascripts/utils.js'
+      src: 'http://localhost:3000/javascripts/utils.min.js'
     }
 ]
 
