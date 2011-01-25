@@ -1,5 +1,6 @@
 class UserMailer < ActionMailer::Base
   default :from => "copypasta@credibl.es"
+  helper :edits
 
   def edit_status_change_notice(edit)
     @edit = edit
