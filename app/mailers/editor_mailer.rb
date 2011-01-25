@@ -11,16 +11,25 @@ class EditorMailer < ActionMailer::Base
     mail(:to => editor.email, :from => from, :subject => "Corrections for #{edit.page.url}", :bcc => 'kurt@mubble.net')
   end
 
+  def edit_message(edit, message, editor)
+    from = "copypasta <copypasta+edit-#{edit.id}-#{edit.key}@credibl.es>"
+    mail(:to => editor.email, :from => from, :subject => "Re: Corrections for #{edit.page.url}", :bcc => 'kurt@mubble.net')
+  end
+
   def receive(email)
     addr = ReceivedEmail.parse_address(email.to.join(","))
-    return unless addr
+    return unless addr && addr[:id]
+
+    e = Edit.where(:id => addr[:id]).first
 
     if addr[:key].nil? #user response
-
+      message = email.text_part.body.to_s
+      e.page.account.editors.each do |editor|
+        EditorMailer.edit_message(e, message, editor)
+      end
+    end
     else #editor response
-      e = Edit.where(:id => addr[:id]).first
       ins = ReceivedEmail.parse_body(email.text_part.body.to_s, addr[:key])
-
       if e && addr[:key] == e.key
         e.last_message = ins[:message]
         unless ins[:status].blank?

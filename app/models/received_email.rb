@@ -41,8 +41,8 @@ class ReceivedEmail < Email
       receive(source)
 
       # there isn't move in imap so we copy to new mailbox and then delete from inbox
-      #imap.uid_copy(uid, "[Gmail]/All Mail")
-      #imap.uid_store(uid, "+FLAGS", [:Deleted])
+      imap.uid_copy(uid, "[Gmail]/All Mail")
+      imap.uid_store(uid, "+FLAGS", [:Deleted])
     end
     
     # expunge removes the deleted emails

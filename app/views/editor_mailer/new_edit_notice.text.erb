@@ -1,13 +1,5 @@
 <%= raw ((@edit.email.blank? && '(Anonymous)') || @edit.email) %> just submitted a correction for one of your pages:
-<%= raw @edit.url %>
+<%= raw @edit.url + '#copypasta-auto' %>
 
 Changes:
 <%= raw diff_edit_text(diff_edit_context @edit, false) %>
-
-***copypasta instructions***
-Responses to this email will be sent to the submitter.
-Everything below these instructions will be stripped out.
-To change the status of this edit, put an x between the brackets:
-Current status: <%= @edit.status %>
-[  ] accept
-[  ] reject
