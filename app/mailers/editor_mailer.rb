@@ -28,7 +28,6 @@ class EditorMailer < ActionMailer::Base
       e.page.account.editors.each do |editor|
         EditorMailer.edit_message(e, message, editor)
       end
-    end
     else #editor response
       ins = ReceivedEmail.parse_body(email.text_part.body.to_s, addr[:key])
       if e && addr[:key] == e.key
