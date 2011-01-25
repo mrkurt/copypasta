@@ -13,4 +13,10 @@ class Account < ActiveRecord::Base
     end
     s.account
   end
+
+  def notify_editors(edit)
+    editors.each do |editor|
+      EditorMailer.new_edit_notice(edit, editor).deliver
+    end
+  end
 end

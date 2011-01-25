@@ -1,8 +1,6 @@
 class EditObserver < ActiveRecord::Observer
   def after_create(edit)
-    edit.page.account.editors.each do |editor|
-      EditorMailer.new_edit_notice(edit, editor).deliver
-    end
+    edit.page.account.notify_editors(edit)
   end
 
 #  def after_update(edit)
