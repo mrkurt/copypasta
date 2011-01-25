@@ -33,7 +33,7 @@ class EditorMailer < ActionMailer::Base
       options[:message] = email.text_part.body.to_s
       e.page.account.editors.each do |editor|
         Rails.logger.info("EditorMailer: Sending user response on #{e.id} to #{editor.email}")
-        EditorMailer.edit_message(e, editor, options)
+        EditorMailer.edit_message(e, editor, options).deliver
       end
       true
     else #editor response
@@ -49,7 +49,7 @@ class EditorMailer < ActionMailer::Base
 
         unless e.email.blank?
           Rails.logger.info("EditorMailer: Sending editor response on #{e.id} to #{e.email}")
-          UserMailer.edit_status_change_notice(e, options)
+          UserMailer.edit_status_change_notice(e, options).deliver
         end
         true
       elsif e && addr[:key] != e.key
