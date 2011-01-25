@@ -5,7 +5,7 @@ copypasta_debug = window.location.hash.indexOf('debug') > 0
 debug_msg = (msg)->
   if copypasta_debug
     if console && console.log
-    console.log(msg)
+      console.log(msg)
 
 resize = () ->
   m = {label : 'resize', h: $('html').height()}

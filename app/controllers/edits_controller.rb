@@ -41,8 +41,15 @@ class EditsController < ApplicationController
   def update
     @edit = Edit.find(params[:id])
     raise "No yuo!" unless is_editor_for?(@edit.page)
+    mail_options = {}
     @edit.status = params[:edit][:status] if params[:edit][:status]
+    if @edit.changes['status']
+      mail_options[:old_status] = @edit.changes['status'].first
+    end
+
     @edit.update_attributes!(params[:edit])
+
+    UserMailer.edit_status_change_notice(@edit) unless @edit.email.blank?
 
     if @edit.status == 'rejected'
       flash[:error] = "Edit rejected"

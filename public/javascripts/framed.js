@@ -4,7 +4,9 @@
   copypasta_debug = window.location.hash.indexOf('debug') > 0;
   debug_msg = function(msg) {
     if (copypasta_debug) {
-      return console.debug(msg);
+      if (console && console.log) {
+        return console.log(msg);
+      }
     }
   };
   resize = function() {
