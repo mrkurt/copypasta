@@ -14,6 +14,7 @@ class EditorMailer < ActionMailer::Base
   def edit_message(edit, message, editor)
     from = "copypasta <copypasta+edit-#{edit.id}-#{edit.key}@credibl.es>"
     mail(:to => editor.email, :from => from, :subject => "Re: Corrections for #{edit.page.url}", :bcc => 'kurt@mubble.net')
+
   end
 
   def receive(email)
