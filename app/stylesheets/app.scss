@@ -1,0 +1,97 @@
+@import 'compass/reset';
+@import 'compass/css3/gradient';
+@import 'compass/css3/text-shadow';
+@import 'compass/css3/box-shadow';
+@import 'compass/css3/inline-block';
+@import 'compass/css3/border-radius';
+$default-border-radius: 5px;
+body{
+  background: url('../../images/bkg-texture.jpg');
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  line-height: 140%;
+}
+em{ font-style: italic; }
+.good{ background: #AFA; }
+.bad { background: #FAA; }
+#logo{
+  background: url('../../images/logo.png') top left no-repeat;
+  padding: 0;
+  margin: 0px auto;
+  z-index: 2;
+  position: relative;
+  width: 530px; height: 155px;
+  span{ display: none; }
+}
+#container{
+  width: 600px;
+  margin: 30px auto;
+  @include border-radius;
+}
+#content{
+  background-color: #f6f6f6;
+  position: relative;
+  z-index: 1;
+  top: -50px;
+  padding: 50px;
+  @include border-radius;
+}
+
+h4{
+  font-weight: bold;
+}
+.instructions{
+  text-align: justify;
+}
+#signup{
+  margin: 20px auto;
+  width: 400px;
+
+  #editor_email{
+    width: 386px;
+    @include border-radius;
+  }
+}
+textarea, input[type=text]{
+  border: 1px solid #999;
+  @include border-radius(3px);
+  padding: 6px;
+  font-family: Arial, sans-serif;
+  font-size: 1em;
+}
+input[type=text]{
+  margin: 0;
+  background-color: #fff;
+  @include linear-gradient(color-stops(#ddd 0%, #fff 10%, #fff));
+}
+
+.options{ margin-top: 15px; text-align: right; }
+
+.button, input[type=submit], input[type=button]{
+  border: 0px;
+  margin: 0px;
+  color: white;
+  font-size: 12px;
+  padding: 5px 12px;
+  vertical-align: middle;
+  text-align: center;
+  text-decoration: none;
+  font-weight: bold;
+  @include border-radius(5px);
+  @include text-shadow(#1067ae);
+  @include inline-block;
+  background-color: #50a4d0;
+  @include linear-gradient(color-stops(#50a4d0, #126baf));
+  @include box-shadow(#000, 0, 1px, 1px);
+  cursor: pointer;
+  
+  &.secondary{
+    background-color: #777;
+    @include linear-gradient(color-stops(#999, #777));
+    @include text-shadow(#444);
+  }
+
+  &:hover{
+    color: #FF9;
+  }
+}

@@ -3,7 +3,7 @@ CopyPasta::Application.routes.draw do
   resource :session, :only => [:new]
   resource :signup
   
-  root :to => 'signups#new'
+  root :to => 'signups#shhh'
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
