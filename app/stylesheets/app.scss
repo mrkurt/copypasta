@@ -133,25 +133,12 @@ code{ font-family: monospace; }
   background: mix(#fff, green, 80%);
 }
 #copy-pasta-button{
-  width: 150px;
+  width: 110px;
   display: block;
   margin: 0px auto;
   z-index: 1;
   position: relative;
   white-space: nowrap;
   padding-left: 19px;
-
-  &:after{
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    background-image: url(../../images/pencil.png);
-    background-position: middle left;
-    background-repeat: no-repeat;
-    z-index: 2;
-    top: 50%;
-    left: 7px;
-    margin-top: -7px;
-    content: '';
-  }
+  cursor: pointer;
 }

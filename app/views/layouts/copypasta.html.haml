@@ -8,7 +8,7 @@
       %span copypasta
     #content
       =yield
-    #copy-pasta-button{:class => 'button'} Try it out on this page!
+    #copy-pasta-button= image_tag "button.png", :alt => 'Suggest changes'
     :plain
       <script type="text/javascript">
         copypasta_content_selector = '#content';

@@ -3,11 +3,11 @@
 %p.instructions Changes will be sent to your email, simply reply to notification emails to accept or reject changes.
 %div
   %textarea#code= '' + |
-    "<div id=\"copypasta-button\">Suggest changes</div>\n" + |
+    "<a href="//copypasta.credibl.es" id=\"copypasta-button\" style="margin: 0; padding: 0; line-height: 20px;display:none;"><img src="//copypasta.credibl.es/images/button.png" alt="Suggest changes" style="border-width: 0px !important; width: 110px; height: 20px;" /></a>\n" + |
     "<script type=\"text/javascript\">\n" + |
     "  copypasta_account_id = '" + @account.obfuscated_id + "';\n" + |
     "</script>\n" + |
-    "<script type=\"text/javascript\" src=\"http://copypasta.credibl.es/javascripts/copypasta.js\"></script>" |
+    "<script type=\"text/javascript\" src=\"//copypasta.credibl.es/javascripts/copypasta.js\"></script>" |
 .advanced
   %h4 Advanced instructions
   %p.instructions The contents of <code>div#copypasta-button</code> can change according to your preference, any element with that ID will trigger the editing function.
