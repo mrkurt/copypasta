@@ -16,8 +16,8 @@
     }
     return _results;
   })())[0];
-  iframe_host = "https://copypasta.heroku.com";
-  static_host = "http://copypasta.credibl.es";
+  iframe_host = "https://copypasta.credibl.es";
+  static_host = "//copypasta.credibl.es";
   css = document.createElement('link');
   css.rel = "stylesheet";
   css.href = static_host + "/stylesheets/compiled/copypasta.css?v=2";
@@ -376,7 +376,7 @@
           return true;
         }
       },
-      src: 'http://copypasta.credibl.es/javascripts/jquery-1.4.4.min.js',
+      src: '//copypasta.credibl.es/javascripts/jquery-1.4.4.min.js',
       callback: function() {
         (copypasta.$ = $ = w.jQuery).noConflict(1);
         return debug_msg("Loaded own jquery: version " + $.fn.jquery);
@@ -385,7 +385,7 @@
       test: function() {
         return copypasta.getElementCssPath && w.jQuery && w.jQuery.fn.lightbox_me;
       },
-      src: 'http://copypasta.credibl.es/javascripts/utils.min.js'
+      src: '//copypasta.credibl.es/javascripts/utils.min.js'
     }
   ];
   scripts.load = function(queue, callback) {
