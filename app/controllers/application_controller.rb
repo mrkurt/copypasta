@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
   def account
     return @account if @account
 
-    @account = Account.find_with_obfuscated_id(params[:account_id]) if params[:account_id] && params[:account_id] != 'undefined'
+    @account = Account.find_with_obfuscated_id(params[:account_id]) unless params[:account_id].blank? || params[:account_id] == 'undefined'
     if @account.nil? && !(h = host).nil?
       @account = Account.for_host(h)
     end
