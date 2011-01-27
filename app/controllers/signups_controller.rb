@@ -1,5 +1,6 @@
 class SignupsController < ApplicationController
   layout 'copypasta'
+  before_filter :no_cache!
   def show
     @account = Account.new
     @editor = Editor.new
