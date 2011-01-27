@@ -162,7 +162,7 @@ show_dialog = (src, type) ->
 widget_url = ()->
   page_id = copypasta.page_id ? ''
   account_id = copypasta.account_id ? ''
-  url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id) + '&account_id=' + copypasta.account_id
+  url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id) + '&account_id=' + account_id
 
 blank_widget = '<div id="' + ids.widget + '"><h1><img src="' + static_host + '/images/logo-small.png" /></h1><iframe frameborder="no" scrolling="no"></iframe></div>'
 
