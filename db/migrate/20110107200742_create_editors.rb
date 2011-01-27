@@ -8,7 +8,6 @@ class CreateEditors < ActiveRecord::Migration
     end
 
     add_index(:editors, :host)
-    add_index(:editors, [:host, :email], :unique => true)
   end
 
   def self.down
