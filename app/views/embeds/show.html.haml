@@ -1,15 +1,19 @@
 %h4 Installation Instructions
 %p.instructions Copy and paste this HTML + Javascript to your site template.  Make sure you put the code where you want the button to appear.
-%p.instructions Changes will be sent to your email, simply reply to notification emails to accept or reject changes.
+%p.instructions Changes will be sent to your email, simply reply to notification emails to accept or reject changes.  <strong id="edit-preview">Click here to try editing this page</strong>.
 %div
   %textarea#code= '' + |
-    "<div id=\"copypasta-button\">Suggest changes</div>\n" + |
+    "<a id=\"copypasta-button\"><img src=\"//copypasta.credibl.es/images/button.png\" alt=\"Suggest changes\"></a>\n" + |
     "<script type=\"text/javascript\">\n" + |
     "  copypasta_account_id = '" + @account.obfuscated_id + "';\n" + |
     "</script>\n" + |
-    "<script type=\"text/javascript\" src=\"http://copypasta.credibl.es/javascripts/copypasta.js\"></script>" |
+    "<script type=\"text/javascript\" src=\"//copypasta.credibl.es/javascripts/copypasta.js\"></script>" |
 .advanced
   %h4 Advanced instructions
   %p.instructions The contents of <code>div#copypasta-button</code> can change according to your preference, any element with that ID will trigger the editing function.
   %p.instructions To restrict editing to a specific element or set of elements on your page, set a javascript variable named <code>copypasta_content_selector</code> to the CSS path of your content container.
   %p.instructions URL hash values are ignored by default.  If you need hash values to uniquely identify pages, set <code>copypasta_include_url_hash = true;</code> in the embed script.
+
+=content_for :button_options do
+  :plain
+    copypasta_account_id = '#{escape_javascript @account.obfuscated_id}';

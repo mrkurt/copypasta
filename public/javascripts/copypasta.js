@@ -202,9 +202,9 @@
     var account_id, page_id, url, _ref, _ref2;
     page_id = (_ref = copypasta.page_id) != null ? _ref : '';
     account_id = (_ref2 = copypasta.account_id) != null ? _ref2 : '';
-    return url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id) + '&account_id=' + copypasta.account_id;
+    return url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id) + '&account_id=' + account_id;
   };
-  blank_widget = '<div id="' + ids.widget + '"><h1><img src="' + static_host + '/images/logo-small.png" /></h1><iframe frameborder="no" scrolling="no"></iframe></div>';
+  blank_widget = '<div id="' + ids.widget + '"><h1><a href="https://copypasta.credibl.es"><img src="' + static_host + '/images/logo-small.png" /></a></h1><iframe frameborder="no" scrolling="no"></iframe></div>';
   widget = function(src) {
     var iframe;
     if ($(paths.widget).length === 0) {

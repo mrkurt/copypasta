@@ -21,10 +21,10 @@ class Account < ActiveRecord::Base
   end
 
   def obfuscated_id
-    (self.id + 100000).to_s(36)
+    (self.id * self.id).to_s(36)
   end
 
   def self.find_with_obfuscated_id(id)
-    find(id.to_i(36) - 100000)
+    find(Math.sqrt id.to_i(36))
   end
 end
