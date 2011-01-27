@@ -30,6 +30,7 @@
     $: false,
     page_id: w.copypasta_page_id
   };
+  copypasta.account_id = w.copypasta_account_id;
   copypasta.debug = w.copypasta_debug || w.location.hash.indexOf('copypasta-debug') > 0;
   copypasta.auto_start = w.copypasta_auto_start || w.location.hash.indexOf('copypasta-auto') > 0;
   copypasta.include_url_hash = w.copypasta_include_url_hash;
@@ -130,17 +131,18 @@
     });
   };
   show_edit_dialog = function() {
-    var page_id, url, _ref, _ref2;
+    var account_id, page_id, url, _ref, _ref2, _ref3;
     e = currentLive;
     (_ref = e.original_text) != null ? _ref : e.original_text = e.innerHTML;
     page_id = (_ref2 = copypasta.page_id) != null ? _ref2 : '';
+    account_id = (_ref3 = copypasta.account_id) != null ? _ref3 : '';
     form_data.new_edit = {
       'edit[original]': e.original_text,
       'edit[proposed]': e.original_text,
       'edit[url]': find_current_url(),
       'edit[element_path]': copypasta.getElementCssPath(e)
     };
-    url = iframe_host + '/edits/new?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id);
+    url = iframe_host + '/edits/new?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id) + '&account_id=' + account_id;
     $(paths.widget).hide();
     return show_dialog(url, 'edit');
   };
@@ -197,9 +199,10 @@
     }
   };
   widget_url = function() {
-    var page_id, url, _ref;
+    var account_id, page_id, url, _ref, _ref2;
     page_id = (_ref = copypasta.page_id) != null ? _ref : '';
-    return url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id);
+    account_id = (_ref2 = copypasta.account_id) != null ? _ref2 : '';
+    return url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id) + '&account_id=' + copypasta.account_id;
   };
   blank_widget = '<div id="' + ids.widget + '"><h1><img src="' + static_host + '/images/logo-small.png" /></h1><iframe frameborder="no" scrolling="no"></iframe></div>';
   widget = function(src) {

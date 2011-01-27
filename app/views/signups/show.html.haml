@@ -1,12 +1,14 @@
 %p.instructions copypasta is a collaborative editing tool.  Readers submit edits, authors approve changes, everyone wins.
 =form_for @account, :url => signup_path, :html => {:id => 'signup'} do |f|
   =fields_for @editor do |e|
-    %h4=e.label :email, 'Enter your email address to join the beta'
-    %p=e.text_field :email
-  %p.options=f.submit 'Next: Get the code!'
+    %h4 <label for='editor_email'>Enter your email address to join the beta</label>
+    -if @editor.errors.length > 0
+      .error
+        %ul
+          -@editor.errors.keys.each do |f|
+            -@editor.errors[f].each do |e|
+              %li= f.to_s.humanize + ' ' + e
+    %div=e.text_field :email
+  .options= f.submit 'Next: Get the code!'
 
-%p.instructions
-  This tool is for you if you've ever received an email, comment, or smoke signal saying "hey, it's spelled 
-  != '<em class="good">pasta</em>... '
-  not
-  != '<em class="bad">rasta</em>".'
+%p.instructions This tool is for you if you've ever received an email, comment, or smoke signal saying "hey, it's spelled <em class="good">pasta</em>... not <em class="bad">rasta</em>".

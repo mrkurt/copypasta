@@ -19,4 +19,12 @@ class Account < ActiveRecord::Base
       EditorMailer.new_edit_notice(edit, editor).deliver
     end
   end
+
+  def obfuscated_id
+    (self.id + 100000).to_s(36)
+  end
+
+  def self.find_with_obfuscated_id(id)
+    find(id.to_i(36) - 100000)
+  end
 end

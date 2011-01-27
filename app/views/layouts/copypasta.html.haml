@@ -8,3 +8,10 @@
       %span copypasta
     #content
       =yield
+    #copy-pasta-button{:class => 'button'} Try it out on this page!
+    :plain
+      <script type="text/javascript">
+        copypasta_content_selector = '#content';
+        copypasta_account_id = '255v';
+      </script>
+    %script{:type => 'text/javascript', :src => '/javascripts/copypasta.js'}

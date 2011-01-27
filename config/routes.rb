@@ -1,5 +1,6 @@
 CopyPasta::Application.routes.draw do
   resources :edits
+  resources :embeds
   resource :session, :only => [:new]
   resource :signup
   

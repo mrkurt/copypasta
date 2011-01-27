@@ -15,6 +15,7 @@ currentContainer = false
 form_data = {}
 
 w.copypasta = copypasta = {$ : false, page_id : w.copypasta_page_id}
+copypasta.account_id = w.copypasta_account_id
 copypasta.debug = w.copypasta_debug || w.location.hash.indexOf('copypasta-debug') > 0
 copypasta.auto_start = w.copypasta_auto_start || w.location.hash.indexOf('copypasta-auto') > 0
 copypasta.include_url_hash = w.copypasta_include_url_hash
@@ -113,13 +114,14 @@ show_edit_dialog = ()->
   e.original_text ?= e.innerHTML
 
   page_id = copypasta.page_id ? ''
+  account_id = copypasta.account_id ? ''
   form_data.new_edit =
     'edit[original]' : e.original_text
     'edit[proposed]' : e.original_text
     'edit[url]' : find_current_url()
     'edit[element_path]' : copypasta.getElementCssPath(e)
   
-  url = iframe_host + '/edits/new?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id)
+  url = iframe_host + '/edits/new?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id) + '&account_id=' + account_id
 
   $(paths.widget).hide()
   show_dialog(url, 'edit')
@@ -159,7 +161,8 @@ show_dialog = (src, type) ->
 #widget stuff
 widget_url = ()->
   page_id = copypasta.page_id ? ''
-  url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id)
+  account_id = copypasta.account_id ? ''
+  url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id) + '&account_id=' + copypasta.account_id
 
 blank_widget = '<div id="' + ids.widget + '"><h1><img src="' + static_host + '/images/logo-small.png" /></h1><iframe frameborder="no" scrolling="no"></iframe></div>'
 
