@@ -42,6 +42,7 @@ strong{ font-weight: bold; }
   z-index: 1;
   top: -50px;
   padding: 50px;
+  padding-bottom: 10px;
   @include border-radius;
 }
 
@@ -144,12 +145,12 @@ code{ font-family: monospace; }
   background: mix(#fff, green, 80%);
 }
 #copy-pasta-button{
-  width: 110px;
-  display: block;
+  width: 136px;
+  height: 20px;
   margin: 0px auto;
   z-index: 1;
   position: relative;
   white-space: nowrap;
-  padding-left: 19px;
   cursor: pointer;
+  margin-top: 30px;
 }
