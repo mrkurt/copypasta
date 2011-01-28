@@ -13,6 +13,7 @@ class EditorMailer < ActionMailer::Base
 
   def edit_message(edit, editor, options = {})
     @options = options
+    @edit = edit
     name = options[:from_name]
     name = 'copypasta' if name.blank?
 
