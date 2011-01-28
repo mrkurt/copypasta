@@ -209,6 +209,7 @@ is_scrolled_into_view = (elem)->
 load_iframe_form = (id)->
   if id && form_data[id]
     send_to_iframe('label' : 'form_data', 'data' : form_data[id])
+    form_data[id] = false
 
 send_to_iframe = (msg) ->
   debug_msg("Parent send: " + msg.label + " to " + iframe_host)

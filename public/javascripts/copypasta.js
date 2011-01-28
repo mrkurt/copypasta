@@ -256,10 +256,11 @@
   };
   load_iframe_form = function(id) {
     if (id && form_data[id]) {
-      return send_to_iframe({
+      send_to_iframe({
         'label': 'form_data',
         'data': form_data[id]
       });
+      return form_data[id] = false;
     }
   };
   send_to_iframe = function(msg) {
