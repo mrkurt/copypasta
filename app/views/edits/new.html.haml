@@ -4,6 +4,7 @@
 =form_for @edit, :html => {:class => 'primary'} do |f|
   =hidden_field_tag 'view', params[:view] if params[:view]
   =hidden_field_tag 'url', params[:url] if params[:url]
+  =hidden_field_tag 'account_id', params[:account_id]
   -if @page
     =fields_for @page do |p|
       =p.hidden_field :key
