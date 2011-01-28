@@ -6,7 +6,7 @@ class Edit < ActiveRecord::Base
 
   validates_inclusion_of :status, :in => ['new', 'rejected', 'accepted']
   validates_presence_of :proposed, :original, :url
-  validates :email, :email => true, :required => true
+  validates :email, :email => true, :presence => true
 
   validate :proposed_should_be_different
   before_save :calculate_distance
