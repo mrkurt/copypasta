@@ -4,6 +4,7 @@ CopyPasta::Application.routes.draw do
   resource :session, :only => [:new]
   resource :signup
   
+  match 'dashboard/check_mail' => 'dashboard#check_mail'
   root :to => 'signups#show'
   # The priority is based upon order of creation:
   # first created -> highest priority.

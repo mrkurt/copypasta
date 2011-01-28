@@ -26,6 +26,7 @@ class EditorMailer < ActionMailer::Base
     return unless addr && addr[:id]
 
     e = Edit.where(:id => addr[:id]).first
+    return if e.nil?
     options = {}
     options[:from_name] = email[:from].display_names.join(",")
 
