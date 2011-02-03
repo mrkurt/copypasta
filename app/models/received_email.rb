@@ -7,7 +7,7 @@ class ReceivedEmail < Email
   end
 
   EDIT_ADDRESS_REGEX = /copypasta\+edit-(\d+)-?(([a-z0-9]+))?@credibl\.es/
-  STATUS_REGEX = /^[^\n]*\[\s*x|X\s*\]\s(\w+)/m 
+  STATUS_REGEX = /^[^\n]*\[\s*x\s*\]\s(\w+)/mi
   INSTRUCTIONS_REGEX = /(.*)^[^\n]*\*{3}copypasta\sinstructions\*{3}[^\n]*\n(.*)/m
   EMAIL_SANITIZE_REGEX = /copypasta(\+|%2B)edit-(\d+)-\w+\@credibl\.es/
   def self.parse_body(body, key)
