@@ -30,16 +30,17 @@ class EditorMailer < ActionMailer::Base
     return if e.nil?
     options = {}
     options[:from_name] = email[:from].display_names.join(",")
+    body = (email.text_part && email.text_part.body.to_s) || email.body.to_s
 
     if addr[:key].blank? #user response
-      options[:message] = email.text_part.body.to_s
+      options[:message] = body
       e.page.account.editors.each do |editor|
         Rails.logger.info("EditorMailer: Sending user response on #{e.id} to #{editor.email}")
         EditorMailer.edit_message(e, editor, options).deliver
       end
       true
     else #editor response
-      ins = ReceivedEmail.parse_body(email.text_part.body.to_s, addr[:key])
+      ins = ReceivedEmail.parse_body(body, addr[:key])
       if e && addr[:key] == e.key
         options[:message] = ins[:message]
         unless ins[:status].blank? || ins[:status] == e.status
