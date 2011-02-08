@@ -23,6 +23,11 @@ $default-border-radius: 5px;
   border-width: 0 !important;
 }
 
+#copypasta-button, #copy-pasta-button, .copy-pasta-button{
+  display: none;
+  cursor: pointer;
+}
+
 .copy-pasta-overlay{
   z-index: 3;
   display: none;
