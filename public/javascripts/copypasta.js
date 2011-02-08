@@ -334,7 +334,9 @@
     var elements;
     images.load();
     $(paths.btn).addClass('on');
-    elements = $(currentContainer).addClass('copy-pasta-active').find(editable_elements).filter(':visible');
+    elements = $(currentContainer).addClass('copy-pasta-active').find(editable_elements).filter(':visible').filter(function(i) {
+      return this.innerText && $.trim($(this).text()) !== '';
+    });
     elements.addClass('copy-pasta-editable').bind('click', editable_click);
     return widget();
   };
