@@ -60,7 +60,7 @@ ids =
 paths =
   indicator: '#' + ids.indicator
   dialog: '#' + ids.dialog
-  btn: '#' + ids.btn
+  btn: '#copypasta-button, #copy-pasta-button, .copy-pasta-button'
   active: '.copy-pasta-active'
   iframe: '#' + ids.iframe
   overlay: '.copy-pasta-overlay'
