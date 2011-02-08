@@ -43,7 +43,7 @@ locate_text_containers = ()->
   if parent_count >= copypasta.paragraph_threshold || parent_character_count > copypasta.character_threshold
     containers.push(parent)
 
-  containers
+  copypasta.containers = containers
 
 debug_msg = (msg)->
   if copypasta.debug

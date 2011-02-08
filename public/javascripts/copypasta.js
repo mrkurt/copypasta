@@ -64,7 +64,7 @@
     if (parent_count >= copypasta.paragraph_threshold || parent_character_count > copypasta.character_threshold) {
       containers.push(parent);
     }
-    return containers;
+    return copypasta.containers = containers;
   };
   debug_msg = function(msg) {
     if (copypasta.debug) {
