@@ -1,6 +1,6 @@
 class Edit < ActiveRecord::Base
-  xss_foliate :strip => [:original, :proposed]
-  attr_accessible :element_path, :original, :proposed, :url, :email, :user_name, :opt_in
+  xss_foliate :strip => [:original, :proposed, :comments]
+  attr_accessible :element_path, :original, :proposed, :url, :email, :user_name, :opt_in, :comments
 
   belongs_to :page
 
@@ -8,7 +8,7 @@ class Edit < ActiveRecord::Base
   validates_presence_of :proposed, :original, :url
   validates :email, :email => true, :presence => true
 
-  validate :proposed_should_be_different
+  validate :proposed_should_be_different, :unless => :comments?
   before_save :calculate_distance
   before_save :generate_key
 
@@ -21,7 +21,7 @@ class Edit < ActiveRecord::Base
   end
   
   def proposed_should_be_different
-    errors[:proposed] << 'fix must have changes' if proposed == original
+    errors[:proposed] << 'fix must have changes if you leave comments blank' if proposed == original
   end
 
   def url_with_edits

@@ -6,3 +6,8 @@ Changes:
 
 Comments from user:
 <%= raw @edit.comments %>
+
+<% unless @edit.page.account.edit_url_format.blank? %>
+Edit link:
+<%= raw @edit.page.account.edit_url_format.gsub('{{key}}', @edit.page.key) %>
+<% end %>

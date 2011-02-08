@@ -10,11 +10,12 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110208000933) do
+ActiveRecord::Schema.define(:version => 20110208003101) do
 
   create_table "accounts", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "edit_url_format"
   end
 
   create_table "editor_tokens", :force => true do |t|
