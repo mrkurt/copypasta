@@ -13,6 +13,10 @@ class ApplicationController < ActionController::Base
     raise "You must supply either an account ID or a URL" if account.nil?
   end
 
+  def require_page!
+    raise "You must supply either a page key or a URL" if load_page.nil?
+  end
+
   def host
     return @host if @host
     return nil unless params[:url]
@@ -29,6 +33,22 @@ class ApplicationController < ActionController::Base
     end
     @account
   end
+
+  def load_page
+    return @page if @page
+    return nil unless (params[:page] && !params[:page][:key].blank?) || params[:url]
+    key = (params[:page] && !params[:page][:key].blank?) ? params[:page][:key] : Digest::MD5.hexdigest(params[:url])
+    @page = Page.where(:key => key, :account_id => account.id).first
+    unless @page
+      @page = Page.new(params[:page])
+      @page.account = account
+      @page.key = key
+      @page.url = params[:url]
+      @page.save
+    end
+    @page
+  end
+
 
   def is_editor_for?(account_or_child)
     account = ((account_or_child.is_a?(Account) && account_or_child) || account_or_child.account)

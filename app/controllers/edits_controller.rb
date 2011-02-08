@@ -68,19 +68,4 @@ class EditsController < ApplicationController
     render :layout => (params[:view] || true)
   end
 
-  def load_page
-    return @page if @page
-    return nil unless (params[:page] && !params[:page][:key].blank?) || params[:url]
-    key = (params[:page] && !params[:page][:key].blank?) ? params[:page][:key] : Digest::MD5.hexdigest(params[:url])
-    @page = Page.where(:key => key, :account_id => account.id).first
-    unless @page
-      @page = Page.new(params[:page])
-      @page.account = account
-      @page.key = key
-      @page.url = params[:url]
-      @page.save
-    end
-    @page
-  end
-
 end

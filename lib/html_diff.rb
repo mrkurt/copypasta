@@ -337,7 +337,7 @@ module HTMLDiff
       last = d.length
     end
 
-    d = d.slice(first, last - first).strip
+    d = d.slice(first, last - first).strip if last > first
 
     d = '...' + d if first > 0
     d = d + '...' if last < original_length
