@@ -46,16 +46,18 @@
     _ref = document.getElementsByTagName('p');
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       p = _ref[_i];
-      if (parent !== p.parentElement) {
-        if (parent_count >= copypasta.paragraph_threshold || parent_character_count > copypasta.character_threshold) {
-          containers.push(parent);
+      if (p.innerText && p.innerText.length) {
+        if (parent !== p.parentElement) {
+          if (parent_count >= copypasta.paragraph_threshold || parent_character_count > copypasta.character_threshold) {
+            containers.push(parent);
+          }
+          parent = p.parentElement;
+          parent_count = 0;
+          parent_character_count = p.innerText.length;
         }
-        parent = p.parentElement;
-        parent_count = 0;
-        parent_character_count = p.innerText.length;
+        parent_count += 1;
+        parent_character_count += p.innerText.length;
       }
-      parent_count += 1;
-      parent_character_count += p.innerText.length;
     }
     if (parent_count >= copypasta.paragraph_threshold || parent_character_count > copypasta.character_threshold) {
       containers.push(parent);

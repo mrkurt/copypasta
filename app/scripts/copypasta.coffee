@@ -29,7 +29,7 @@ copypasta.locate_text_containers = locate_text_containers = ()->
   parent_count = 0
   parent_character_count = 0
 
-  for p in document.getElementsByTagName('p')
+  for p in document.getElementsByTagName('p') when p.innerText && p.innerText.length
     if parent != p.parentElement
       if parent_count >= copypasta.paragraph_threshold || parent_character_count > copypasta.character_threshold
         containers.push(parent)
