@@ -12,7 +12,14 @@
   =f.hidden_field :element_path
   =f.hidden_field :url
   =f.hidden_field :original
-  =f.text_area :proposed
+  %p.field.first
+    %label
+      What should this say?
+      =f.text_area :proposed
+  %p.field
+    %label
+      Comments (optional)
+      =f.text_area :comments, :class => 'comments'
   %p.field
     %label
       Your email

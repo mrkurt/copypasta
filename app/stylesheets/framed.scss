@@ -91,11 +91,12 @@ form{
   
   textarea{
     width: 392px;
-    height: 200px;
+    height: 100px;
     background-color: #fff;
     @include linear-gradient(color-stops(#ddd 0%, #fff 2%, #fff));
     display: block;
     resize: none;
+    &.comments{ height: 50px; }
   }
   textarea, input[type=text]{
     border: 1px solid #999;
@@ -129,6 +130,8 @@ form{
         display: block;
         padding-top: 5px;
       }
+
+      &.first{ margin-top: 0px; padding-top: 0px; }
     }
     &.options{
       margin-bottom: 0px;
