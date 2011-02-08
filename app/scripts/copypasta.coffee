@@ -100,6 +100,9 @@ find_current_url = ()->
     w.location.hash = ''
 
   url = ($('link[rel=canonical]').attr('href') || w.location.href.replace(/#+$/,''))
+  a = w.document.createElement('a')
+  a.href = url
+  url = a.href #resolves relative URLs
   w.location.hash = oh
   url
 

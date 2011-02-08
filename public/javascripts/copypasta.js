@@ -111,7 +111,7 @@
     return $(element).css(sz);
   };
   find_current_url = function() {
-    var oh, url;
+    var a, oh, url;
     oh = w.location.hash;
     if (copypasta.include_url_hash) {
       w.location.hash = w.location.hash.replace(/#?copypasta-[a-z]+/g, '');
@@ -119,6 +119,9 @@
       w.location.hash = '';
     }
     url = $('link[rel=canonical]').attr('href') || w.location.href.replace(/#+$/, '');
+    a = w.document.createElement('a');
+    a.href = url;
+    url = a.href;
     w.location.hash = oh;
     return url;
   };
