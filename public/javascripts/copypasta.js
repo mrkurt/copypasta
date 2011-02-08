@@ -52,10 +52,14 @@
         }
         parent = p.parentElement;
         parent_count = 0;
-        parent_character_count = p.innerText.length;
+        if (p.innerText) {
+          parent_character_count = p.innerText.length;
+        }
       }
       parent_count += 1;
-      parent_character_count += p.innerText.length;
+      if (p.innerText) {
+        parent_character_count += p.innerText.length;
+      }
     }
     if (parent_count >= copypasta.paragraph_threshold || parent_character_count > copypasta.character_threshold) {
       containers.push(parent);
