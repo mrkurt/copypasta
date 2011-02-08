@@ -30,6 +30,7 @@ copypasta.locate_text_containers = locate_text_containers = ()->
   parent_character_count = 0
 
   for p in $('p')
+    p = $(p)
     if parent != p.parent().get(0)
       if parent_count >= copypasta.paragraph_threshold || parent_character_count > copypasta.character_threshold
         containers.push(parent)

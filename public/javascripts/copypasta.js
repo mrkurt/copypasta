@@ -46,6 +46,7 @@
     _ref = $('p');
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       p = _ref[_i];
+      p = $(p);
       if (parent !== p.parent().get(0)) {
         if (parent_count >= copypasta.paragraph_threshold || parent_character_count > copypasta.character_threshold) {
           containers.push(parent);
