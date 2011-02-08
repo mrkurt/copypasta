@@ -37,7 +37,7 @@
   copypasta.content_selector = w.copypasta_content_selector;
   copypasta.paragraph_threshold = w.copypasta_paragraph_threshold || 3;
   copypasta.character_threshold = w.copypasta_character_threshold || 100;
-  locate_text_containers = function() {
+  copypasta.locate_text_containers = locate_text_containers = function() {
     var containers, p, parent, parent_character_count, parent_count, _i, _len, _ref;
     containers = [];
     parent = false;
@@ -52,19 +52,15 @@
         }
         parent = p.parentElement;
         parent_count = 0;
-        if (p.innerText) {
-          parent_character_count = p.innerText.length;
-        }
+        parent_character_count = p.innerText.length;
       }
       parent_count += 1;
-      if (p.innerText) {
-        parent_character_count += p.innerText.length;
-      }
+      parent_character_count += p.innerText.length;
     }
     if (parent_count >= copypasta.paragraph_threshold || parent_character_count > copypasta.character_threshold) {
       containers.push(parent);
     }
-    return copypasta.containers = containers;
+    return containers;
   };
   debug_msg = function(msg) {
     if (copypasta.debug) {
