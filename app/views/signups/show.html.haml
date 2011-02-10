@@ -15,5 +15,5 @@
 -if params[:gravatars]
   .gravatars
     %h5 Happy editors!
-    -Edit.where(:status => 'accepted').order('random()').limit(6).each do |e|
+    -Edit.where(:status => 'accepted').order('random()').limit(25).each do |e|
       %img{:src => edit_gravatar(e)}
