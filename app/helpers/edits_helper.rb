@@ -57,4 +57,10 @@ module EditsHelper
     edit ||= @edit
     controller.is_editor_for?(edit.page.account)
   end
+
+  def edit_gravatar(edit = nil)
+    edit ||= @edit
+
+    "https://secure.gravatar.com/avatar/#{Digest::MD5.hexdigest(edit.email)}?s=50"
+  end
 end

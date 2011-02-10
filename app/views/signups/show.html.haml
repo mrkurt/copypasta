@@ -12,3 +12,8 @@
   .options= f.submit 'Next: Get the code!'
 
 %p.instructions This tool is for you if you've ever received an email, comment, or smoke signal saying "hey, it's spelled <em class="good">pasta</em>... not <em class="bad">rasta</em>".
+-if params[:gravatars]
+  .gravatars
+    %h5 Happy editors!
+    -Edit.where(:status => 'accepted').order('random()').limit(6).each do |e|
+      %img{:src => edit_gravatar(e)}
