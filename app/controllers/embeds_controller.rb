@@ -3,6 +3,9 @@ class EmbedsController < ApplicationController
   def index
     raise request.env.inspect
   end
+  def new
+    index
+  end
   def show
     @account = Account.find_with_obfuscated_id(params[:id])
   end
