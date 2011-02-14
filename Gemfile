@@ -10,6 +10,8 @@ gem 'sqlite3'
 gem 'loofah'
 gem 'loofah-activerecord'
 
+gem 'cloudseed'
+
 gem 'hoptoad_notifier'
 
 gem 'text'
