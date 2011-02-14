@@ -12,6 +12,8 @@ gem 'loofah-activerecord'
 
 gem 'cloudseed'
 
+gem 'uglifier'
+
 gem 'hoptoad_notifier'
 
 gem 'text'
