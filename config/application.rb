@@ -44,6 +44,6 @@ module CopyPasta
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
 
-    config.middleware.use 'CloudSeed::Middleware'
+    config.middleware.insert_before ActionDispatch::Static, CloudSeed::Middleware
   end
 end
