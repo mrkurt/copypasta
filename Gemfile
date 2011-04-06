@@ -12,8 +12,6 @@ gem 'loofah-activerecord'
 
 gem 'cloudseed'
 
-gem 'hoptoad_notifier'
-
 gem 'text'
 
 group :development, :test do
