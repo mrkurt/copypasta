@@ -9,10 +9,6 @@ class Email < ActiveRecord::Base
   end
 
   def self.config
-    unless @config
-      config = YAML::load(File.open("#{RAILS_ROOT}/config/email.yml"))
-      @config = config[Rails.env]
-    end
-    @config ||= {}
+    @config ||= {:password => ENV['COPYPASTA_EMAIL_PASSWORD'], :email => ENV['COPYPASTA_EMAIL']}
   end
 end

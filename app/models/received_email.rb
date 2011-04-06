@@ -29,7 +29,7 @@ class ReceivedEmail < Email
   def self.check_mail
     # make a connection to imap account
     imap = Net::IMAP.new('imap.gmail.com', 993, true)
-    imap.login(Email.config['username'], Email.config['password'])
+    imap.login(Email.config[:username], Email.config[:password])
     # select inbox as our mailbox to process
     imap.select('Inbox')
     
