@@ -168,7 +168,7 @@ widget_url = ()->
   account_id = copypasta.account_id ? ''
   url = iframe_host + '/edits?view=framed&url=' + escape(find_current_url()) + '&page[key]=' + escape(page_id) + '&account_id=' + account_id
 
-blank_widget = '<div id="' + ids.widget + '"><h1><a href="https://copypasta.credibl.es"><img src="' + static_host + '/images/logo-small.png" /></a></h1><iframe frameborder="no" scrolling="no"></iframe></div>'
+blank_widget = '<div id="' + ids.widget + '"><h1><a href="http://copypasta.credibl.es"><img src="' + static_host + '/images/logo-small.png" /></a></h1><iframe frameborder="no" scrolling="no"></iframe></div>'
 
 widget = (src)->
   if $(paths.widget).length == 0
